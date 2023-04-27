@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/cards_mui/static/css/main.ae71d505.css",
+    "main.js": "/cards_mui/static/js/main.36d4c1fb.js",
+    "static/js/787.68bbb5b0.chunk.js": "/cards_mui/static/js/787.68bbb5b0.chunk.js",
+    "static/media/logo.svg": "/cards_mui/static/media/logo.b2e5a01e505f739f1484b881277d5186.svg",
+    "index.html": "/cards_mui/index.html",
+    "main.ae71d505.css.map": "/cards_mui/static/css/main.ae71d505.css.map",
+    "main.36d4c1fb.js.map": "/cards_mui/static/js/main.36d4c1fb.js.map",
+    "787.68bbb5b0.chunk.js.map": "/cards_mui/static/js/787.68bbb5b0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ae71d505.css",
+    "static/js/main.36d4c1fb.js"
+  ]
+}
