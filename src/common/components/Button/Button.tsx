@@ -34,6 +34,7 @@ const Button: React.FC<SuperButtonPropsType> = (
       onClick={callback}
       disabled={disabled}
       className={finalClassName}
+      type={restProps.type}
       {...restProps} // отдаём кнопке остальные пропсы если они есть (children там внутри)
     >
       {name}

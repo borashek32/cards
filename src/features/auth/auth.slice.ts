@@ -1,35 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 import {
   ArgLoginType,
   ArgRegisterType,
   authApi,
   ProfileType
-} from "features/auth/auth.api";
-import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+} from "features/auth/auth.api"
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
 
 
 const register = createAppAsyncThunk<void, ArgRegisterType>
 ("auth/register", async (arg) => {
-  await authApi.register(arg);
-});
+  await authApi.register(arg)
+})
 const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
 ("auth/login", async (arg, thunkAPI) => {
-  const res = await authApi.login(arg);
-  return { profile: res.data };
-});
+  const res = await authApi.login(arg)
+  return { profile: res.data }
+})
 
 const slice = createSlice({
   name: "auth",
   initialState: {
-    profile: null as ProfileType | null
+    profile: null as ProfileType | null,
+    isLoggedIn: false
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-      state.profile = action.payload.profile;
-    });
+      state.profile = action.payload.profile
+      state.isLoggedIn = true
+    })
   }
-});
+})
 
-export const authThunks = { register, login };
+export const authThunks = { register, login }
+export const authReducer = slice.reducer

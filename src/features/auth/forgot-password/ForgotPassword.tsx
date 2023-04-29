@@ -21,7 +21,7 @@ export const ForgotPassword = () => {
       <Footer>
         <Button callback={() => {}} name={"Send Instructions"} xType={"default"}/>
         <p className={s.auth__alreadyHaveAcc}>Did you remember your password?</p>
-        <NavLink to={"./registration"}>
+        <NavLink to={"/login"}>
           <p className={s.auth__redirect}>Try logging in</p>
         </NavLink>
       </Footer>

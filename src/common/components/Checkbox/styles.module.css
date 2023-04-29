@@ -23,11 +23,10 @@
     background-repeat: no-repeat;
     background-position: center center;
 
-    /* background-size: 90% 90%; */
     vertical-align: middle;
     margin-right: 8px;
     border-radius: 3px;
-    border: var(--border);
+    border: 1px solid var(--primary-color);
     cursor: pointer;
 }
 

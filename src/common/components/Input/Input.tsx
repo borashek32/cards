@@ -20,13 +20,11 @@ type SuperInputTextPropsType = DefaultInputPropsType & {
   onEnter?: () => void
   error?: ReactNode
   spanClassName?: string
-}
-type CustomInputType = {
   label?: string
   valueInvisible: boolean
 }
 
-const Input: React.FC<SuperInputTextPropsType & CustomInputType> = (
+const Input: React.FC<SuperInputTextPropsType> = (
   {
     value,
     onChange,
