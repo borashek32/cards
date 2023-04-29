@@ -1,0 +1,58 @@
+.input:focus {
+    outline: none;
+}
+
+.input {
+    width: 347px;
+    height: 48px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--black-color);
+    border: none;
+    border-bottom: var(--border);
+}
+.input::placeholder {
+    color: var(--grey-color)
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.superInput {
+
+}
+
+.errorInput {
+    border: 1px solid #CC0000;
+}
+
+.inputLabel {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--grey-color);
+
+    position: absolute;
+    z-index: 2;
+    top: -10px;
+}
+.inputEye {
+    position: absolute;
+    right: 17px;
+    bottom: 13px;
+    cursor: pointer;
+}
+.inputEyeCrossLine {
+    height: 2px;
+    width: 30px;
+    transform: rotate(-45deg);
+    background-color: var(--black-color);
+    position: absolute;
+    left: 88%;
+    top: 53%;
+    cursor: pointer;
+}
+
