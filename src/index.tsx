@@ -7,9 +7,9 @@ import "./index.css";
 import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
 import Error404 from "common/errors/404/Error404";
 import { Login } from "features/auth/login/Login";
-import { Register } from "features/auth/register/Register";
-import { SetNewPassword } from "features/auth/set-new-password/SetNewPassword";
-import { ForgotPassword } from "features/auth/forgot-password/ForgotPassword";
+import { SignUpForm } from "features/auth/sign-up/SignUpForm";
+import {SetNewPasswordForm} from "features/auth/set-new-password/SetNewPasswordFrom";
+import { ForgotPasswordForm } from "features/auth/forgot-password/ForgotPasswordForm";
 import { CheckEmail } from "features/auth/check-email/CheckEmail";
 import { Profile } from "features/profile/Profile";
 import { Cards } from "features/cards/Cards";
@@ -36,18 +36,18 @@ const router = createBrowserRouter([
     errorElement: <Error404 />
   },
   {
-    path: "/register",
-    element: <Register />,
+    path: "/sign-up",
+    element: <SignUpForm />,
     errorElement: <Error404 />
   },
   {
     path: "/set-new-password",
-    element: <SetNewPassword />,
+    element: <SetNewPasswordForm />,
     errorElement: <Error404 />
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: <ForgotPasswordForm />,
     errorElement: <Error404 />
   },
   {
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/set-new-password",
-    element: <SetNewPassword />,
+    element: <SetNewPasswordForm />,
     errorElement: <Error404 />
   },
   // profile

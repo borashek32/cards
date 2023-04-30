@@ -5,11 +5,14 @@ export const authApi = {
     return instance.post<RegisterResponseType>("auth/register", arg)
   },
   login(arg: ArgLoginType) {
-    // TODO
     return instance.post<ProfileType>("auth/login", arg)
   },
   logout() {
     return instance.delete("auth/login")
+  },
+  forgotPassword(arg: ArgForgotType) {
+    // TODO types
+    return instance.post("auth/forgot", arg)
   },
   me() {
     return instance.get("auth/me")
@@ -22,6 +25,7 @@ export type ArgLoginType = {
   rememberMe: boolean
 }
 export type ArgRegisterType = Omit<ArgLoginType, 'rememberMe' | 'isLoggedIn'>
+export type ArgForgotType = Omit<ArgRegisterType, 'password'>
 
 export type RegisterResponseType = {
   addedUser: Omit<ProfileType, 'token' | 'tokenDeathTime'>
