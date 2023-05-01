@@ -1,7 +1,7 @@
 import {useAppDispatch} from "common/hooks/hooks"
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
-import React, {useEffect} from "react"
+import React from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
 import {Navigate, NavLink} from "react-router-dom"

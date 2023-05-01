@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 import {
-  ArgForgotType,
+  ArgForgotPasswordType,
   ArgLoginType,
   ArgRegisterType,
+  ArgSetNewPasswordType,
   authApi,
-  ProfileType
+  ProfileType, TokenResponseType
 } from "features/auth/auth.api"
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
 
@@ -20,9 +21,21 @@ const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
     return { profile: res.data }
   }
 )
-const forgotPassword = createAppAsyncThunk<void, ArgForgotType>
-("auth/forgot-password", async (arg) => {
-    await authApi.forgotPassword(arg)
+const logout = createAppAsyncThunk<void>
+("auth/me", async () => {
+    await authApi.logout()
+  }
+)
+const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>
+  ("auth/forgot-password", async (arg) => {
+    const response = await authApi.forgotPassword(arg)
+    console.log("slice ", response.data)
+    return response.data
+  }
+)
+const setNewPassword = createAppAsyncThunk<void, ArgSetNewPasswordType>
+  (`auth/set-new-password/:token`, async (arg) => {
+    await authApi.setNewPassword(arg)
   }
 )
 
@@ -37,11 +50,18 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-      state.profile = action.payload.profile
-      state.isLoggedIn = true
-    })
+        state.profile = action.payload.profile
+        state.isLoggedIn = true
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.profile = null
+        state.isLoggedIn = false
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        console.log(state, action)
+      })
   }
 })
 
-export const authThunks = { register, login, forgotPassword }
+export const authThunks = { register, login, forgotPassword, setNewPassword, logout }
 export const authReducer = slice.reducer

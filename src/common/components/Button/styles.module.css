@@ -17,11 +17,11 @@
 
     cursor: pointer;
     transition: all .3s ease;
-    box-shadow: var(--primary-color--shadow);
 }
 
 .default {
     background: var(--primary-color);
+    box-shadow: var(--primary-color--shadow);
 }
 
 .default:hover {
@@ -32,21 +32,20 @@
     background: var(--primary-color--active);
 }
 
-/*.secondary {*/
-/*    background: #fff;*/
-/*    border: 1px solid #366EFF;*/
-/*    color: #366EFF;*/
-/*}*/
+.secondary {
+    background: var(--white--color);
+    color: var(--primary-color);
+    box-shadow: var(--secondary-color--shadow);
+}
 
-/*.secondary:hover {*/
-/*    background: #E5F0FA;*/
-/*}*/
+.secondary:hover {
+    background: #f1f1f1;
+}
 
-/*.secondary:active {*/
-/*    background-color: #0059B3;*/
-/*    color: #fff;*/
-/*    border: 1px solid #0066CC;*/
-/*}*/
+.secondary:active {
+    background-color: #0059B3;
+    color: var(--white--color);
+}
 
 /*.red {*/
 /*    background: #CC1439;*/

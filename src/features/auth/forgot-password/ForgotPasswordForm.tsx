@@ -1,10 +1,10 @@
-import React from "react"
+import React, {useState} from "react"
 import {Card} from "common/components/Card/Card";
 import {Title} from "common/components/Title/Title";
 import s from "features/auth/styles.module.css";
 import {Footer} from "common/components/Footer/Footer";
 import Button from "common/components/Button/Button";
-import {NavLink} from "react-router-dom";
+import {Navigate, NavLink} from "react-router-dom";
 import i from "common/components/Input/styles.module.css"
 import {TextField} from "@mui/material"
 import {useAppDispatch} from "common/hooks/hooks"
@@ -19,6 +19,7 @@ type FormDataType = {
 export const ForgotPasswordForm = () => {
 
   const dispatch = useAppDispatch()
+  const [sentSuccess, setSentSuccess] = useState(false)
   const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
@@ -27,11 +28,13 @@ export const ForgotPasswordForm = () => {
   })
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    console.log(data)
+    console.log("tsx ", data)
+    setSentSuccess(true)
     dispatch(authThunks.forgotPassword(data))
     reset()
   }
 
+  if (sentSuccess) return <Navigate to={'/check-email'} />
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#">

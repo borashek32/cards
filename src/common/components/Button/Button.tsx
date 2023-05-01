@@ -1,14 +1,15 @@
 import React, {ButtonHTMLAttributes, DetailedHTMLProps} from 'react'
 import s from 'common/components/Button/styles.module.css'
 
-// тип пропсов обычной кнопки, children в котором храниться название кнопки там уже описан
+
 type DefaultButtonPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement>
 
 type SuperButtonPropsType = DefaultButtonPropsType & {
   xType?: string
   name: string
-  callback: () => void
+  callback?: () => void
+  className?: string
 }
 
 const Button: React.FC<SuperButtonPropsType> = (
@@ -18,7 +19,7 @@ const Button: React.FC<SuperButtonPropsType> = (
     xType,
     className,
     disabled,
-    ...restProps // все остальные пропсы попадут в объект restProps, там же будет children
+    ...restProps
   }
 ) => {
 
@@ -33,9 +34,9 @@ const Button: React.FC<SuperButtonPropsType> = (
     <button
       onClick={callback}
       disabled={disabled}
-      className={finalClassName}
+      className={className ? finalClassName + " " + className : finalClassName}
       type={restProps.type}
-      {...restProps} // отдаём кнопке остальные пропсы если они есть (children там внутри)
+      {...restProps}
     >
       {name}
     </button>

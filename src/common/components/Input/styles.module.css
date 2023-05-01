@@ -19,6 +19,7 @@
 
 .inputWrapper {
     height: 50px;
+    position: relative;
 }
 
 .superInput {

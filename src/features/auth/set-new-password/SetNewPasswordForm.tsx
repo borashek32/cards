@@ -8,7 +8,8 @@ import i from "common/components/Input/styles.module.css"
 import {TextField} from "@mui/material"
 import {useAppDispatch} from "common/hooks/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
-import {Navigate} from "react-router-dom"
+import {Navigate, useParams} from "react-router-dom"
+import {authThunks} from "features/auth/auth.slice"
 
 
 type FormDataType = {
@@ -18,7 +19,7 @@ type FormDataType = {
 export const SetNewPasswordForm = () => {
 
   const dispatch = useAppDispatch()
-  const [isRegistered, setIsRegistered] = useState(false)
+  const [newPasswordExists, setNewPasswordExists] = useState(false)
   const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
@@ -26,13 +27,17 @@ export const SetNewPasswordForm = () => {
     }
   })
 
+  const token = useParams()
+  console.log(token)
+
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    setIsRegistered(true)
     console.log(data)
+    dispatch(authThunks.setNewPassword(data))
+    setNewPasswordExists(true)
     reset()
   }
 
-  if (isRegistered) return <Navigate to={"/login"} />
+  if (newPasswordExists) return <Navigate to={"/login"} />
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>
