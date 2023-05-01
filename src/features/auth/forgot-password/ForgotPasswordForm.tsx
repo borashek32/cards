@@ -28,7 +28,6 @@ export const ForgotPasswordForm = () => {
   })
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    console.log("tsx ", data)
     setSentSuccess(true)
     dispatch(authThunks.forgotPassword(data))
     reset()

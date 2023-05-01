@@ -14,30 +14,37 @@ import {authThunks} from "features/auth/auth.slice"
 
 type FormDataType = {
   password: string
+  resetPasswordToken: string
 }
 
 export const SetNewPasswordForm = () => {
 
   const dispatch = useAppDispatch()
   const [newPasswordExists, setNewPasswordExists] = useState(false)
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
+  const {
+    register,
+    handleSubmit,
+    formState:
+      {errors},
+    reset
+  } = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
       password: ''
     }
   })
 
-  const token = useParams()
-  console.log(token)
+  const resetPasswordToken: string | undefined = useParams().token
+  // console.log(resetPasswordToken)
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     console.log(data)
-    dispatch(authThunks.setNewPassword(data))
+    resetPasswordToken && dispatch(authThunks.setNewPassword({...data, resetPasswordToken}))
     setNewPasswordExists(true)
     reset()
   }
 
-  if (newPasswordExists) return <Navigate to={"/login"} />
+  if (newPasswordExists) return <Navigate to={"/login"}/>
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>

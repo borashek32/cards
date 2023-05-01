@@ -4,7 +4,7 @@ import {
   ArgLoginType,
   ArgRegisterType,
   ArgSetNewPasswordType,
-  authApi,
+  authApi, NewPassReqType,
   ProfileType, TokenResponseType
 } from "features/auth/auth.api"
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
@@ -16,7 +16,7 @@ const register = createAppAsyncThunk<void, ArgRegisterType>
   }
 )
 const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
-  ("auth/login", async (arg, thunkAPI) => {
+  ("auth/login", async (arg) => {
     const res = await authApi.login(arg)
     return { profile: res.data }
   }
@@ -33,7 +33,7 @@ const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordT
     return response.data
   }
 )
-const setNewPassword = createAppAsyncThunk<void, ArgSetNewPasswordType>
+const setNewPassword = createAppAsyncThunk<void, NewPassReqType>
   (`auth/set-new-password/:token`, async (arg) => {
     await authApi.setNewPassword(arg)
   }
@@ -56,9 +56,6 @@ const slice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.profile = null
         state.isLoggedIn = false
-      })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        console.log(state, action)
       })
   }
 })

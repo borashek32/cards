@@ -13,8 +13,9 @@ export const authApi = {
   forgotPassword(arg: ArgForgotPasswordType) {
     return instance.post("auth/forgot", arg)
   },
-  setNewPassword(arg: ArgSetNewPasswordType) {
-    return instance.post("/auth/set-new-password", arg)
+  setNewPassword(arg: NewPassReqType) {
+    console.log(arg)
+    return instance.post(`auth/set-new-password/`, arg)
   },
   me() {
     return instance.get("auth/me")
@@ -27,8 +28,17 @@ export type ArgLoginType = {
   rememberMe: boolean
 }
 export type ArgRegisterType = Omit<ArgLoginType, 'rememberMe' | 'isLoggedIn'>
+
 export type ArgForgotPasswordType = Omit<ArgRegisterType, 'password'>
-export type ArgSetNewPasswordType = Omit<ArgRegisterType, 'email'>
+
+export type ArgSetNewPasswordType = {
+  password: string
+  token: string
+}
+export type NewPassReqType = {
+  password: string
+  resetPasswordToken: string
+}
 
 export type TokenResponseType = {
   token: string
