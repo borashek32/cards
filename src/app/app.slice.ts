@@ -23,6 +23,9 @@ const slice = createSlice({
       // т.к. иммутабельность достигается благодаря immer.js
       state.isLoading = action.payload.isLoading;
     },
+    setAppInitialized: (state, action: PayloadAction<{ isAppInitialized: boolean }>) => {
+      state.isAppInitialized = action.payload.isAppInitialized
+    }
   },
 });
 

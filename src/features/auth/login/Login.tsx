@@ -35,7 +35,6 @@ export const Login = () => {
   })
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    console.log(data)
     dispatch(authThunks.login(data))
     reset()
   }

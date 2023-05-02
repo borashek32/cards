@@ -1,14 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit"
+import {createSlice, Dispatch} from "@reduxjs/toolkit"
 import {
   ArgForgotPasswordType,
   ArgLoginType,
   ArgRegisterType,
-  ArgSetNewPasswordType,
   authApi, NewPassReqType,
   ProfileType, TokenResponseType
 } from "features/auth/auth.api"
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
+import {appActions} from "app/app.slice"
 
+
+const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/initializeApp", async (_, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI
+  try {
+    const res = await authApi.me()
+    if (res.data) {
+      return { isLoggedIn: true }
+    } else {
+      return rejectWithValue(null)
+    }
+  } catch (e) {
+    console.log(e)
+    return rejectWithValue(null)
+  } finally {
+    dispatch(appActions.setAppInitialized({ isAppInitialized: true }))
+  }
+})
 
 const register = createAppAsyncThunk<void, ArgRegisterType>
   ("auth/sign-up", async (arg) => {
@@ -57,8 +74,12 @@ const slice = createSlice({
         state.profile = null
         state.isLoggedIn = false
       })
+      .addCase(initializeApp.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload.isLoggedIn
+        state.isLoggedIn = true
+      })
   }
 })
 
-export const authThunks = { register, login, forgotPassword, setNewPassword, logout }
+export const authThunks = { register, login, forgotPassword, setNewPassword, logout, initializeApp }
 export const authReducer = slice.reducer
