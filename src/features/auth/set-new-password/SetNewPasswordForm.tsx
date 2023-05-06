@@ -6,10 +6,10 @@ import {Footer} from "common/components/Footer/Footer";
 import Button from "common/components/Button/Button";
 import i from "common/components/Input/styles.module.css"
 import {TextField} from "@mui/material"
-import {useAppDispatch} from "common/hooks/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {Navigate, useParams} from "react-router-dom"
 import {authThunks} from "features/auth/auth.slice"
+import {useAppDispatch} from "common/hooks/use-add-dispatch"
 
 
 type FormDataType = {
@@ -24,8 +24,7 @@ export const SetNewPasswordForm = () => {
   const {
     register,
     handleSubmit,
-    formState:
-      {errors},
+    formState: {errors},
     reset
   } = useForm<FormDataType>({
     mode: "onChange",
@@ -35,10 +34,8 @@ export const SetNewPasswordForm = () => {
   })
 
   const resetPasswordToken: string | undefined = useParams().token
-  // console.log(resetPasswordToken)
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    console.log(data)
     resetPasswordToken && dispatch(authThunks.setNewPassword({...data, resetPasswordToken}))
     setNewPasswordExists(true)
     reset()

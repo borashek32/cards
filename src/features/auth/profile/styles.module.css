@@ -36,7 +36,7 @@
 }
 .profile__userNameWrapper {
     display: flex;
-    gap: 20px;
+    gap: 6px;
     align-items: center;
     justify-content: center;
     height: 50px;
@@ -46,6 +46,7 @@
     line-height: 24px;
 }
 .profile__editImg {
+    margin-top: 5px;
     cursor: pointer;
 }
 .profile__userEmail {

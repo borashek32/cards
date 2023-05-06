@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "common/hooks/hooks";
 import { appActions } from "app/app.slice";
 import {Header} from "features/header/Header"
 import {Layout} from "features/layout/Layout"
@@ -16,6 +15,9 @@ import {Learn} from "features/learn/Learn"
 import Stand from "common/components/Stand"
 import Error404 from "common/errors/404/Error404"
 import {authThunks} from "features/auth/auth.slice"
+import {LinearProgress} from "@mui/material"
+import {useAppDispatch} from "common/hooks/use-add-dispatch"
+import {useAppSelector} from "common/hooks/use-add-selector"
 
 
 function App() {
@@ -33,7 +35,7 @@ function App() {
     <div className="App">
       <Header/>
       <Layout>
-        {isLoading && <h1>Loader...</h1>}
+        {isLoading && <div style={{marginTop: "-60px", marginBottom: "60px"}}><LinearProgress /></div>}
         <HashRouter>
           <Routes>
             <Route path="/" element={<Login/>}/>

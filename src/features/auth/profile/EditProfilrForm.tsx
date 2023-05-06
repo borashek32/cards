@@ -2,25 +2,38 @@ import {TextField} from "@mui/material"
 import i from "common/components/Input/styles.module.css"
 import styles from "features/auth/profile/styles.module.css"
 import Button from "common/components/Button/Button"
-import React from "react"
-import {useForm} from "react-hook-form"
+import React, {FC, useEffect} from "react"
+import {SubmitHandler, useForm} from "react-hook-form"
+import {authThunks} from "features/auth/auth.slice"
+import {useAppDispatch} from "common/hooks"
 
 
-type FormDataType = {
+type Props = {
+  userName: string | null
+  editMode: boolean
+  setEditMode: (editMode: boolean) => void
+}
+export type FormDataType = {
   name: string
 }
 
-export const EditProfileForm = () => {
+export const EditProfileForm: FC<Props> = ({userName,editMode, setEditMode}) => {
 
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
-    mode: "onChange",
-    defaultValues: {
-      name: ''
-    }
-  })
+  const dispatch = useAppDispatch()
+  const {register, formState: {errors}, handleSubmit, setValue} = useForm<FormDataType>({mode: "onChange"})
+
+  useEffect(() => {
+    userName && setValue("name", userName)
+  }, [])
+
+  const onSubmit: SubmitHandler<FormDataType> = (data) => {
+    dispatch(authThunks.updateProfile(data))
+    setEditMode(false)
+  }
+
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>
       <TextField
         label={"User Name"}
         variant={"standard"}
@@ -40,6 +53,6 @@ export const EditProfileForm = () => {
         <Button name={"SAVE"} xType={"default"} className={styles.profile__buttonSaveUserInfo}/>
       </div>
       {errors.name && <span className={i.error}>{errors.name.message}</span>}
-    </>
+    </form>
   )
 }

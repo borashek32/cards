@@ -1,7 +1,8 @@
 import React from 'react'
 import s from 'features/header/styles.module.css'
 import s1 from 'app/App.module.css'
-import logo from 'img/logo.svg'
+import logo from 'assets/img/logo.svg'
+import cat from 'assets/img/catYellow.jpg'
 
 
 export const Header = () => {
@@ -13,7 +14,7 @@ export const Header = () => {
           <img src={logo} alt="IT-incubator Logo" className={s.header__logo} />
           <div className={s.header__userSection}>
             <p className={s.header__userName}>User</p>
-            <img src="https://static.vecteezy.com/system/resources/previews/002/410/747/original/cute-siamese-cat-on-yellow-background-free-photo.jpg"
+            <img src={cat}
                  alt="user img"
                  className={s.header__userImg}/>
           </div>

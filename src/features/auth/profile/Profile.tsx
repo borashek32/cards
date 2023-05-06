@@ -1,34 +1,45 @@
-import {useAppDispatch} from "common/hooks/hooks"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
 import {SubmitHandler, useForm} from "react-hook-form"
 import styles from "features/auth/profile/styles.module.css"
-import edit from "img/edit.svg"
-import editPhoto from "img/editPhoto.svg"
+import edit from "assets/img/edit.svg"
+import editPhoto from "assets/img/editPhoto.svg"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
 import i from "common/components/Input/styles.module.css"
 import {EditProfileForm} from "features/auth/profile/EditProfilrForm"
 import {authThunks} from "features/auth/auth.slice"
 import {useSelector} from "react-redux"
-import {selectIsLoggedIn} from "features/auth/auth.selectors"
+import {selectIsLoggedIn, selectProfile} from "features/auth/auth.selectors"
 import {Navigate} from "react-router-dom"
+import {useAppDispatch} from "common/hooks"
+import cat from 'assets/img/catYellow.jpg'
 
 
 export const Profile = () => {
 
   const dispatch = useAppDispatch()
   const isLoggedIn = useSelector(selectIsLoggedIn)
+  const profile = useSelector(selectProfile)
   const [editMode, setEditMode] = useState(false)
-  const {handleSubmit} = useForm()
+  const {handleSubmit, setValue} = useForm()
+  const ifProfileExists = profile && profile.name
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data)
-    dispatch(authThunks.logout())
+  useEffect(() => {
+    console.log("useEffect")
+    dispatch(authThunks.authMe())
+  }, [ifProfileExists, dispatch])
+
+  const onSubmit: SubmitHandler<any> = () => dispatch(authThunks.logout())
+
+  if (!isLoggedIn) return <Navigate to={"/login"}/>
+
+  const onEditMode = () => {
+    setEditMode(true)
+    setValue("name", profile && profile.name)
   }
 
-  if (!isLoggedIn) return <Navigate to={"/login"} />
 
   return (
     <Card id={'cards-profile'}>
@@ -36,7 +47,7 @@ export const Profile = () => {
       <div className={styles.profile__wrapper}>
         <div className={styles.profile__userPhotoWrapper}>
           <img
-            src="https://static.vecteezy.com/system/resources/previews/002/410/747/original/cute-siamese-cat-on-yellow-background-free-photo.jpg"
+            src={cat}
             alt="user img"
             className={styles.profile__userPhoto}/>
           <div className={styles.profile__editPhotoWrapper}>
@@ -46,14 +57,14 @@ export const Profile = () => {
 
         <div className={styles.profile__userInfoWrapper}>
           {!editMode ? <div className={styles.profile__userNameWrapper}>
-              <p className={styles.profile__userName}>userName</p>
-              <img src={edit} alt="edit profile" onClick={() => setEditMode(true)} className={styles.profile__editImg}/>
+              <p className={styles.profile__userName}>{profile && profile.name}</p>
+              <img src={edit} alt="edit profile" onClick={onEditMode} className={styles.profile__editImg}/>
             </div>
             : <div className={i.inputWrapper + " " + styles.profile__inputWrapper + ' ' +
               (editMode && styles.profile__inputWrapperFadeIn)}>
-              <EditProfileForm />
+              <EditProfileForm userName={profile && profile.name} editMode={editMode} setEditMode={setEditMode} />
             </div>}
-          <p className={styles.profile__userEmail}>userEmail@gmail.com</p>
+          <p className={styles.profile__userEmail}>{profile && profile.email}</p>
         </div>
 
         <Footer>

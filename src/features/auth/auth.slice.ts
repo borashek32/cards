@@ -1,16 +1,12 @@
-import {createSlice, Dispatch} from "@reduxjs/toolkit"
-import {
-  ArgForgotPasswordType,
-  ArgLoginType,
-  ArgRegisterType,
-  authApi, NewPassReqType,
-  ProfileType, TokenResponseType
-} from "features/auth/auth.api"
-import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
+import {createSlice} from "@reduxjs/toolkit"
+import {ArgForgotPasswordType, ArgLoginType, ArgRegisterType, authApi, NewPassReqType, ProfileType, TokenResponseType, UpdateProfileDataType} from "features/auth/auth.api"
+import { createAppAsyncThunk } from "common/utils/create-app-async-thunk"
 import {appActions} from "app/app.slice"
+import {thunkTryCatch} from "common/utils/thunk-try-catch"
 
 
-const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/initializeApp", async (_, thunkAPI) => {
+const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
+("app/initialize-app", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
   try {
     const res = await authApi.me()
@@ -20,48 +16,55 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/in
       return rejectWithValue(null)
     }
   } catch (e) {
-    console.log(e)
     return rejectWithValue(null)
   } finally {
     dispatch(appActions.setAppInitialized({ isAppInitialized: true }))
   }
 })
-
+const authMe = createAppAsyncThunk<{ profile: ProfileType }>
+('auth/me', async () => {
+  const res = await authApi.me()
+  return { profile: res.data }
+})
 const register = createAppAsyncThunk<void, ArgRegisterType>
-  ("auth/sign-up", async (arg) => {
+("auth/register", async (arg: ArgRegisterType, thunkAPI) => {
+  return thunkTryCatch(thunkAPI, async () => {
     await authApi.register(arg)
-  }
-)
+  }, false)
+})
 const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
-  ("auth/login", async (arg) => {
-    const res = await authApi.login(arg)
-    return { profile: res.data }
-  }
-)
+("auth/login", async (arg, thunkAPI) => {
+  return thunkTryCatch(thunkAPI, async () => {
+    const res = await authApi.login(arg);
+    return { profile: res.data };
+  }, false);
+})
 const logout = createAppAsyncThunk<void>
-("auth/me", async () => {
-    await authApi.logout()
-  }
-)
+("auth/logout", async () => {
+  await authApi.logout()
+})
 const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>
-  ("auth/forgot-password", async (arg) => {
-    const response = await authApi.forgotPassword(arg)
-    console.log("slice ", response.data)
-    return response.data
-  }
-)
+("auth/forgot-password", async (arg) => {
+  const response = await authApi.forgotPassword(arg)
+  return response.data
+})
 const setNewPassword = createAppAsyncThunk<void, NewPassReqType>
-  (`auth/set-new-password/:token`, async (arg) => {
-    await authApi.setNewPassword(arg)
-  }
-)
+(`auth/set-new-password/:token`, async (arg) => {
+  await authApi.setNewPassword(arg)
+})
+const updateProfile = createAppAsyncThunk<{ profile: ProfileType }, UpdateProfileDataType>
+("auth/update-profile-data", async (arg) => {
+  const res = await authApi.updateProfileData(arg)
+  return { profile: res.data }
+})
 
 
 const slice = createSlice({
   name: "auth",
   initialState: {
     profile: null as ProfileType | null,
-    isLoggedIn: false
+    isLoggedIn: false,
+    authError: ''
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -78,8 +81,27 @@ const slice = createSlice({
         state.isLoggedIn = action.payload.isLoggedIn
         state.isLoggedIn = true
       })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.profile = action.payload.profile
+      })
+      .addCase(authMe.fulfilled, (state, action) => {
+        state.profile = action.payload.profile
+      })
+      // how to work with errors
+      // .addCase(register.rejected, (state, action) => {
+      //   state.authError = action.payload
+      // })
   }
 })
 
-export const authThunks = { register, login, forgotPassword, setNewPassword, logout, initializeApp }
+export const authThunks = {
+  register,
+  login,
+  forgotPassword,
+  setNewPassword,
+  logout,
+  initializeApp ,
+  updateProfile,
+  authMe
+}
 export const authReducer = slice.reducer

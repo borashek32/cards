@@ -1,24 +1,27 @@
 import { instance } from "common/api/common.api"
 
 export const authApi = {
-  register(arg: ArgRegisterType) {
+  register: (arg: ArgRegisterType) => {
     return instance.post<RegisterResponseType>("auth/register", arg)
   },
-  login(arg: ArgLoginType) {
+  login: (arg: ArgLoginType) => {
     return instance.post<ProfileType>("auth/login", arg)
   },
-  logout() {
+  logout: () => {
     return instance.delete("auth/me")
   },
-  forgotPassword(arg: ArgForgotPasswordType) {
+  forgotPassword: (arg: ArgForgotPasswordType) => {
     return instance.post("auth/forgot", arg)
   },
-  setNewPassword(arg: NewPassReqType) {
+  setNewPassword: (arg: NewPassReqType) => {
     return instance.post(`auth/set-new-password/`, arg)
   },
-  me() {
-    return instance.post("auth/me")
+  me: () => {
+    return instance.post<ProfileType>("auth/me")
   },
+  updateProfileData: (arg: UpdateProfileDataType) => {
+    return instance.put<ProfileType>('auth/me', arg)
+  }
 }
 
 export type ArgLoginType = {
@@ -34,14 +37,12 @@ export type NewPassReqType = {
   password: string
   resetPasswordToken: string
 }
-
 export type TokenResponseType = {
   token: string
 }
 export type RegisterResponseType = {
   addedUser: Omit<ProfileType, 'token' | 'tokenDeathTime'>
 }
-
 export type ProfileType = {
   _id: string
   email: string
@@ -55,4 +56,7 @@ export type ProfileType = {
   __v: number
   token: string
   tokenDeathTime: number
+}
+export type UpdateProfileDataType = {
+  name: string
 }

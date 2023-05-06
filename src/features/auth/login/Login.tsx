@@ -1,4 +1,3 @@
-import {useAppDispatch} from "common/hooks/hooks"
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
 import React from "react"
@@ -13,6 +12,8 @@ import {selectIsLoggedIn} from "features/auth/auth.selectors"
 import i from "common/components/Input/styles.module.css"
 import c from "common/components/Checkbox/styles.module.css"
 import {TextField} from "@mui/material"
+import {useAppDispatch} from "common/hooks"
+import {toast} from "react-toastify"
 
 
 type FormDataType = {
@@ -24,6 +25,8 @@ type FormDataType = {
 export const Login = () => {
 
   const dispatch = useAppDispatch()
+  // here it's not useful
+  // const navigate = useNavigate()
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
     mode: "onChange",
@@ -36,11 +39,22 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     dispatch(authThunks.login(data))
-    reset()
+      // unwrap is used everytime with then and catch
+      .unwrap()
+      .then((res) =>{
+        toast.success("You are logged in successfully")
+        reset()
+          // here it's not useful
+          // setTimeout(() => {
+          //   navigate('/profile')
+          // }, 1000)
+        })
+      .catch((err) => {
+        toast.error(err.e.response.data.error)
+      })
   }
 
   if (isLoggedIn) return <Navigate to={"/profile"}/>
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>

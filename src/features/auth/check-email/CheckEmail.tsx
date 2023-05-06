@@ -2,7 +2,7 @@ import React from "react"
 import { Card } from "common/components/Card/Card";
 import { Title } from "common/components/Title/Title";
 import s from "features/auth/styles.module.css";
-import email from "img/email.svg";
+import email from "assets/img/email.svg";
 import { Footer } from "common/components/Footer/Footer";
 import Button from "common/components/Button/Button";
 

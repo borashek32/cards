@@ -1,7 +1,6 @@
 import s from 'features/auth/styles.module.css'
-import {useAppDispatch} from "common/hooks/hooks"
 import {authThunks} from "features/auth/auth.slice"
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Title} from "common/components/Title/Title"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
@@ -10,6 +9,9 @@ import {Card} from "common/components/Card/Card"
 import i from "common/components/Input/styles.module.css"
 import {useForm} from "react-hook-form"
 import {TextField} from "@mui/material"
+import {useAppDispatch} from "common/hooks/use-add-dispatch"
+import {unHandleAction} from "common/actions/unhandle.action"
+import {toast} from "react-toastify"
 
 
 type FormDataType = {
@@ -19,6 +21,10 @@ type FormDataType = {
 }
 
 export const SignUpForm = () => {
+
+  useEffect(() => {
+    dispatch(unHandleAction())
+  }, [])
 
   const dispatch = useAppDispatch()
   const [isRegistered, setIsRegistered] = useState(false)
@@ -37,8 +43,13 @@ export const SignUpForm = () => {
 
   const onSubmit = (data: FormDataType) => {
     dispatch(authThunks.register(data))
-    setIsRegistered(true)
-    reset()
+      .unwrap()
+      .then(() => {
+        toast.success("You are registered successfully")
+      })
+      .catch((err) => {
+        toast.error(err.e.response.data.error)
+      })
   }
 
   return (

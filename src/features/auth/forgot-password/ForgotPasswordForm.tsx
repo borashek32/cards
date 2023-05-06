@@ -1,15 +1,15 @@
 import React, {useState} from "react"
-import {Card} from "common/components/Card/Card";
-import {Title} from "common/components/Title/Title";
-import s from "features/auth/styles.module.css";
-import {Footer} from "common/components/Footer/Footer";
-import Button from "common/components/Button/Button";
-import {Navigate, NavLink} from "react-router-dom";
+import {Card} from "common/components/Card/Card"
+import {Title} from "common/components/Title/Title"
+import s from "features/auth/styles.module.css"
+import {Footer} from "common/components/Footer/Footer"
+import Button from "common/components/Button/Button"
+import {Navigate, NavLink} from "react-router-dom"
 import i from "common/components/Input/styles.module.css"
 import {TextField} from "@mui/material"
-import {useAppDispatch} from "common/hooks/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
+import {useAppDispatch} from "common/hooks"
 
 
 type FormDataType = {
