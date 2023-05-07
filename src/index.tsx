@@ -75,12 +75,10 @@ const root = createRoot(container);
 // ]);
 
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <GlobalAppError />
-      <App />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <GlobalAppError/>
+    <App/>
+  </Provider>
 );
 
 reportWebVitals();

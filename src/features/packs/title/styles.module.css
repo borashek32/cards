@@ -1,0 +1,11 @@
+.pack__titleWrapper {
+    display: flex;
+    align-items: center;
+    height: 108px;
+    justify-content: space-between;
+}
+.packs__title {
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 27px;
+}

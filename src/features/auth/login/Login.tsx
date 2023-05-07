@@ -1,6 +1,6 @@
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
-import React from "react"
+import React, {useState} from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
 import {Navigate, NavLink} from "react-router-dom"
@@ -14,6 +14,7 @@ import c from "common/components/Checkbox/styles.module.css"
 import {TextField} from "@mui/material"
 import {useAppDispatch} from "common/hooks"
 import {toast} from "react-toastify"
+import eye from 'assets/img/eye.svg'
 
 
 type FormDataType = {
@@ -25,6 +26,7 @@ type FormDataType = {
 export const Login = () => {
 
   const dispatch = useAppDispatch()
+  const [isPasswordInputType, setIsPasswordInputType] = useState(true)
   // here it's not useful
   // const navigate = useNavigate()
   const isLoggedIn = useSelector(selectIsLoggedIn)
@@ -41,7 +43,7 @@ export const Login = () => {
     dispatch(authThunks.login(data))
       // unwrap is used everytime with then and catch
       .unwrap()
-      .then((res) =>{
+      .then((res) => {
         toast.success("You are logged in successfully")
         reset()
           // here it's not useful
@@ -96,8 +98,17 @@ export const Login = () => {
                 },
                 minLength: 8
               }))}
-              type="password"
+              type={isPasswordInputType ? "password" : "text"}
             />
+            <div className={i.eyeWrapper}>
+              <img
+                src={eye}
+                alt="password hidden img"
+                className={i.eye}
+                onClick={() => setIsPasswordInputType(!isPasswordInputType)}
+              />
+              {isPasswordInputType && <hr className={i.hr}/>}
+            </div>
             {errors.password && <span className={i.error}>{errors.password.message}</span>}
           </div>
         </div>

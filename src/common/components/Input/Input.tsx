@@ -5,20 +5,21 @@ import React from "react"
 
 
 type Props = {
-  label: string
+  placeholder: string
+  label?: string
   type: string
-  options: any
+  options?: any
 }
 
-export const Input: FC<Props> = ({label, type, options}) => {
+export const Input: FC<Props> = ({placeholder, label, type, options}) => {
 
   return (
-    <TextField
+    <Input
       label={label}
-      variant={"standard"}
-      autoComplete="off"
-      placeholder={label}
-      className={i.input}
+      // variant={"outlined"}
+      // autoComplete="off"
+      placeholder={placeholder}
+      // className={i.input}
       type={type}
     />
   )

@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {Title} from "common/components/Title/Title"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
-import {Navigate, NavLink} from "react-router-dom"
+import {Navigate, NavLink, useNavigate} from "react-router-dom"
 import {Card} from "common/components/Card/Card"
 import i from "common/components/Input/styles.module.css"
 import {useForm} from "react-hook-form"
@@ -12,6 +12,7 @@ import {TextField} from "@mui/material"
 import {useAppDispatch} from "common/hooks/use-add-dispatch"
 import {unHandleAction} from "common/actions/unhandle.action"
 import {toast} from "react-toastify"
+import eye from "assets/img/eye.svg"
 
 
 type FormDataType = {
@@ -27,7 +28,8 @@ export const SignUpForm = () => {
   }, [])
 
   const dispatch = useAppDispatch()
-  const [isRegistered, setIsRegistered] = useState(false)
+  const navigate = useNavigate()
+  const [isPasswordInputType, setIsPasswordInputType] = useState(true)
   const {register, handleSubmit, formState: {errors}, reset, watch} = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
@@ -37,8 +39,6 @@ export const SignUpForm = () => {
     }
   })
 
-  if (isRegistered) return <Navigate to={"/login"} />
-
   const password = watch("password", "")
 
   const onSubmit = (data: FormDataType) => {
@@ -46,6 +46,7 @@ export const SignUpForm = () => {
       .unwrap()
       .then(() => {
         toast.success("You are registered successfully")
+        navigate("/login")
       })
       .catch((err) => {
         toast.error(err.e.response.data.error)
@@ -96,8 +97,17 @@ export const SignUpForm = () => {
                   message: "Password is too short, min length is 8 symbols"
                 }
               }))}
-              type="password"
+              type={isPasswordInputType ? "password" : "text"}
             />
+            <div className={i.eyeWrapper}>
+              <img
+                src={eye}
+                alt="password hidden img"
+                className={i.eye}
+                onClick={() => setIsPasswordInputType(!isPasswordInputType)}
+              />
+              {isPasswordInputType && <hr className={i.hr}/>}
+            </div>
             {errors.password && <span className={i.error}>{errors.password.message}</span>}
           </div>
 
@@ -115,15 +125,23 @@ export const SignUpForm = () => {
                 },
                 minLength: 8
               }))}
-              type="password"
+              type={isPasswordInputType ? "password" : "text"}
             />
+            <div className={i.eyeWrapper}>
+              <img
+                src={eye}
+                alt="password hidden img"
+                className={i.eye}
+                onClick={() => setIsPasswordInputType(!isPasswordInputType)}
+              />
+              {isPasswordInputType && <hr className={i.hr}/>}
+            </div>
             {errors.confirmPassword && <span className={i.error}>{errors.confirmPassword.message}</span>}
           </div>
         </div>
 
         <Footer>
-          <Button callback={() => {
-          }} name={"Sign up"} xType={"default"}/>
+          <Button name={"Sign up"} xType={"default"}/>
           <p className={s.auth__alreadyHaveAcc}>Already have an account?</p>
           <NavLink to={"/login"}>
             <p className={s.auth__redirect}>Sign in</p>

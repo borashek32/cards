@@ -47,6 +47,19 @@
     color: var(--white--color);
 }
 
+.buttonWrapper {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonNameBlack {
+    color: var(--black-color)
+}
+.buttonNameWhite {
+    color: var(--white--color)
+}
 /*.red {*/
 /*    background: #CC1439;*/
 /*}*/

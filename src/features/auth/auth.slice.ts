@@ -1,25 +1,23 @@
 import {createSlice} from "@reduxjs/toolkit"
-import {ArgForgotPasswordType, ArgLoginType, ArgRegisterType, authApi, NewPassReqType, ProfileType, TokenResponseType, UpdateProfileDataType} from "features/auth/auth.api"
+import {ArgForgotPasswordType, ArgLoginType, ArgRegisterType, NewPassReqType, ProfileType, TokenResponseType, UpdateProfileDataType} from "common/types/types"
 import { createAppAsyncThunk } from "common/utils/create-app-async-thunk"
-import {appActions} from "app/app.slice"
 import {thunkTryCatch} from "common/utils/thunk-try-catch"
+import {authApi} from "features/auth/auth.api"
+import {appActions} from "app/app.slice"
 
 
 const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
 ("app/initialize-app", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
-  try {
+  dispatch(appActions.setAppInitialized({ isAppInitialized: true }))
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await authApi.me()
     if (res.data) {
       return { isLoggedIn: true }
     } else {
       return rejectWithValue(null)
     }
-  } catch (e) {
-    return rejectWithValue(null)
-  } finally {
-    dispatch(appActions.setAppInitialized({ isAppInitialized: true }))
-  }
+  }, false)
 })
 const authMe = createAppAsyncThunk<{ profile: ProfileType }>
 ('auth/me', async () => {

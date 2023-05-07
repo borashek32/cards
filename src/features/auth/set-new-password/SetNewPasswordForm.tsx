@@ -10,6 +10,7 @@ import {SubmitHandler, useForm} from "react-hook-form"
 import {Navigate, useParams} from "react-router-dom"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks/use-add-dispatch"
+import eye from "assets/img/eye.svg"
 
 
 type FormDataType = {
@@ -20,6 +21,7 @@ type FormDataType = {
 export const SetNewPasswordForm = () => {
 
   const dispatch = useAppDispatch()
+  const [isPasswordInputType, setIsPasswordInputType] = useState(true)
   const [newPasswordExists, setNewPasswordExists] = useState(false)
   const {
     register,
@@ -66,8 +68,17 @@ export const SetNewPasswordForm = () => {
                   message: "Password is too short, min length is 8 symbols"
                 }
               }))}
-              type="password"
+              type={isPasswordInputType ? "password" : "text"}
             />
+            <div className={i.eyeWrapper}>
+              <img
+                src={eye}
+                alt="password hidden img"
+                className={i.eye}
+                onClick={() => setIsPasswordInputType(!isPasswordInputType)}
+              />
+              {isPasswordInputType && <hr className={i.hr}/>}
+            </div>
             {errors.password && <span className={i.error}>{errors.password.message}</span>}
           </div>
         </div>

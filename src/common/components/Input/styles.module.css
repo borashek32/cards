@@ -61,4 +61,21 @@
     top: 53%;
     cursor: pointer;
 }
-
+.eyeWrapper {
+    position: relative;
+}
+.eye {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    cursor: pointer;
+}
+.hr {
+    position: absolute;
+    right: 0;
+    bottom: 4px;
+    border: 1px solid var(--black-color);
+    transform: rotate(45deg);
+    width: 23px;
+    height: 1px;
+}

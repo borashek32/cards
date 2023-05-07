@@ -65,3 +65,8 @@ input::-webkit-inner-spin-button {
     transition: background-color 5000s ease-in-out 0s;
     font-size: 16px;
 }
+button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}

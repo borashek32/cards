@@ -1,0 +1,13 @@
+.nav {
+    display: flex;
+    justify-content: space-around;
+}
+.nav__search {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.nav__searchTitle {
+    font-size: 14px;
+    line-height: 17px;
+}

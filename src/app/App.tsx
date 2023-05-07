@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { appActions } from "app/app.slice";
+import React, {useEffect} from "react";
+import {appActions} from "app/app.slice";
 import {Header} from "features/header/Header"
 import {Layout} from "features/layout/Layout"
 import {HashRouter, Route, Routes} from "react-router-dom"
@@ -18,47 +18,51 @@ import {authThunks} from "features/auth/auth.slice"
 import {LinearProgress} from "@mui/material"
 import {useAppDispatch} from "common/hooks/use-add-dispatch"
 import {useAppSelector} from "common/hooks/use-add-selector"
+import {toast} from "react-toastify"
 
 
 function App() {
-  const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.app.isLoading);
+
+  const dispatch = useAppDispatch()
+  const isLoading = useAppSelector((state) => state.app.isLoading)
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch(authThunks.initializeApp())
       dispatch(appActions.setIsLoading({isLoading: false}))
-    }, 3000);
-  }, []);
+    }, 2000)
+    dispatch(authThunks.initializeApp())
+      .unwrap()
+      .catch((err) => {
+        toast.error(err.e.response.data.error + " Register or log in, please")
+      })
+  }, [dispatch])
 
   return (
-    <div className="App">
-      <Header/>
+    <HashRouter>
       <Layout>
-        {isLoading && <div style={{marginTop: "-60px", marginBottom: "60px"}}><LinearProgress /></div>}
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<Login/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/sign-up" element={<SignUpForm/>}/>
-            <Route path="/set-new-password/:token" element={<SetNewPasswordForm/>}/>
-            <Route path="/forgot-password" element={<ForgotPasswordForm/>}/>
-            <Route path="/check-email" element={<CheckEmail/>}/>
+        <Header/>
+        {isLoading && <div style={{paddingTop: "60px", marginBottom: "-60px"}}><LinearProgress/></div>}
+        <Routes>
+          <Route path="/" element={<Login/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/sign-up" element={<SignUpForm/>}/>
+          <Route path="/set-new-password/:token" element={<SetNewPasswordForm/>}/>
+          <Route path="/forgot-password" element={<ForgotPasswordForm/>}/>
+          <Route path="/check-email" element={<CheckEmail/>}/>
 
-            <Route path="/profile" element={<Profile/>}/>
+          <Route path="/profile" element={<Profile/>}/>
 
-            <Route path="/cards" element={<Cards/>}/>
-            <Route path="/packs" element={<Packs/>}/>
-            <Route path="/learn" element={<Learn/>}/>
+          <Route path="/cards" element={<Cards/>}/>
+          <Route path="/packs" element={<Packs/>}/>
+          <Route path="/learn" element={<Learn/>}/>
 
-            <Route path="/stand" element={<Stand/>}/>
+          <Route path="/stand" element={<Stand/>}/>
 
-            <Route path="/error" element={<Error404/>}/>
-            <Route path="/*" element={<Error404/>}/>
-          </Routes>
-        </HashRouter>
+          <Route path="/error" element={<Error404/>}/>
+          <Route path="/*" element={<Error404/>}/>
+        </Routes>
       </Layout>
-    </div>
+    </HashRouter>
   );
 }
 

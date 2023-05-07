@@ -10,6 +10,7 @@ type SuperButtonPropsType = DefaultButtonPropsType & {
   name: string
   callback?: () => void
   className?: string
+  imgPath?: string
 }
 
 const Button: React.FC<SuperButtonPropsType> = (
@@ -19,12 +20,13 @@ const Button: React.FC<SuperButtonPropsType> = (
     xType,
     className,
     disabled,
+    imgPath,
     ...restProps
   }
 ) => {
 
   const finalClassName = s.button
-      + (disabled ? ' ' + s.disabled
+    + (disabled ? ' ' + s.disabled
       : xType === 'default' ? ' ' + s.default
         : xType === 'red' ? ' ' + s.red
           : xType === 'secondary' ? ' ' + s.secondary
@@ -38,7 +40,10 @@ const Button: React.FC<SuperButtonPropsType> = (
       type={restProps.type}
       {...restProps}
     >
-      {name}
+      <div className={s.buttonWrapper}>
+        {imgPath && <img src={imgPath} alt="log out"/>}
+        <p className={imgPath ? s.buttonNameBlack : s.buttonNameWhite}>{name}</p>
+      </div>
     </button>
   )
 }

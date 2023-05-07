@@ -12,28 +12,32 @@ import {EditProfileForm} from "features/auth/profile/EditProfilrForm"
 import {authThunks} from "features/auth/auth.slice"
 import {useSelector} from "react-redux"
 import {selectIsLoggedIn, selectProfile} from "features/auth/auth.selectors"
-import {Navigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import {useAppDispatch} from "common/hooks"
 import cat from 'assets/img/catYellow.jpg'
+import logout from 'assets/img/logout.svg'
 
 
 export const Profile = () => {
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const profile = useSelector(selectProfile)
   const [editMode, setEditMode] = useState(false)
-  const {handleSubmit, setValue} = useForm()
+  const {setValue} = useForm()
   const ifProfileExists = profile && profile.name
 
+  // we send query to auth/me to get profile data
   useEffect(() => {
-    console.log("useEffect")
     dispatch(authThunks.authMe())
+    !isLoggedIn && navigate('/login')
   }, [ifProfileExists, dispatch])
 
-  const onSubmit: SubmitHandler<any> = () => dispatch(authThunks.logout())
-
-  if (!isLoggedIn) return <Navigate to={"/login"}/>
+  // log out
+  const onSubmit: SubmitHandler<any> = () => {
+    dispatch(authThunks.logout())
+  }
 
   const onEditMode = () => {
     setEditMode(true)
@@ -62,15 +66,13 @@ export const Profile = () => {
             </div>
             : <div className={i.inputWrapper + " " + styles.profile__inputWrapper + ' ' +
               (editMode && styles.profile__inputWrapperFadeIn)}>
-              <EditProfileForm userName={profile && profile.name} editMode={editMode} setEditMode={setEditMode} />
+              <EditProfileForm userName={profile && profile.name} editMode={editMode} setEditMode={setEditMode}/>
             </div>}
           <p className={styles.profile__userEmail}>{profile && profile.email}</p>
         </div>
 
         <Footer>
-          <form onSubmit={handleSubmit(onSubmit)} action="#">
-            <Button name={"Log out"} xType={"secondary"}/>
-          </form>
+          <Button onClick={onSubmit} name={"Log out"} xType={"secondary"} imgPath={logout}/>
         </Footer>
       </div>
     </Card>

@@ -11,8 +11,10 @@ type PropsType = {
 export const Card: FC<PropsType> = ({children, id}) => {
 
   return (
-    <div className={s.card} id={id}>
-      {children}
+    <div className={s.cardWrapper}>
+      <div className={s.card} id={id}>
+        {children}
+      </div>
     </div>
   )
 }
