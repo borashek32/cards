@@ -39,8 +39,8 @@ function App() {
 
   return (
     <HashRouter>
+      <Header/>
       <Layout>
-        <Header/>
         {isLoading && <div style={{paddingTop: "60px", marginBottom: "-60px"}}><LinearProgress/></div>}
         <Routes>
           <Route path="/" element={<Login/>}/>

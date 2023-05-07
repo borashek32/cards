@@ -1,13 +1,65 @@
 .nav {
     display: flex;
     justify-content: space-around;
+    gap: 24px;
 }
-.nav__search {
+.nav__position {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 8px;
 }
-.nav__searchTitle {
+.nav__filterTitle {
     font-size: 14px;
     line-height: 17px;
+}
+.nav__showPackCards {
+    width: 196px;
+}
+.nav__filterButtonsWrapper {
+    display: flex;
+
+}
+.nav__filterButton {
+    cursor: pointer;
+    height: 36px;
+    width: 98px;
+    border: var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav__filterButton_active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.nav__rangeWrapper {
+    display: flex;
+    gap: 18px;
+    align-items: flex-end;
+}
+.nav__rangeInput {
+    width: 36px;
+    height: 36px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    border: var(--border);
+}
+.rangeInput::placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav__buttonWrapper {
+    display: flex;
+    align-items: flex-end;
+}
+.nav__buttonNoFilters {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: var(--border)
 }

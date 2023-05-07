@@ -1,0 +1,20 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    color: var(--color-text);
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.text1 {
+    color: var(--color-text);
+}
+
+.text2 {
+    color: var(--color-text);
+}

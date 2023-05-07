@@ -1,6 +1,5 @@
 import React from 'react'
 import s from 'features/header/styles.module.css'
-import s1 from 'app/App.module.css'
 import logo from 'assets/img/logo.svg'
 import {useSelector} from "react-redux"
 import {selectIsLoggedIn} from "features/auth/auth.selectors"
@@ -14,11 +13,9 @@ export const Header = () => {
 
   return (
     <div id={'hw5-header'} className={s.header}>
-      <div className={s1.container}>
-        <div className={s.header__container}>
-          <img src={logo} alt="IT-incubator Logo" className={s.header__logo}/>
-          {isLoggedIn && <DropDownMenu />}
-        </div>
+      <div className={s.header__container}>
+        <img src={logo} alt="IT-incubator Logo" className={s.header__logo}/>
+        {isLoggedIn && <DropDownMenu/>}
       </div>
     </div>
   )

@@ -1,7 +1,5 @@
-import {TextField} from "@mui/material"
-import i from "./styles.module.css"
-import {FC} from "react"
-import React from "react"
+import i from "common/components/Input/styles.module.css"
+import React, {FC} from "react"
 
 
 type Props = {
@@ -9,18 +7,19 @@ type Props = {
   label?: string
   type: string
   options?: any
+  extraClass?: string
 }
 
-export const Input: FC<Props> = ({placeholder, label, type, options}) => {
+export const Input: FC<Props> = ({extraClass, placeholder, label, type, options}) => {
 
   return (
-    <Input
-      label={label}
-      // variant={"outlined"}
-      // autoComplete="off"
-      placeholder={placeholder}
-      // className={i.input}
-      type={type}
-    />
+    <>
+      {label && <label>{label}</label>}
+      <input
+        placeholder={placeholder}
+        type={type}
+        className={i.inputField + " " + (extraClass && extraClass)}
+      />
+    </>
   )
 }
