@@ -61,6 +61,7 @@ export const SignUpForm = () => {
         <div className={s.auth__inputGroup}>
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Email"}
               variant={"standard"}
               autoComplete="off"
@@ -81,6 +82,7 @@ export const SignUpForm = () => {
 
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Password"}
               variant={"standard"}
               autoComplete="off"
@@ -113,6 +115,7 @@ export const SignUpForm = () => {
 
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Confirm password"}
               variant={"standard"}
               autoComplete="off"

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {FC, useEffect, useState} from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
 import {SubmitHandler, useForm} from "react-hook-form"
@@ -16,23 +16,23 @@ import {useNavigate} from "react-router-dom"
 import {useAppDispatch} from "common/hooks"
 import cat from 'assets/img/catYellow.jpg'
 import logout from 'assets/img/logout.svg'
+import {ProfileType} from "common/types/types"
 
 
-export const Profile = () => {
+type PropsType = {
+  profile: ProfileType
+}
+
+export const Profile: FC<PropsType> = ({profile}) => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const profile = useSelector(selectProfile)
   const [editMode, setEditMode] = useState(false)
   const {setValue} = useForm()
-  const ifProfileExists = profile && profile.name
 
-  // we send query to auth/me to get profile data
-  useEffect(() => {
-    dispatch(authThunks.authMe())
-    !isLoggedIn && navigate('/login')
-  }, [ifProfileExists, dispatch])
+  console.log('profile ', isLoggedIn)
+  !isLoggedIn && navigate('/login')
 
   // log out
   const onSubmit: SubmitHandler<any> = () => {

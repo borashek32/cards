@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
-import {appActions} from "app/app.slice";
+import React, {useEffect, useState} from "react";
 import {Header} from "features/header/Header"
 import {Layout} from "features/layout/Layout"
-import {HashRouter, Route, Routes} from "react-router-dom"
+import {BrowserRouter, HashRouter, Route, Routes} from "react-router-dom"
 import {Login} from "features/auth/login/Login"
 import {SignUpForm} from "features/auth/sign-up/SignUpForm"
 import {SetNewPasswordForm} from "features/auth/set-new-password/SetNewPasswordForm"
@@ -15,33 +14,32 @@ import {Learn} from "features/learn/Learn"
 import Stand from "common/components/Stand"
 import Error404 from "common/errors/404/Error404"
 import {authThunks} from "features/auth/auth.slice"
-import {LinearProgress} from "@mui/material"
 import {useAppDispatch} from "common/hooks/use-add-dispatch"
-import {useAppSelector} from "common/hooks/use-add-selector"
 import {toast} from "react-toastify"
+import {ProfileType} from "common/types/types"
 
 
 function App() {
 
   const dispatch = useAppDispatch()
-  const isLoading = useAppSelector((state) => state.app.isLoading)
+  const [profile, setProfile] = useState<ProfileType>()
 
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(appActions.setIsLoading({isLoading: false}))
-    }, 2000)
     dispatch(authThunks.initializeApp())
       .unwrap()
-      .catch((err) => {
-        toast.error(err.e.response.data.error + " Register or log in, please")
+      .then((res) => {
+        setProfile(res.profile)
       })
+      // .catch((err) => {
+      //   toast.error(err.e.response.data.error + " Register or log in, please")
+      // })
   }, [dispatch])
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Header/>
       <Layout>
-        {isLoading && <div style={{paddingTop: "60px", marginBottom: "-60px"}}><LinearProgress/></div>}
+        {/*{isLoading && <div style={{paddingTop: "60px", marginBottom: "-60px"}}><LinearProgress/></div>}*/}
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/login" element={<Login/>}/>
@@ -50,7 +48,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordForm/>}/>
           <Route path="/check-email" element={<CheckEmail/>}/>
 
-          <Route path="/profile" element={<Profile/>}/>
+          {profile && <Route path="/profile" element={<Profile profile={profile}/>}/>}
 
           <Route path="/cards" element={<Cards/>}/>
           <Route path="/packs" element={<Packs/>}/>
@@ -58,11 +56,11 @@ function App() {
 
           <Route path="/stand" element={<Stand/>}/>
 
-          <Route path="/error" element={<Error404/>}/>
+          {/*<Route path="/error" element={<Error404/>}/>*/}
           <Route path="/*" element={<Error404/>}/>
         </Routes>
       </Layout>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 

@@ -11,7 +11,6 @@ export const Nav = () => {
   const [value2, setValue2] = useState(100);
 
   const change = (event: Event, value: number | number[]) => {
-    // пишет студент // если пришёл массив - сохранить значения в оба useState, иначе в первый
     if (Number.isInteger(value)) {
       setValue1(value as number)
     } else if (Array.isArray(value)) {

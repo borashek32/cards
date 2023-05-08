@@ -25,8 +25,9 @@ export const DropDownMenu = () => {
 
   const onSubmit: SubmitHandler<any> = () => {
     dispatch(authThunks.logout())
-    !isLoggedIn && navigate('/login')
   }
+
+  !isLoggedIn && navigate('/login')
 
 
   return (
@@ -55,7 +56,7 @@ export const DropDownMenu = () => {
             </NavLink>
           </ul>
 
-          <button onClick={onSubmit} className={s.header__logoutButton} type="button">
+          <button onClick={onSubmit} className={s.header__logoutButton} type="button" style={{cursor: "pointer"}}>
             <img src={logout} alt="log out"/>
             <p className={s.header__itemName}>Log out</p>
           </button>

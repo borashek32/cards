@@ -2,22 +2,26 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 36px;
+    background-color: var(--white--color);
 }
 .table__head {
     background-color: #E5E5E5;
     border: 1px solid #E5E5E5;
 }
 .table__tr {
-
+    border-bottom: var(--border);
 }
 .table__colName {
     padding: 16px 0 16px 36px;
 }
-
-
+.table__colValue {
+    padding: 16px 0 16px 36px;
+}
 .table__colValue_actions {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
+    padding: 16px 0 16px 16px;
+    cursor: pointer;
 }

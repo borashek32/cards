@@ -6,23 +6,18 @@ import {authApi} from "features/auth/auth.api"
 import {appActions} from "app/app.slice"
 
 
-const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
+const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean, profile: ProfileType }, void>
 ("app/initialize-app", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
   dispatch(appActions.setAppInitialized({ isAppInitialized: true }))
   return thunkTryCatch(thunkAPI, async () => {
     const res = await authApi.me()
     if (res.data) {
-      return { isLoggedIn: true }
+      return { isLoggedIn: true, profile: res.data }
     } else {
       return rejectWithValue(null)
     }
   }, false)
-})
-const authMe = createAppAsyncThunk<{ profile: ProfileType }>
-('auth/me', async () => {
-  const res = await authApi.me()
-  return { profile: res.data }
 })
 const register = createAppAsyncThunk<void, ArgRegisterType>
 ("auth/register", async (arg: ArgRegisterType, thunkAPI) => {
@@ -30,16 +25,17 @@ const register = createAppAsyncThunk<void, ArgRegisterType>
     await authApi.register(arg)
   }, false)
 })
-const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
+const login = createAppAsyncThunk<{ isLoggedIn: boolean, profile: ProfileType }, ArgLoginType>
 ("auth/login", async (arg, thunkAPI) => {
   return thunkTryCatch(thunkAPI, async () => {
     const res = await authApi.login(arg);
-    return { profile: res.data };
+    return { profile: res.data, isLoggedIn: true };
   }, false);
 })
-const logout = createAppAsyncThunk<void>
+const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
 ("auth/logout", async () => {
   await authApi.logout()
+  return {isLoggedIn: false}
 })
 const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>
 ("auth/forgot-password", async (arg) => {
@@ -69,20 +65,16 @@ const slice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.profile = action.payload.profile
-        state.isLoggedIn = true
+        state.isLoggedIn = action.payload.isLoggedIn
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state, action) => {
         state.profile = null
-        state.isLoggedIn = false
+        state.isLoggedIn = action.payload.isLoggedIn
       })
       .addCase(initializeApp.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload.isLoggedIn
-        state.isLoggedIn = true
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
-        state.profile = action.payload.profile
-      })
-      .addCase(authMe.fulfilled, (state, action) => {
         state.profile = action.payload.profile
       })
       // how to work with errors
@@ -99,7 +91,6 @@ export const authThunks = {
   setNewPassword,
   logout,
   initializeApp ,
-  updateProfile,
-  authMe
+  updateProfile
 }
 export const authReducer = slice.reducer

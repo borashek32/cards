@@ -22,10 +22,6 @@ export const EditProfileForm: FC<Props> = ({userName,editMode, setEditMode}) => 
   const dispatch = useAppDispatch()
   const {register, formState: {errors}, handleSubmit, setValue} = useForm<FormDataType>({mode: "onChange"})
 
-  useEffect(() => {
-    userName && setValue("name", userName)
-  }, [])
-
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     dispatch(authThunks.updateProfile(data))
     setEditMode(false)
@@ -33,8 +29,9 @@ export const EditProfileForm: FC<Props> = ({userName,editMode, setEditMode}) => 
 
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>
+    <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'} style={{width: "350px"}}>
       <TextField
+        fullWidth={true}
         label={"User Name"}
         variant={"standard"}
         autoComplete="off"

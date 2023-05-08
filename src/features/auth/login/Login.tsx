@@ -1,9 +1,9 @@
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
-import {Navigate, NavLink} from "react-router-dom"
+import {NavLink, useNavigate} from "react-router-dom"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
 import {SubmitHandler, useForm} from "react-hook-form"
@@ -27,8 +27,7 @@ export const Login = () => {
 
   const dispatch = useAppDispatch()
   const [isPasswordInputType, setIsPasswordInputType] = useState(true)
-  // here it's not useful
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
     mode: "onChange",
@@ -46,17 +45,18 @@ export const Login = () => {
       .then((res) => {
         toast.success("You are logged in successfully")
         reset()
-          // here it's not useful
-          // setTimeout(() => {
-          //   navigate('/profile')
-          // }, 1000)
         })
-      .catch((err) => {
-        toast.error(err.e.response.data.error)
-      })
+      // .catch((err) => {
+      //   toast.error(err.e.response.data.error)
+      // })
   }
 
-  if (isLoggedIn) return <Navigate to={"/profile"}/>
+  console.log('login ', isLoggedIn)
+  if(isLoggedIn) {
+  setTimeout(()=>{
+    navigate('/profile')
+  },200)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>
@@ -65,6 +65,7 @@ export const Login = () => {
         <div className={s.auth__inputGroup}>
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Email"}
               variant={"standard"}
               autoComplete="off"
@@ -85,6 +86,7 @@ export const Login = () => {
 
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Password"}
               variant={"standard"}
               autoComplete="off"
