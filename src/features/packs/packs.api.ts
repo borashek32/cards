@@ -18,8 +18,9 @@ export const packsApi = {
   updatePack: (arg: ArgUpdatePackType) => {
     return instance.put<ResGetPacksType>("cards/pack", arg)
   },
-  // deletePack: (arg: ArgDeletePackType) => {
-  //   return instance.delete<ResGetPacksType>("cards/pack", arg)
-  // }
+  deletePack: (arg: ArgDeletePackType) => {
+    const id = arg.id
+    return instance.delete<ResGetPacksType>(`cards/pack?id=${id}`)
+  }
 }
 

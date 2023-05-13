@@ -4,15 +4,15 @@ import React, {useEffect, useState} from 'react'
 import {Title} from "common/components/Title/Title"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
-import {Navigate, NavLink, useNavigate} from "react-router-dom"
+import {NavLink, useNavigate} from "react-router-dom"
 import {Card} from "common/components/Card/Card"
 import i from "common/components/Input/styles.module.css"
 import {useForm} from "react-hook-form"
 import {TextField} from "@mui/material"
-import {useAppDispatch} from "common/hooks/use-add-dispatch"
-import {unHandleAction} from "common/actions/unhandle.action"
+import {useAppDispatch} from "common/hooks/use-app-dispatch"
 import {toast} from "react-toastify"
 import eye from "assets/img/eye.svg"
+import {unHandleAction} from "common/actions"
 
 
 type FormDataType = {
@@ -49,7 +49,7 @@ export const SignUpForm = () => {
         navigate("/login")
       })
       .catch((err) => {
-        toast.error(err.e.response.data.error)
+        toast.error(err.response ? err.e.response.data.error : err.e.message)
       })
   }
 

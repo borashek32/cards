@@ -5,17 +5,14 @@ import user from "assets/img/user.svg"
 import logout from "assets/img/logout.svg"
 import triangle from "assets/img/triangle.svg"
 import React, {useState} from "react"
-import {SubmitHandler, useForm} from "react-hook-form"
+import {SubmitHandler} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
-import {useSelector} from "react-redux"
-import {selectIsLoggedIn} from "features/auth/auth.selectors"
 
 export const DropDownMenu = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const isLoggedIn = useSelector(selectIsLoggedIn)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
   const handleOpenMenu = () => setIsOpenMenu(!isOpenMenu)
@@ -25,9 +22,11 @@ export const DropDownMenu = () => {
 
   const onSubmit: SubmitHandler<any> = () => {
     dispatch(authThunks.logout())
+      .unwrap()
+      .then(() => {
+        navigate('/login')
+      })
   }
-
-  !isLoggedIn && navigate('/login')
 
 
   return (

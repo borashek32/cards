@@ -8,7 +8,7 @@ import CustomPagination from "common/components/Pagination/CustomPagination"
 import teacher from 'assets/img/teacher.svg'
 import pencil from 'assets/img/pencil.svg'
 import bin from 'assets/img/bin.svg'
-import {PackType} from "common/types/types"
+import {ArgUpdatePackType, PackType} from "common/types/types"
 import {packsThunks} from "features/packs/packs.slice"
 import {useSelector} from "react-redux"
 import {selectPacks} from "features/packs/packs.selectors"
@@ -28,23 +28,24 @@ export const Table = () => {
   const packs = useSelector(selectPacks)
 
   const [sort, setSort] = useState('')
-  const [count, setCount] = useState(4)
+  const [count, setCount] = useState(10)
   const [totalCount, setTotalCount] = useState(100)
   const [searchParams, setSearchParams] = useSearchParams(`?page=1&count=4`)
 
 
   useEffect(() => {
     dispatch(packsThunks.getPacks({}))
-      .unwrap()
-      .then(() => {
-        toast.success('Packs loaded successfully')
-      })
-      .catch((err) => {
-        toast.error(err.e.response.data.error)
-      })
     const params = Object.fromEntries(searchParams)
-    setCount(+params.count || 4)
+    setCount(+params.count || 10)
   }, [searchParams, sort])
+
+  const deletePack = (id: number) => {
+    dispatch(packsThunks.deletePack({id: id}))
+  }
+
+  const updatePack = (pack: ArgUpdatePackType) => {
+    dispatch(packsThunks.updatePack(pack))
+  }
 
   const mappedPacks = packs?.map((p: PackType) => (
     <tr key={p?._id} className={s.table__tr}>
@@ -62,8 +63,8 @@ export const Table = () => {
       </td>
       <td className={s.table__colValue_actions}>
         <img src={teacher} alt="teacher"/>
-        <img src={pencil} alt="pencil"/>
-        <img src={bin} alt="bin"/>
+        <img onClick={() => updatePack({cardsPack: p})} src={pencil} alt="pencil"/>
+        <img onClick={() => deletePack(p?._id)} src={bin} alt="bin"/>
       </td>
     </tr>
   ))

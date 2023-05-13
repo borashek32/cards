@@ -8,10 +8,10 @@ type PropsType = {
 export const Layout: FC<PropsType> = ({children}) => {
 
   return (
-    <>
-      <div className={s.layout}>
+    <div className={s.layout}>
+      <div className={s.layoutContainer}>
         {children}
       </div>
-    </>
+    </div>
   )
 }

@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Header} from "features/header/Header"
 import {Layout} from "features/layout/Layout"
-import {BrowserRouter, HashRouter, Route, Routes} from "react-router-dom"
+import {BrowserRouter, Route, Routes} from "react-router-dom"
 import {Login} from "features/auth/login/Login"
 import {SignUpForm} from "features/auth/sign-up/SignUpForm"
 import {SetNewPasswordForm} from "features/auth/set-new-password/SetNewPasswordForm"
@@ -13,33 +13,29 @@ import {Packs} from "features/packs/Packs"
 import {Learn} from "features/learn/Learn"
 import Stand from "common/components/Stand"
 import Error404 from "common/errors/404/Error404"
+import {useAppDispatch} from "common/hooks/use-app-dispatch"
+import {LinearProgress} from "@mui/material"
+import {useSelector} from "react-redux"
+import {selectIsLoading} from "app/app.selectors"
+import {useAppSelector} from "common/hooks"
 import {authThunks} from "features/auth/auth.slice"
-import {useAppDispatch} from "common/hooks/use-add-dispatch"
-import {toast} from "react-toastify"
-import {ProfileType} from "common/types/types"
 
 
 function App() {
 
   const dispatch = useAppDispatch()
-  const [profile, setProfile] = useState<ProfileType>()
+  const isLoading = useSelector(selectIsLoading)
+  const profile = useAppSelector(state => state.auth.profile)
 
   useEffect(() => {
-    dispatch(authThunks.initializeApp())
-      .unwrap()
-      .then((res) => {
-        setProfile(res.profile)
-      })
-      // .catch((err) => {
-      //   toast.error(err.e.response.data.error + " Register or log in, please")
-      // })
-  }, [dispatch])
+    dispatch(authThunks.authMe())
+  }, [])
 
   return (
     <BrowserRouter>
       <Header/>
+      {isLoading && <div><LinearProgress/></div>}
       <Layout>
-        {/*{isLoading && <div style={{paddingTop: "60px", marginBottom: "-60px"}}><LinearProgress/></div>}*/}
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/login" element={<Login/>}/>
@@ -48,7 +44,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordForm/>}/>
           <Route path="/check-email" element={<CheckEmail/>}/>
 
-          {profile && <Route path="/profile" element={<Profile profile={profile}/>}/>}
+          {profile && <Route path="/profile" element={<Profile profile={profile} />} />}
 
           <Route path="/cards" element={<Cards/>}/>
           <Route path="/packs" element={<Packs/>}/>
@@ -56,8 +52,7 @@ function App() {
 
           <Route path="/stand" element={<Stand/>}/>
 
-          {/*<Route path="/error" element={<Error404/>}/>*/}
-          <Route path="/*" element={<Error404/>}/>
+          {/*<Route path="/*" element={<Error404/>}/>*/}
         </Routes>
       </Layout>
     </BrowserRouter>

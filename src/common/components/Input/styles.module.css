@@ -11,9 +11,10 @@
     line-height: 20px;
     color: var(--black-color);
     border: var(--border);
+    background-color: var(--white--color);
 }
 .input::placeholder {
-    color: var(--grey-color)
+    color: var(--grey-color);
 }
 
 .inputWrapper {

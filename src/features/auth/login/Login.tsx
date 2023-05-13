@@ -1,20 +1,18 @@
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
-import React, {useEffect, useState} from "react"
+import React, {useState} from "react"
 import {Card} from "common/components/Card/Card"
 import {Title} from "common/components/Title/Title"
 import {NavLink, useNavigate} from "react-router-dom"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
 import {SubmitHandler, useForm} from "react-hook-form"
-import {useSelector} from "react-redux"
-import {selectIsLoggedIn} from "features/auth/auth.selectors"
 import i from "common/components/Input/styles.module.css"
 import c from "common/components/Checkbox/styles.module.css"
 import {TextField} from "@mui/material"
 import {useAppDispatch} from "common/hooks"
-import {toast} from "react-toastify"
 import eye from 'assets/img/eye.svg'
+import {toast} from "react-toastify"
 
 
 type FormDataType = {
@@ -26,10 +24,9 @@ type FormDataType = {
 export const Login = () => {
 
   const dispatch = useAppDispatch()
-  const [isPasswordInputType, setIsPasswordInputType] = useState(true)
   const navigate = useNavigate()
-  const isLoggedIn = useSelector(selectIsLoggedIn)
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormDataType>({
+  const [isPasswordInputType, setIsPasswordInputType] = useState(true)
+  const {register, handleSubmit, formState: {errors}} = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
       email: '',
@@ -40,23 +37,16 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     dispatch(authThunks.login(data))
-      // unwrap is used everytime with then and catch
       .unwrap()
-      .then((res) => {
-        toast.success("You are logged in successfully")
-        reset()
-        })
-      // .catch((err) => {
-      //   toast.error(err.e.response.data.error)
-      // })
+      .then(() => {
+        toast.success("You are logged successfully")
+        navigate("/profile")
+      })
+      .catch((err) => {
+        toast.error(err.response ? err.e.response.data.error : err.e.message)
+      })
   }
 
-  console.log('login ', isLoggedIn)
-  if(isLoggedIn) {
-  setTimeout(()=>{
-    navigate('/profile')
-  },200)
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'}>

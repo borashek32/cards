@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import React, {useEffect} from "react"
 import {useDispatch} from "react-redux"
 import {appActions} from "app/app.slice"
-import {useAppSelector} from "common/hooks/use-add-selector"
+import {useAppSelector} from "common/hooks/use-app-selector"
 
 export const GlobalAppError = () => {
   const error = useAppSelector((state) => state.app.error)
@@ -13,6 +13,7 @@ export const GlobalAppError = () => {
     toast.error(error);
   }
 
+  // clear error message
   useEffect(() => {
     setTimeout(() => {
       dispatch(appActions.setAppError({ error: null }))
@@ -22,7 +23,7 @@ export const GlobalAppError = () => {
   return (
     <ToastContainer
       position="top-right"
-      autoClose={5000}
+      autoClose={2000}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick

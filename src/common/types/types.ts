@@ -78,17 +78,19 @@ export type ResGetPacksType = {
 }
 export type ArgCreatePackType = {
   cardsPack: {
-    name?: string // если не отправить будет таким
-    deckCover?: string // не обязателен
+    name?: string
+    deckCover?: string
     private?: boolean
   }
 }
 
-export type ArgDeletePackType = Omit<ArgCreatePackType, 'name' | 'deckCover' | 'private'>
+export type ArgDeletePackType = { id: number }
 
 export type ArgUpdatePackType = {
-  _id: string
-  name?: string // если не отправить будет таким
-  deckCover?: string // не обязателен
-  private?: false // если не отправить будет такой
+  cardsPack: {
+    _id: number
+    name?: string
+    deckCover?: string
+    private?: boolean
+  }
 }

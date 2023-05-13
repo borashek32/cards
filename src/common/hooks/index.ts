@@ -1,2 +1,2 @@
-export { useAppSelector } from './use-add-selector'
-export { useAppDispatch } from './use-add-dispatch'
+export { useAppSelector } from 'common/hooks/use-app-selector'
+export { useAppDispatch } from 'common/hooks/use-app-dispatch'

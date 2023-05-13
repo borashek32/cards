@@ -9,7 +9,7 @@ import {TextField} from "@mui/material"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {Navigate, useParams} from "react-router-dom"
 import {authThunks} from "features/auth/auth.slice"
-import {useAppDispatch} from "common/hooks/use-add-dispatch"
+import {useAppDispatch} from "common/hooks/use-app-dispatch"
 import eye from "assets/img/eye.svg"
 
 

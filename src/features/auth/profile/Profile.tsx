@@ -8,15 +8,13 @@ import editPhoto from "assets/img/editPhoto.svg"
 import {Footer} from "common/components/Footer/Footer"
 import Button from "common/components/Button/Button"
 import i from "common/components/Input/styles.module.css"
-import {EditProfileForm} from "features/auth/profile/EditProfilrForm"
+import {EditProfileForm} from "features/auth/profile/EditProfileForm"
 import {authThunks} from "features/auth/auth.slice"
-import {useSelector} from "react-redux"
-import {selectIsLoggedIn, selectProfile} from "features/auth/auth.selectors"
-import {useNavigate} from "react-router-dom"
 import {useAppDispatch} from "common/hooks"
 import cat from 'assets/img/catYellow.jpg'
 import logout from 'assets/img/logout.svg'
 import {ProfileType} from "common/types/types"
+import {useNavigate} from "react-router-dom"
 
 
 type PropsType = {
@@ -27,16 +25,16 @@ export const Profile: FC<PropsType> = ({profile}) => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const isLoggedIn = useSelector(selectIsLoggedIn)
   const [editMode, setEditMode] = useState(false)
   const {setValue} = useForm()
-
-  console.log('profile ', isLoggedIn)
-  !isLoggedIn && navigate('/login')
 
   // log out
   const onSubmit: SubmitHandler<any> = () => {
     dispatch(authThunks.logout())
+      .unwrap()
+      .then(() => {
+        navigate('/login')
+      })
   }
 
   const onEditMode = () => {

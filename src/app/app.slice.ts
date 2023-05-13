@@ -4,14 +4,13 @@ import {AxiosError, isAxiosError} from "axios"
 
 const appInitialState = {
   error: null as string | null,
-  isLoading: false,
-  isAppInitialized: false,
+  isLoading: false
 }
 type InitialStateType = typeof appInitialState
 
 const slice = createSlice({
-  name: "app",
-  initialState: appInitialState,
+  name: "app", // from file name, prefix
+  initialState: appInitialState, // it's better to make an object, easier to increase
   reducers: {
     // Подредьюсер.
     // Action - это payload объект. Типизация через PayloadAction
@@ -23,9 +22,6 @@ const slice = createSlice({
       // Логику в подредьюсерах пишем мутабельным образом,
       // т.к. иммутабельность достигается благодаря immer.js
       state.isLoading = action.payload.isLoading
-    },
-    setAppInitialized: (state, action: PayloadAction<{ isAppInitialized: boolean }>) => {
-      state.isAppInitialized = action.payload.isAppInitialized
     },
     setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
       state.error = action.payload.error
