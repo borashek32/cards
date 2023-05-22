@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React from 'react'
 import s from 'common/components/Pagination/styles.module.css'
 import Select from "common/components/Select/Select"
 import Pagination from '@mui/material/Pagination'
@@ -6,27 +6,16 @@ import Pagination from '@mui/material/Pagination'
 export type SuperPaginationPropsType = {
   id?: string
   page: number
-  itemsCountForPage: number
-  totalCount: number
   onChange: (page: number, count: number) => void
 }
 
 const CustomPagination: React.FC<SuperPaginationPropsType> = (
   {
     page,
-    itemsCountForPage,
-    totalCount,
     onChange,
     id = 'hw15',
   }
 ) => {
-
-  const lastPage = Math.ceil(totalCount / itemsCountForPage) // пишет студент // вычислить количество страниц
-
-  const onChangeCallback = (event: ChangeEvent<unknown>, page: number) => {
-    // пишет студент
-    onChange(page, itemsCountForPage)
-  }
 
   const onChangeSelect = (id: number) => {
     // пишет студент
@@ -43,7 +32,6 @@ const CustomPagination: React.FC<SuperPaginationPropsType> = (
         color="primary"
         shape="rounded"
         page={page}
-        count={lastPage}
         // onChange={onChangeCallback}
         hideNextButton
         hidePrevButton
@@ -56,7 +44,6 @@ const CustomPagination: React.FC<SuperPaginationPropsType> = (
 
         <Select
           id={id + '-pagination-select'}
-          value={itemsCountForPage}
           st={{width: "50px", padding: "4px 6px", appearance: "none"}}
           options={[
             {id: 4, value: 4},

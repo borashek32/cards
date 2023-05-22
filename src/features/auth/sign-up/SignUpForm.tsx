@@ -43,13 +43,13 @@ export const SignUpForm = () => {
 
   const onSubmit = (data: FormDataType) => {
     dispatch(authThunks.register(data))
-      .unwrap()
+      // .unwrap() нужен при использовании .catch()
+      // .unwrap()
       .then(() => {
         toast.success("You are registered successfully")
-        navigate("/login")
-      })
-      .catch((err) => {
-        toast.error(err.response ? err.e.response.data.error : err.e.message)
+        setTimeout(() => {
+          navigate("/login")
+        }, 1000)
       })
   }
 

@@ -52,6 +52,7 @@ export const SetNewPasswordForm = () => {
         <div className={s.auth__inputGroup}>
           <div className={i.inputWrapper}>
             <TextField
+              fullWidth={true}
               label={"Password"}
               variant={"standard"}
               autoComplete="off"

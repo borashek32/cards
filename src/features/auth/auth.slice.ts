@@ -7,7 +7,7 @@ import {
   ProfileType,
   TokenResponseType,
   UpdateProfileDataType
-} from "common/types/types"
+} from "./auth.types"
 import {createAppAsyncThunk} from "common/utils/create-app-async-thunk"
 import {authApi} from "features/auth/auth.api"
 import {thunkTryCatch} from "common/utils"
@@ -63,30 +63,40 @@ const logout = createAppAsyncThunk<void>(
     await authApi.logout()
   }, false)
 })
-const authMe = createAppAsyncThunk<any>(
+const authMe = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/auth-me",
   async (arg, thunkAPI
   ) => {
   return thunkTryCatch(thunkAPI, async () => {
     const res = await authApi.me()
     return { profile: res.data }
+  }, false)
+})
+const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>(
+  "auth/forgot-password",
+  async (arg, thunkAPI
+  ) => {
+  return thunkTryCatch(thunkAPI, async () => {
+    const res = await authApi.forgotPassword(arg)
+    return res.data
+  }, false)
+})
+const setNewPassword = createAppAsyncThunk<void, NewPassReqType>(
+  `auth/set-new-password/:token`,
+  async (arg, thunkAPI
+  ) => {
+  return thunkTryCatch(thunkAPI, async () => {
+    await authApi.setNewPassword(arg)
   })
 })
-
-
-const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>
-("auth/forgot-password", async (arg) => {
-  const response = await authApi.forgotPassword(arg)
-  return response.data
-})
-const setNewPassword = createAppAsyncThunk<void, NewPassReqType>
-(`auth/set-new-password/:token`, async (arg) => {
-  await authApi.setNewPassword(arg)
-})
-const updateProfile = createAppAsyncThunk<{ profile: ProfileType }, UpdateProfileDataType>
-("auth/update-profile-data", async (arg) => {
-  const res = await authApi.updateProfileData(arg)
-  return { profile: res.data }
+const updateProfile = createAppAsyncThunk<{ profile: ProfileType }, UpdateProfileDataType>(
+  "auth/update-profile-data",
+  async (arg, thunkAPI
+  ) => {
+  return thunkTryCatch(thunkAPI, async () => {
+    const res = await authApi.updateProfileData(arg)
+    return { profile: res.data }
+  })
 })
 
 

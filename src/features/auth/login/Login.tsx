@@ -37,13 +37,13 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     dispatch(authThunks.login(data))
+      // .unwrap() нужен при использовании .catch()
       .unwrap()
       .then(() => {
         toast.success("You are logged successfully")
-        navigate("/profile")
-      })
-      .catch((err) => {
-        toast.error(err.response ? err.e.response.data.error : err.e.message)
+        setTimeout(() => {
+          navigate("/profile")
+        }, 1000)
       })
   }
 
@@ -121,8 +121,7 @@ export const Login = () => {
           </NavLink>
         </div>
         <Footer>
-          <Button type={"submit"} callback={() => {
-          }} name={"Sign in"} xType={"default"}/>
+          <Button type={"submit"} name={"Sign in"} xType={"default"}/>
           <p className={s.auth__alreadyHaveAcc}>Not registered yet?</p>
           <NavLink to={"/sign-up"}>
             <p className={s.auth__redirect}>Sign up</p>

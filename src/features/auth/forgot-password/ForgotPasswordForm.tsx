@@ -33,33 +33,32 @@ export const ForgotPasswordForm = () => {
     reset()
   }
 
-  if (sentSuccess) return <Navigate to={'/check-email'} />
+  if (sentSuccess) return <Navigate to={'/check-email'}/>
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} action="#">
       <Card id={'cards-forgot-password'}>
         <Title title={"Forgot your password"}/>
         <div className={s.auth__inputGroup}>
-          <div className={s.auth__inputGroup}>
-            <div className={i.inputWrapper}>
-              <TextField
-                label={"Email"}
-                variant={"standard"}
-                autoComplete="off"
-                placeholder={"Email"}
-                className={i.input}
-                {...(register("email", {
-                  required: "Email field is required",
-                  pattern: {
-                    value: /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9-]+.)+([a-zA-Z]{2,})$/,
-                    message: 'Enter valid email address',
-                  },
-                  minLength: 7
-                }))}
-                type="email"
-              />
-              {errors.email && <span className={i.error}>{errors.email.message}</span>}
-            </div>
+          <div className={i.inputWrapper}>
+            <TextField
+              fullWidth={true}
+              label={"Email"}
+              variant={"standard"}
+              autoComplete={"off"}
+              placeholder={"Email"}
+              className={i.input}
+              {...(register("email", {
+                required: "Email field is required",
+                pattern: {
+                  value: /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9-]+.)+([a-zA-Z]{2,})$/,
+                  message: 'Enter valid email address',
+                },
+                minLength: 7
+              }))}
+              type="email"
+            />
+            {errors.email && <span className={i.error}>{errors.email.message}</span>}
           </div>
         </div>
         <p className={s.auth__alreadyHaveAcc} style={{marginTop: "18px"}}>

@@ -1,11 +1,11 @@
-import { instance } from "common/api/common.api"
+import { instance } from "common/api"
 import {
   ArgForgotPasswordType,
   ArgLoginType,
   ArgRegisterType, NewPassReqType,
   ProfileType,
   RegisterResponseType, UpdateProfileDataType
-} from "common/types/types"
+} from "./auth.types"
 
 export const authApi = {
   register: (arg: ArgRegisterType) => {
@@ -21,7 +21,7 @@ export const authApi = {
     return instance.post("auth/forgot", arg)
   },
   setNewPassword: (arg: NewPassReqType) => {
-    return instance.post(`auth/set-new-password/`, arg)
+    return instance.post(`auth/set-new-password/:token`, arg)
   },
   me: () => {
     return instance.post<ProfileType>("auth/me")

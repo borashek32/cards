@@ -1,3 +1,9 @@
-.pack {
+.packsWrapper {
+    position: relative;
+}
+
+.packs {
+    max-width: 1008px;
+    margin: 0 auto;
     padding: 0 10px;
 }

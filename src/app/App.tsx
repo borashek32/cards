@@ -12,13 +12,13 @@ import {Cards} from "features/cards/Cards"
 import {Packs} from "features/packs/Packs"
 import {Learn} from "features/learn/Learn"
 import Stand from "common/components/Stand"
-import Error404 from "common/errors/404/Error404"
 import {useAppDispatch} from "common/hooks/use-app-dispatch"
 import {LinearProgress} from "@mui/material"
 import {useSelector} from "react-redux"
 import {selectIsLoading} from "app/app.selectors"
 import {useAppSelector} from "common/hooks"
 import {authThunks} from "features/auth/auth.slice"
+import Error404 from "common/errors/404/Error404"
 
 
 function App() {
@@ -29,13 +29,17 @@ function App() {
 
   useEffect(() => {
     dispatch(authThunks.authMe())
+      .unwrap()
+      .catch((e) => {
+
+      })
   }, [])
 
   return (
     <BrowserRouter>
-      <Header/>
-      {isLoading && <div><LinearProgress/></div>}
       <Layout>
+        <Header/>
+        {isLoading && <div><LinearProgress/></div>}
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/login" element={<Login/>}/>
@@ -45,14 +49,13 @@ function App() {
           <Route path="/check-email" element={<CheckEmail/>}/>
 
           {profile && <Route path="/profile" element={<Profile profile={profile} />} />}
-
-          <Route path="/cards" element={<Cards/>}/>
-          <Route path="/packs" element={<Packs/>}/>
-          <Route path="/learn" element={<Learn/>}/>
+          {profile && <Route path="/cards" element={<Cards/>}/>}
+          {profile && <Route path="/packs" element={<Packs/>}/>}
+          {profile && <Route path="/learn" element={<Learn/>}/>}
 
           <Route path="/stand" element={<Stand/>}/>
 
-          {/*<Route path="/*" element={<Error404/>}/>*/}
+          <Route path="/*" element={<Error404 />}/>
         </Routes>
       </Layout>
     </BrowserRouter>

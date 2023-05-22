@@ -1,26 +1,26 @@
-import { instance } from "common/api/common.api"
+import { instance } from "common/api"
 import {
   ArgCreatePackType,
-  ArgDeletePackType,
-  ArgGetPacksType,
-  ArgUpdatePackType,
-  ResGetPacksType
-} from "common/types/types"
+  CreatePackResponseType,
+  FetchPacksResponseType,
+  PackType,
+  RemovePackResponseType,
+  UpdatePackResponseType,
+} from "./packs.types"
 
 
 export const packsApi = {
-  getPacks: (arg: ArgGetPacksType) => {
-    return instance.get<ResGetPacksType>("cards/pack", { params: arg })
+  getPacks: () => {
+    return instance.get<FetchPacksResponseType>("cards/pack");
   },
-  createPack: (arg: ArgCreatePackType) => {
-    return instance.post<ResGetPacksType>("cards/pack", arg)
+  createPack: (cardsPack: ArgCreatePackType) => {
+    return instance.post<CreatePackResponseType>("cards/pack", { cardsPack });
   },
-  updatePack: (arg: ArgUpdatePackType) => {
-    return instance.put<ResGetPacksType>("cards/pack", arg)
+  removePack: (id: string) => {
+    return instance.delete<RemovePackResponseType>(`cards/pack?id=${id}`);
   },
-  deletePack: (arg: ArgDeletePackType) => {
-    const id = arg.id
-    return instance.delete<ResGetPacksType>(`cards/pack?id=${id}`)
-  }
-}
+  updatePack: (cardsPack: PackType) => {
+    return instance.put<UpdatePackResponseType>("cards/pack", { cardsPack });
+  },
+};
 

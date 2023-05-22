@@ -1,3 +1,3 @@
 import { RootState } from "app/store"
 
-export const selectPacks = (state: RootState) => state.packs.packs
+export const selectPacks = (state: RootState) => state.packs.cardPacks
