@@ -4,12 +4,17 @@ import {NavLink, useNavigate} from "react-router-dom"
 import user from "assets/img/user.svg"
 import logout from "assets/img/logout.svg"
 import triangle from "assets/img/triangle.svg"
-import React, {useState} from "react"
+import React, {FC, useState} from "react"
 import {SubmitHandler} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
 
-export const DropDownMenu = () => {
+
+type Props = {
+  userName: string
+}
+
+export const DropDownMenu: FC<Props> = ({userName}) => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -32,7 +37,7 @@ export const DropDownMenu = () => {
   return (
     <div onClick={handleOpenMenu}>
       <div className={s.header__userSection}>
-        <p className={s.header__userName}>User</p>
+        <p className={s.header__userName}>{userName}</p>
         <img src={cat}
              alt="user img"
              className={s.header__userImg}

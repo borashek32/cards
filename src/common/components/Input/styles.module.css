@@ -36,16 +36,16 @@
     color: #cc0000;
 }
 
-.inputLabel {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
-    color: var(--grey-color);
+/*.inputLabel {*/
+/*    font-weight: 400;*/
+/*    font-size: 13px;*/
+/*    line-height: 20px;*/
+/*    color: var(--grey-color);*/
 
-    position: absolute;
-    z-index: 2;
-    top: -10px;
-}
+/*    position: absolute;*/
+/*    z-index: 2;*/
+/*    top: -10px;*/
+/*}*/
 .inputEye {
     position: absolute;
     right: 17px;
@@ -74,9 +74,19 @@
 .hr {
     position: absolute;
     right: 0;
-    bottom: 4px;
+    bottom: -8px;
     border: 1px solid var(--black-color);
     transform: rotate(45deg);
     width: 23px;
     height: 1px;
+}
+
+.inputLabel {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #24254A;
+    opacity: 0.5;
+    margin-top: 15px;
+    margin-bottom: -5px;
 }

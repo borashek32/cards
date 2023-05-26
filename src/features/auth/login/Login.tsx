@@ -1,7 +1,7 @@
 import {authThunks} from "features/auth/auth.slice"
 import s from "features/auth/styles.module.css"
 import React, {useState} from "react"
-import {Card} from "common/components/Card/Card"
+import {Card} from "common/components/Card/AuthCard/Card"
 import {Title} from "common/components/Title/Title"
 import {NavLink, useNavigate} from "react-router-dom"
 import {Footer} from "common/components/Footer/Footer"
@@ -37,12 +37,11 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     dispatch(authThunks.login(data))
-      // .unwrap() нужен при использовании .catch()
       .unwrap()
       .then(() => {
-        toast.success("You are logged successfully")
+        toast.success("You are logged in successfully")
         setTimeout(() => {
-          navigate("/profile")
+          navigate("/packs")
         }, 1000)
       })
   }

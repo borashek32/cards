@@ -1,6 +1,5 @@
 import React, {FC} from "react"
-import {Card} from "common/components/Card/Card"
-import {Title} from "common/components/Title/Title"
+import {Card} from "common/components/Card/AuthCard/Card"
 import styles from "features/auth/profile/styles.module.css"
 import Button from "common/components/Button/Button"
 import {TextField} from "@mui/material"
@@ -11,9 +10,9 @@ import {toast} from "react-toastify"
 import {packsThunks} from "features/packs/packs.slice"
 import {Footer} from "common/components/Footer/Footer"
 import {PackType} from "features/packs/packs.types"
-import {Layout} from "features/layout/Layout"
 import s from "features/packs/forms/styles.module.css"
 import closeImg from "assets/img/close.svg"
+import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 
 
 type Props = {
@@ -22,6 +21,7 @@ type Props = {
 }
 type FormDataType = {
   name: string
+  privateCard: boolean
 }
 
 export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
@@ -45,15 +45,15 @@ export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
         <div className={s.closeImgWrapper}>
           <img src={closeImg} alt="close image" className={s.closeImg} onClick={() => setEditMode(false)}/>
         </div>
-        <Title title={"Edit Pack"}/>
+        <LeftTitle title={"Edit Pack"}/>
         <div className={styles.profile__wrapper}>
           <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'} style={{width: "350px"}}>
             <TextField
               fullWidth={true}
-              label={"Edit Pack Name"}
+              label={"Name pack"}
               variant={"standard"}
               autoComplete="off"
-              placeholder={"Pack Name"}
+              placeholder={"Name pack"}
               className={i.input}
               {...(register("name", {
                 required: "Pack Name field is required",
@@ -66,6 +66,11 @@ export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
               type="text"
             />
             {errors.name && <span className={i.error}>{errors.name.message}</span>}
+
+            <div className={s.checkboxWrapper}>
+              <input type={"checkbox"} {...register('privateCard')} className={s.checkbox} />
+              <label htmlFor="#" style={{color: "#000"}} className={s.label}>Private Pack</label>
+            </div>
             <Footer>
               <Button name={"Edit"} xType={"default"} />
             </Footer>

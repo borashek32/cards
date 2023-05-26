@@ -13,7 +13,7 @@ export const Header = () => {
     <div id={'hw5-header'} className={s.header}>
       <div className={s.header__container}>
         <img src={logo} alt="IT-incubator Logo" className={s.header__logo}/>
-        {profile && <DropDownMenu/>}
+        {profile && <DropDownMenu userName={profile.name} />}
       </div>
     </div>
   )

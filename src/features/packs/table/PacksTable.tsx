@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect} from "react"
 import {useAppDispatch} from "common/hooks"
 import s from 'features/packs/table/styles.module.css'
 import CustomPagination from "common/components/Pagination/CustomPagination"
@@ -9,15 +9,14 @@ import {useSelector} from "react-redux"
 import {Pack} from "features/packs/table/Pack"
 
 
-export const Table = () => {
+export const PacksTable = () => {
 
   const cardPacks = useSelector(selectPacks);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(packsThunks.fetchPacks());
+    dispatch(packsThunks.fetchPacks())
   }, [])
-
 
   return (
     <div className={s.container}>
@@ -43,7 +42,7 @@ export const Table = () => {
         </thead>
 
         <tbody>
-          {cardPacks?.map((p: PackType) => <Pack p={p} />)}
+          {cardPacks?.map((p: PackType) => <Pack key={p._id} p={p} />)}
         </tbody>
       </table>
 

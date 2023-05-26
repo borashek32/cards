@@ -42,7 +42,7 @@ const Button: React.FC<SuperButtonPropsType> = (
     >
       <div className={s.buttonWrapper}>
         {imgPath && <img src={imgPath} alt="log out"/>}
-        <p className={imgPath ? s.buttonNameBlack : s.buttonNameWhite}>{name}</p>
+        <p className={xType === 'secondary' ? s.buttonNameBlack : s.buttonNameWhite}>{name}</p>
       </div>
     </button>
   )

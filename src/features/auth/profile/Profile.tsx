@@ -1,5 +1,5 @@
-import React, {FC, useState} from "react"
-import {Card} from "common/components/Card/Card"
+import React, {useState} from "react"
+import {Card} from "common/components/Card/AuthCard/Card"
 import {Title} from "common/components/Title/Title"
 import {SubmitHandler} from "react-hook-form"
 import styles from "features/auth/profile/styles.module.css"
@@ -13,18 +13,18 @@ import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
 import cat from 'assets/img/catYellow.jpg'
 import logout from 'assets/img/logout.svg'
-import {ProfileType} from "./../auth.types"
 import {useNavigate} from "react-router-dom"
+import {useSelector} from "react-redux"
+import {selectProfile} from "features/auth/auth.selectors"
+import f from 'common/components/Footer/styles.module.css'
+import {BackLink} from "common/components/BackLink/BackLink"
 
 
-type PropsType = {
-  profile: ProfileType
-}
-
-export const Profile: FC<PropsType> = ({profile}) => {
+export const Profile = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const profile = useSelector(selectProfile)
   const [editMode, setEditMode] = useState(false)
 
   // log out
@@ -43,38 +43,41 @@ export const Profile: FC<PropsType> = ({profile}) => {
 
 
   return (
-    <Card id={'cards-profile'}>
-      <Title title={"Personal Information"}/>
-      <div className={styles.profile__wrapper}>
-        <div className={styles.profile__userPhotoWrapper}>
-          <img
-            src={cat}
-            alt="user img"
-            className={styles.profile__userPhoto}/>
-          <div className={styles.profile__editPhotoWrapper}>
-            <img src={editPhoto} alt="edit photo" className={styles.profile__editPhoto}/>
+    <>
+      <BackLink backPath={'/packs'} backText={'Back to Packs List'} />
+      <Card id={'cards-profile'}>
+        <Title title={"Personal Information"}/>
+        <div className={styles.profile__wrapper}>
+          <div className={styles.profile__userPhotoWrapper}>
+            <img
+              src={cat}
+              alt="user img"
+              className={styles.profile__userPhoto}/>
+            <div className={styles.profile__editPhotoWrapper}>
+              <img src={editPhoto} alt="edit photo" className={styles.profile__editPhoto}/>
+            </div>
           </div>
-        </div>
 
-        <div className={styles.profile__userInfoWrapper}>
-          {!editMode ?
-            <div className={styles.profile__userNameWrapper}>
-              <p className={styles.profile__userName}>{profile && profile.name}</p>
-              <img src={edit} alt="edit profile" onClick={onEditMode} className={styles.profile__editImg}/>
-            </div>
-            :
-            <div className={i.inputWrapper + " " + styles.profile__inputWrapper + ' ' +
-              (editMode && styles.profile__inputWrapperFadeIn)}>
-              <EditProfileForm userName={profile && profile.name} editMode={editMode} setEditMode={setEditMode}/>
-            </div>
-          }
-          <p className={styles.profile__userEmail}>{profile && profile.email}</p>
-        </div>
+          <div className={styles.profile__userInfoWrapper}>
+            {!editMode ?
+              <div className={styles.profile__userNameWrapper}>
+                <p className={styles.profile__userName}>{profile && profile.name}</p>
+                <img src={edit} alt="edit profile" onClick={onEditMode} className={styles.profile__editImg}/>
+              </div>
+              :
+              <div className={i.inputWrapper + " " + styles.profile__inputWrapper + ' ' +
+                (editMode && styles.profile__inputWrapperFadeIn)}>
+                <EditProfileForm userName={profile && profile.name} editMode={editMode} setEditMode={setEditMode}/>
+              </div>
+            }
+            <p className={styles.profile__userEmail}>{profile && profile.email}</p>
+          </div>
 
-        <Footer>
-          <Button onClick={onSubmit} name={"Log out"} xType={"secondary"} imgPath={logout}/>
-        </Footer>
-      </div>
-    </Card>
+          <Footer>
+            <Button onClick={onSubmit} name={"Log out"} xType={"secondary"} imgPath={logout}/>
+          </Footer>
+        </div>
+      </Card>
+    </>
   )
 }

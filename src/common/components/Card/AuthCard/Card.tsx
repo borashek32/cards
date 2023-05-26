@@ -1,4 +1,4 @@
-import s from 'common/components/Card/styles.module.css'
+import s from 'common/components/Card/AuthCard/styles.module.css'
 import {FC, ReactNode} from "react"
 import React from 'react'
 

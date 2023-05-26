@@ -29,12 +29,17 @@ const Checkbox: React.FC<SuperCheckboxPropsType> = (
   const onChangeCallback = (e: ChangeEvent<HTMLInputElement>) => {
     // задачка на написание онченджа
     if (onChangeChecked) {
+      console.log(e.currentTarget.checked)
       onChangeChecked(e.currentTarget.checked)
     }
   }
 
   const finalInputClassName = s.checkbox
     + (className ? ' ' + className : '')
+
+  // Извлекаем значение checked из restProps
+  const { checked, ...inputProps } = restProps;
+  console.log(checked)
 
   return (
     <div className={s.checkboxWrapper}>

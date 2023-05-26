@@ -4,34 +4,43 @@ import styles from "features/auth/profile/styles.module.css"
 import Button from "common/components/Button/Button"
 import {TextField} from "@mui/material"
 import i from "common/components/Input/styles.module.css"
-import s from "./styles.module.css"
+import s from "features/packs/forms/styles.module.css"
 import {useAppDispatch} from "common/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {toast} from "react-toastify"
-import {packsThunks} from "features/packs/packs.slice"
 import {Footer} from "common/components/Footer/Footer"
 import closeImg from 'assets/img/close.svg'
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
+import {cardsThunks} from "features/cards/cards.slice"
 
 
 type Props = {
   setOpenCreateModal: (openCreateModal: boolean) => void
+  cardsPack_id?: string
 }
 type FormDataType = {
-  name: string
-  privateCard: boolean
+  question: string
+  answer: string
+  cardsPack_id: string
 }
 
-export const CreatePackForm: FC<Props> = ({setOpenCreateModal}) => {
+export const CreateCardForm: FC<Props> = ({setOpenCreateModal, cardsPack_id}) => {
 
-  const {register, formState: {errors}, handleSubmit} = useForm<FormDataType>({mode: "onChange"})
+  const {register, formState: {errors}, handleSubmit} = useForm<FormDataType>({
+    mode: "onChange",
+    defaultValues: {
+      question: '',
+      answer: '',
+      cardsPack_id: cardsPack_id
+    }
+  })
   const dispatch = useAppDispatch()
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    dispatch(packsThunks.createPack(data))
+    dispatch(cardsThunks.createCard(data))
       .unwrap()
-      .then((res) => {
-        toast.success(`New Pack ${res.pack.name} was added successfully`)
+      .then(() => {
+        toast.success("New Card was added successfully")
       })
     setOpenCreateModal(false)
   }
@@ -43,32 +52,45 @@ export const CreatePackForm: FC<Props> = ({setOpenCreateModal}) => {
         <div className={s.closeImgWrapper}>
           <img src={closeImg} alt="close image" className={s.closeImg} onClick={() => setOpenCreateModal(false)}/>
         </div>
-        <LeftTitle title={"Add New Pack"}/>
+        <LeftTitle title={"Add New Card"}/>
         <div className={styles.profile__wrapper}>
           <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'} style={{width: "350px"}}>
+            <p className={i.inputLabel}>Question</p>
             <TextField
               fullWidth={true}
-              label={"Pack Name"}
               variant={"standard"}
               autoComplete="off"
-              placeholder={"Enter Pack Name"}
               className={i.input}
-              {...(register("name", {
-                required: "Name field is required",
+              {...(register("question", {
+                required: "Question field is required",
                 minLength: {
                   value: 3,
-                  message: "Min length of card name field is 3 symbols"
+                  message: "Min length of card question field is 3 symbols"
                 }
               }))}
               defaultValue={''}
               type="text"
             />
-            {errors.name && <span className={i.error}>{errors.name.message}</span>}
+            {errors.question && <span className={i.error}>{errors.question.message}</span>}
 
-            <div className={s.checkboxWrapper}>
-              <input type={"checkbox"} {...register('privateCard')} className={s.checkbox} />
-              <label htmlFor="#" style={{color: "#000"}} className={s.label}>Private Pack</label>
-            </div>
+            <p className={i.inputLabel}>Answer</p>
+            <TextField
+              fullWidth={true}
+              variant={"standard"}
+              autoComplete="off"
+              className={i.input}
+              {...(register("answer", {
+                required: "Answer field is required",
+                minLength: {
+                  value: 3,
+                  message: "Min length of card answer field is 3 symbols"
+                }
+              }))}
+              defaultValue={''}
+              type="text"
+            />
+            {errors.answer && <span className={i.error}>{errors.answer.message}</span>}
+
             <Footer>
               <Button name={"Create"} xType={"default"}/>
             </Footer>

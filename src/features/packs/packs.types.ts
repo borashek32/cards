@@ -1,6 +1,6 @@
 export type PackType = {
   _id: string
-  user_id: number
+  user_id: string
   user_name: string
   name: string
   cardsCount: number
@@ -15,25 +15,6 @@ export type PackType = {
   type: string
   __v: number
 }
-export type ArgGetPacksType = {
-  packName?: string
-  min?: number
-  max?: number
-  sortPacks?: string
-  page?: number
-  pageCount?: number
-  user_id?: string
-  block?: boolean
-}
-export type ResGetPacksType = {
-  cardPacks: PackType[]
-  cardPacksTotalCount: number
-  // количество колод
-  maxCardsCount: number
-  minCardsCount: number
-  page: number// выбранная страница
-  pageCount: number
-}
 
 export type ArgCreatePackType = {
   name?: string;
@@ -41,23 +22,12 @@ export type ArgCreatePackType = {
   private?: boolean;
 };
 
-export type ArgDeletePackType = { id: number }
-
-
 export type UpdatePackResponseType = {
   updatedCardsPack: PackType;
   token: string;
   tokenDeathTime: number;
 };
 
-export type ArgUpdatePackType = {
-  cardsPack: {
-    _id: number
-    name?: string
-    deckCover?: string
-    private?: boolean
-  }
-}
 
 export type FetchPacksResponseType = {
   cardPacks: PackType[];

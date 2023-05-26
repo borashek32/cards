@@ -46,6 +46,7 @@ const register = createAppAsyncThunk<void, ArgRegisterType>(
     await authApi.register(arg)
   }, false)
 })
+
 const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>(
   "auth/login",
   async(arg, thunkAPI
@@ -55,6 +56,7 @@ const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>(
     return { profile: res.data };
   }, false);
 })
+
 const logout = createAppAsyncThunk<void>(
   "auth/logout",
   async (arg, thunkAPI
@@ -63,15 +65,24 @@ const logout = createAppAsyncThunk<void>(
     await authApi.logout()
   }, false)
 })
+
 const authMe = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/auth-me",
   async (arg, thunkAPI
   ) => {
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await authApi.me()
-    return { profile: res.data }
-  }, false)
+    const {rejectWithValue} = thunkAPI
+    try {
+      const res = await authApi.me()
+      return { profile: res.data }
+    } catch(e) {
+      return rejectWithValue(e)
+    }
+  // return thunkTryCatch(thunkAPI, async () => {
+  //   const res = await authApi.me()
+  //   return { profile: res.data }
+  // }, false)
 })
+
 const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>(
   "auth/forgot-password",
   async (arg, thunkAPI
@@ -81,6 +92,7 @@ const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordT
     return res.data
   }, false)
 })
+
 const setNewPassword = createAppAsyncThunk<void, NewPassReqType>(
   `auth/set-new-password/:token`,
   async (arg, thunkAPI
@@ -89,6 +101,7 @@ const setNewPassword = createAppAsyncThunk<void, NewPassReqType>(
     await authApi.setNewPassword(arg)
   })
 })
+
 const updateProfile = createAppAsyncThunk<{ profile: ProfileType }, UpdateProfileDataType>(
   "auth/update-profile-data",
   async (arg, thunkAPI

@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import {Card} from "common/components/Card/Card"
+import {Card} from "common/components/Card/AuthCard/Card"
 import {Title} from "common/components/Title/Title"
 import s from "features/auth/styles.module.css"
 import {Footer} from "common/components/Footer/Footer"
