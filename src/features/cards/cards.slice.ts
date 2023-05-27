@@ -58,6 +58,7 @@ const slice = createSlice({
     } as GetCardsParamsType,
     selectedCardsPackId: '' as string,
     isLoading: false as boolean,
+    isOwner: false
   },
   reducers: {},
   extraReducers: (builder) => {

@@ -11,13 +11,13 @@ import {
 import {createAppAsyncThunk} from "common/utils/create-app-async-thunk"
 import {authApi} from "features/auth/auth.api"
 import {thunkTryCatch} from "common/utils"
+import {appActions} from "app/app.slice"
 
 
 const slice = createSlice({
   name: "auth",
   initialState: {
-    profile: null as ProfileType | null,
-    authError: ''
+    profile: null as ProfileType | null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -70,17 +70,15 @@ const authMe = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/auth-me",
   async (arg, thunkAPI
   ) => {
-    const {rejectWithValue} = thunkAPI
+    const {rejectWithValue, dispatch} = thunkAPI
     try {
       const res = await authApi.me()
       return { profile: res.data }
     } catch(e) {
       return rejectWithValue(e)
+    } finally {
+      dispatch(appActions.setAppInitialized({isAppInitialized: true}))
     }
-  // return thunkTryCatch(thunkAPI, async () => {
-  //   const res = await authApi.me()
-  //   return { profile: res.data }
-  // }, false)
 })
 
 const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordType>(
@@ -94,7 +92,7 @@ const forgotPassword = createAppAsyncThunk<TokenResponseType, ArgForgotPasswordT
 })
 
 const setNewPassword = createAppAsyncThunk<void, NewPassReqType>(
-  `auth/set-new-password/:token`,
+  `auth/set-new-password`,
   async (arg, thunkAPI
   ) => {
   return thunkTryCatch(thunkAPI, async () => {

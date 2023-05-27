@@ -28,6 +28,16 @@ export type UpdatePackResponseType = {
   tokenDeathTime: number;
 };
 
+export type GetPacksParamsType = {
+  packName?: string
+  min?: string
+  max?: string
+  sortPacks?: string
+  page?: number
+  pageCount?: number
+  user_id?: string
+  block?: boolean
+}
 
 export type FetchPacksResponseType = {
   cardPacks: PackType[];

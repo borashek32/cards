@@ -1,6 +1,5 @@
 import React, {FC} from "react"
 import s from 'features/packs/table/styles.module.css'
-import CustomPagination from "common/components/Pagination/CustomPagination"
 import {Card} from "features/cards/table/Card"
 import {CardType} from "features/cards/cards.types"
 
@@ -42,12 +41,6 @@ export const CardsTable: FC<Props> = ({cardsPack_id, cards}) => {
           }
           </tbody>
         </table>
-
-        <CustomPagination
-          page={1}
-          onChange={() => {
-          }}
-        />
       </div>
     </div>
   )

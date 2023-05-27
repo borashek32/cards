@@ -9,19 +9,19 @@ import {useNavigate} from "react-router-dom"
 
 export const CheckEmail = () => {
 
-  const navigate = useNavigate()
-
-  const backToLogin = () => navigate('/login')
+  // const navigate = useNavigate()
+  //
+  // const backToLogin = () => navigate('/login')
 
   return (
     <Card id={'cards-check-email'}>
       <Title title={"Check email"}/>
       <div className={s.auth__checkEmailWrapper}>
         <img src={email} alt="email"/>
-        <p className={s.auth__sendEmailDesc}>We’ve sent an Email with instructions to example@mail.com</p>
+        <p className={s.auth__sendEmailDesc}>We’ve sent an Email with instructions to your email</p>
       </div>
       <Footer>
-        <Button callback={backToLogin} name={"Back to login"} xType={"default"} />
+        {/*<Button callback={backToLogin} name={"Back to login"} xType={"default"} />*/}
       </Footer>
     </Card>
   )

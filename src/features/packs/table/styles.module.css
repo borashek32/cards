@@ -39,3 +39,16 @@
 .table__link {
     color: var(--black-color);
 }
+
+
+.paginationWrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.paginationText {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--black-color);
+}

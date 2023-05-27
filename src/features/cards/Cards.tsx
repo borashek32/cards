@@ -19,17 +19,14 @@ import {selectProfile} from "features/auth/auth.selectors"
 export const Cards = () => {
 
   const dispatch = useAppDispatch()
-  const cardsPack = useParams()
-  const cardsPack_id = cardsPack.cardsPack_id
+
+  const cardsPackFromUseParams = useParams() // here an object, like {id: "csdghcvdsghcda"}
+  const cardsPack_id = cardsPackFromUseParams.cardsPack_id
+
   const cards = useSelector(selectCards)
-  const authorizedUser = useSelector(selectProfile)
   const packName = useSelector(selectCardsPackName)
 
-  // TODO
-  // to find a pack to take its name
-  const packs = useSelector(selectPacks)
-  const pack = packs.find(p => p._id === cardsPack_id)
-  const isPackOwner = authorizedUser && pack?.user_id === authorizedUser._id
+  const authorizedUser = useSelector(selectProfile)
 
   useEffect(() => {
     dispatch(cardsThunks.getCards({cardsPack_id}))
@@ -46,27 +43,36 @@ export const Cards = () => {
   return (
     <div className={s.packsWrapper}>
       <BackLink backPath={'/packs'} backText={'Back to Packs List'}/>
-      {isPackOwner && openCreateModal && <CreateCardForm cardsPack_id={cardsPack_id} setOpenCreateModal={setOpenCreateModal}/>}
+      {openCreateModal &&
+        <CreateCardForm cardsPack_id={cardsPack_id} setOpenCreateModal={setOpenCreateModal}/>}
       <div className={s.packs}>
         <div className={t.pack__titleWrapper}>
           <h1 className={t.pack__title}>{packName}</h1>
           {cards && cards.length > 0 && <div>
-            <Button name={"Add new card"} xType={"default"} onClick={() => setOpenCreateModal(true)} />
+            <Button name={"Add new card"} xType={"default"} onClick={() => setOpenCreateModal(true)}/>
           </div>}
         </div>
 
         {cards.length > 0
           ? <div>
             <Nav/>
-            <CardsTable cards={cards} cardsPack_id={cardsPack_id} />
+            <CardsTable cards={cards} cardsPack_id={cardsPack_id}/>
           </div>
           : <div className={s.emptyPackWrapper}>
-            <p className={s.addCardDesc}>
-              This pack is empty. Click add new card to fill this pack
-            </p>
-            {isPackOwner && <div className={s.buttonEmptyPackWrapper}>
-              <Button name={"Add new card"} xType={"default"} onClick={() => setOpenCreateModal(true)}/>
-            </div>}
+
+             <>
+                <p className={s.addCardDesc}>
+                  This pack is empty. Click add new card to fill this pack
+                </p>
+                <div className={s.buttonEmptyPackWrapper}>
+                  <Button name={"Add new card"} xType={"default"} onClick={() => setOpenCreateModal(true)}/>
+                </div>
+             </>
+
+             <p className={s.addCardDesc}>
+                This pack is empty
+              </p>
+
           </div>
         }
       </div>

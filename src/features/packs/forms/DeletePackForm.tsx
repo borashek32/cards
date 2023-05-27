@@ -23,7 +23,6 @@ export const DeletePackForm: FC<Props> = ({setDeleteModal, p}) => {
     dispatch(packsThunks.removePack(id))
       .unwrap()
       .then((res) => {
-        dispatch(packsThunks.fetchPacks)
         toast.success(`Pack ${p.name} was deleted successfully`)
       })
     setDeleteModal(false)

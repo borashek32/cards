@@ -65,8 +65,7 @@ export const ForgotPasswordForm = () => {
           Enter your email address and we will send you further instructions
         </p>
         <Footer>
-          <Button callback={() => {
-          }} name={"Send Instructions"} xType={"default"}/>
+          <Button name={"Send Instructions"} xType={"default"}/>
           <p className={s.auth__alreadyHaveAcc}>Did you remember your password?</p>
           <NavLink to={"/login"}>
             <p className={s.auth__redirect}>Try logging in</p>
