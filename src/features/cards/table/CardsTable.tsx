@@ -7,6 +7,7 @@ import {CardType} from "features/cards/cards.types"
 type Props = {
   cardsPack_id?: string
   cards: CardType[]
+  isOwner: boolean
 }
 
 export const CardsTable: FC<Props> = ({cardsPack_id, cards}) => {

@@ -15,10 +15,16 @@ const getCards = createAppAsyncThunk<GetCardsResponseType, ArgGetCardsType>(
   async (arg, thunkAPI) => {
     return thunkTryCatch(thunkAPI, async () => {
       const params = {
-        cardsPack_id: arg.cardsPack_id,
+        cardsPack_id: arg.cardsPack_id
       }
+      debugger
       const res = await cardsApi.getCards(params)
-      return { cards: res.data.cards, cardsPack_id: params.cardsPack_id, packName: res.data.packName }
+      return {
+        cards: res.data.cards,
+        cardsPack_id: params.cardsPack_id,
+        packName: res.data.packName,
+        packUserId: res.data.packUserId
+      }
     })
   })
 
@@ -58,7 +64,7 @@ const slice = createSlice({
     } as GetCardsParamsType,
     selectedCardsPackId: '' as string,
     isLoading: false as boolean,
-    isOwner: false
+    packUserId: ''
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -67,6 +73,7 @@ const slice = createSlice({
         state.cards = action.payload.cards
         state.packName = action.payload.packName
         state.selectedCardsPackId = action.payload.cardsPack_id
+        state.packUserId = action.payload.packUserId
       })
       .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardType }>) => {
         state.cards.unshift(action.payload.card);

@@ -7,19 +7,12 @@ import {selectCardPacksTotalCount, selectPacks, selectPage, selectPageCount} fro
 import {useSelector} from "react-redux"
 import {Pack} from "features/packs/table/Pack"
 import {MenuItem, Pagination, Select, SelectChangeEvent} from "@mui/material"
-import {selectProfile} from "features/auth/auth.selectors"
 
 
 export const PacksTable = () => {
 
   const cardPacks = useSelector(selectPacks);
   const dispatch = useAppDispatch();
-
-  // to get a property isOwner in thunks
-  // pack.id === authorizedUserId
-  const authorizedUser = useSelector(selectProfile)
-  const user_id = authorizedUser?._id
-  // dispatch(packsActions.setParams({params: {user_id}}))
 
   const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
   const pageCount = useSelector(selectPageCount) ?? 4
@@ -37,8 +30,8 @@ export const PacksTable = () => {
   }
 
   useEffect(() => {
-    dispatch(packsThunks.fetchPacks({page, pageCount, user_id}))
-  }, [page, pageCount, user_id])
+    dispatch(packsThunks.fetchPacks({page, pageCount}))
+  }, [page, pageCount])
 
   console.log(cardPacks)
 

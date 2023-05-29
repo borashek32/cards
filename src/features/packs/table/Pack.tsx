@@ -1,5 +1,5 @@
 import {PackType} from "features/packs/packs.types"
-import React, {FC, useState} from "react"
+import React, {FC, useEffect, useState} from "react"
 import s from "features/packs/table/styles.module.css"
 import teacher from "assets/img/teacher.svg"
 import pencil from "assets/img/pencil.svg"
@@ -9,6 +9,8 @@ import {DeletePackForm} from "features/packs/forms/DeletePackForm"
 import {useSelector} from "react-redux"
 import {selectProfile} from "features/auth/auth.selectors"
 import {NavLink} from "react-router-dom"
+import {useAppDispatch} from "common/hooks"
+import {packsActions} from "features/packs/packs.slice"
 
 type Props = {
   p: PackType
@@ -23,6 +25,8 @@ export const Pack: FC<Props> = ({p}) => {
 
   const createdDate = new Date(p.created)
   const updatedDate = new Date(p.updated)
+
+  const isOwner = authorizedUser?._id === p.user_id
 
 
   return (
@@ -39,12 +43,13 @@ export const Pack: FC<Props> = ({p}) => {
         {p.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
       </td>
       <td className={s.table__colValue}>
-        {p.user_name}, {p.isOwner ? "isOwner" : "no" }
+        {p.user_name}
       </td>
       <td
         className={s.table__colValue_actions}>
-        <div className={s.table__colValue_actionsWrapper + ' ' + (authorizedUser?._id !== p.user_id && s.table__colValue_actions_justLearn)}>
-          {authorizedUser?._id === p.user_id &&
+        <div
+          className={s.table__colValue_actionsWrapper + ' ' + (authorizedUser?._id !== p.user_id && s.table__colValue_actions_justLearn)}>
+          {isOwner &&
             <>
               <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
               {editMode && <UpdatePackForm p={p} setEditMode={setEditMode}/>}

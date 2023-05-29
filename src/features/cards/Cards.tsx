@@ -7,12 +7,11 @@ import {useParams} from "react-router-dom"
 import {CardsTable} from "features/cards/table/CardsTable"
 import {BackLink} from "common/components/BackLink/BackLink"
 import {useSelector} from "react-redux"
-import {selectCards, selectCardsPackName} from "features/cards/cards.selectors"
+import {selectCards, selectCardsPackName, selectPackUserId} from "features/cards/cards.selectors"
 import Button from "common/components/Button/Button"
 import {cardsThunks} from "features/cards/cards.slice"
 import {toast} from "react-toastify"
 import {useAppDispatch} from "common/hooks"
-import {selectPacks} from "features/packs/packs.selectors"
 import {selectProfile} from "features/auth/auth.selectors"
 
 
@@ -23,13 +22,16 @@ export const Cards = () => {
   const cardsPackFromUseParams = useParams() // here an object, like {id: "csdghcvdsghcda"}
   const cardsPack_id = cardsPackFromUseParams.cardsPack_id
 
+  const packUserId = useSelector(selectPackUserId)
+  const authorizedUser = useSelector(selectProfile)
+  const isOwner = authorizedUser?._id === packUserId
+  console.log(isOwner)
+
   const cards = useSelector(selectCards)
   const packName = useSelector(selectCardsPackName)
 
-  const authorizedUser = useSelector(selectProfile)
-
   useEffect(() => {
-    dispatch(cardsThunks.getCards({cardsPack_id}))
+    dispatch(cardsThunks.getCards({cardsPack_id, packUserId}))
       .unwrap()
       .then((res) => {
         if (res.cards.length > 0) {
@@ -56,7 +58,7 @@ export const Cards = () => {
         {cards.length > 0
           ? <div>
             <Nav/>
-            <CardsTable cards={cards} cardsPack_id={cardsPack_id}/>
+            <CardsTable isOwner={isOwner} cards={cards} cardsPack_id={cardsPack_id}/>
           </div>
           : <div className={s.emptyPackWrapper}>
 

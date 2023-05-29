@@ -14,7 +14,6 @@ export type PackType = {
   shorts: number
   type: string
   __v: number
-
   isOwner: boolean
 }
 
@@ -39,6 +38,7 @@ export type GetPacksParamsType = {
   pageCount?: number
   user_id?: string
   block?: boolean
+  isOwner?: boolean
 }
 
 export type FetchPacksResponseType = {

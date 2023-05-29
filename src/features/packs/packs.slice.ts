@@ -9,8 +9,7 @@ const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType }, Ge
   async (params, thunkAPI) => {
     return thunkTryCatch(thunkAPI, async () => {
       const res = await packsApi.getPacks(params)
-      debugger
-      return { packsPage: res.data, userId: params.user_id }
+      return { packsPage: res.data }
     })
   }
 )
@@ -60,6 +59,9 @@ const slice = createSlice({
   reducers: {
     setParams: (state, action: PayloadAction<{ params: GetPacksParamsType }>) => {
       state.params = action.payload.params
+    },
+    setIsOwner: (state, action: PayloadAction<{ isOwner: boolean }>) => {
+      state.cardPacks.forEach(pack => pack.isOwner = action.payload.isOwner)
     }
   },
   extraReducers: (builder) => {
@@ -67,11 +69,6 @@ const slice = createSlice({
       .addCase(fetchPacks.fulfilled, (state, action) => {
         state.cardPacks = action.payload.packsPage.cardPacks
         state.cardsPackTotalCount = action.payload.packsPage.cardPacksTotalCount
-
-        state.cardPacks.forEach(p => {
-          // debugger
-          return p.user_id === action.payload.userId ? p.isOwner = true : p.isOwner = false
-        })
       })
       .addCase(createPack.fulfilled, (state, action) => {
         state.cardPacks.unshift(action.payload.pack)
