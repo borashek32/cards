@@ -8,7 +8,7 @@ import {AxiosError, isAxiosError} from "axios"
 export const thunkTryCatch = async (
   thunkAPI: BaseThunkAPI<RootState, any, AppDispatch, unknown>,
   logic: Function,
-  showGlobalError: boolean = true
+  showGlobalError: boolean = false
 ) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   try {

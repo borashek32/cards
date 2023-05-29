@@ -39,7 +39,7 @@ export const Pack: FC<Props> = ({p}) => {
         {p.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
       </td>
       <td className={s.table__colValue}>
-        {p.user_name}
+        {p.user_name}, {p.isOwner ? "isOwner" : "no" }
       </td>
       <td
         className={s.table__colValue_actions}>

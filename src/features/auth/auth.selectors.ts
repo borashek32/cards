@@ -1,3 +1,5 @@
 import { RootState } from "app/store"
 
-export const selectProfile = (state: RootState) => state.auth.profile
+const selectProfile = (state: RootState) => state.auth.profile
+
+export {selectProfile}

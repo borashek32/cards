@@ -8,8 +8,9 @@ const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType }, Ge
   "packs/fetchPacks",
   async (params, thunkAPI) => {
     return thunkTryCatch(thunkAPI, async () => {
-      const res = await packsApi.getPacks(params);
-      return { packsPage: res.data };
+      const res = await packsApi.getPacks(params)
+      debugger
+      return { packsPage: res.data, userId: params.user_id }
     })
   }
 )
@@ -52,7 +53,8 @@ const slice = createSlice({
       pageCount: 4,
       min: '0',
       max: '100',
-      packName: ''
+      packName: '',
+      user_id: ''
     } as GetPacksParamsType
   },
   reducers: {
@@ -66,6 +68,10 @@ const slice = createSlice({
         state.cardPacks = action.payload.packsPage.cardPacks
         state.cardsPackTotalCount = action.payload.packsPage.cardPacksTotalCount
 
+        state.cardPacks.forEach(p => {
+          // debugger
+          return p.user_id === action.payload.userId ? p.isOwner = true : p.isOwner = false
+        })
       })
       .addCase(createPack.fulfilled, (state, action) => {
         state.cardPacks.unshift(action.payload.pack)

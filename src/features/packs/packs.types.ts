@@ -14,6 +14,8 @@ export type PackType = {
   shorts: number
   type: string
   __v: number
+
+  isOwner: boolean
 }
 
 export type ArgCreatePackType = {

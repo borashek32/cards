@@ -1,18 +1,13 @@
-import React, {ChangeEvent, FC, useEffect, useState} from "react"
+import React, {ChangeEvent, useEffect} from "react"
 import {useAppDispatch} from "common/hooks"
 import s from 'features/packs/table/styles.module.css'
 import {PackType} from "./../packs.types"
 import {packsActions, packsThunks} from "features/packs/packs.slice"
-import {
-  selectCardPacksTotalCount,
-  selectPackPaginationParams,
-  selectPacks,
-  selectPage,
-  selectPageCount
-} from "features/packs/packs.selectors"
+import {selectCardPacksTotalCount, selectPacks, selectPage, selectPageCount} from "features/packs/packs.selectors"
 import {useSelector} from "react-redux"
 import {Pack} from "features/packs/table/Pack"
 import {MenuItem, Pagination, Select, SelectChangeEvent} from "@mui/material"
+import {selectProfile} from "features/auth/auth.selectors"
 
 
 export const PacksTable = () => {
@@ -20,11 +15,15 @@ export const PacksTable = () => {
   const cardPacks = useSelector(selectPacks);
   const dispatch = useAppDispatch();
 
+  // to get a property isOwner in thunks
+  // pack.id === authorizedUserId
+  const authorizedUser = useSelector(selectProfile)
+  const user_id = authorizedUser?._id
+  // dispatch(packsActions.setParams({params: {user_id}}))
 
   const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
   const pageCount = useSelector(selectPageCount) ?? 4
   const page = useSelector(selectPage)
-
 
   // packs per page
   const handleChangePacksPerPage = (event: SelectChangeEvent) => {
@@ -36,12 +35,12 @@ export const PacksTable = () => {
   const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
     dispatch(packsActions.setParams({params: {page: newPage}}))
   }
+
   useEffect(() => {
-    dispatch(packsThunks.fetchPacks({
-        page,
-        pageCount
-    }))
-  }, [page, pageCount])
+    dispatch(packsThunks.fetchPacks({page, pageCount, user_id}))
+  }, [page, pageCount, user_id])
+
+  console.log(cardPacks)
 
   return (
     <div className={s.container}>
