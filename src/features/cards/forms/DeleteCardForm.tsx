@@ -3,14 +3,11 @@ import {Card} from "common/components/Card/AuthCard/Card"
 import Button from "common/components/Button/Button"
 import s from "features/packs/forms/styles.module.css"
 import {useAppDispatch} from "common/hooks"
-import {packsThunks} from "features/packs/packs.slice"
 import closeImg from 'assets/img/close.svg'
 import {toast} from "react-toastify"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 import {CardType} from "features/cards/cards.types"
 import {cardsThunks} from "features/cards/cards.slice"
-// import {useSelector} from "react-redux"
-// import {selectIsOwner} from "features/cards/cards.selectors"
 
 
 type Props = {
@@ -22,15 +19,12 @@ type Props = {
 export const DeleteCardForm: FC<Props> = ({setDeleteModal, c, cardsPack_id}) => {
 
   const dispatch = useAppDispatch()
-  // const isOwner = useSelector(selectIsOwner)
 
   const removePackHandler = (id: string) => {
     dispatch(cardsThunks.removeCard(id))
       .unwrap()
       .then((res) => {
         toast.success(`Pack ${c.question} was deleted successfully`)
-        // cardsThunks.getCards({cardsPack_id, isOwner})
-        console.log(cardsPack_id)
       })
     setDeleteModal(false)
   }

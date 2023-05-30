@@ -1,5 +1,5 @@
 import {PackType} from "features/packs/packs.types"
-import React, {FC, useEffect, useState} from "react"
+import React, {FC, useState} from "react"
 import s from "features/packs/table/styles.module.css"
 import teacher from "assets/img/teacher.svg"
 import pencil from "assets/img/pencil.svg"
@@ -9,8 +9,6 @@ import {DeletePackForm} from "features/packs/forms/DeletePackForm"
 import {useSelector} from "react-redux"
 import {selectProfile} from "features/auth/auth.selectors"
 import {NavLink} from "react-router-dom"
-import {useAppDispatch} from "common/hooks"
-import {packsActions} from "features/packs/packs.slice"
 
 type Props = {
   p: PackType
@@ -27,7 +25,6 @@ export const Pack: FC<Props> = ({p}) => {
   const updatedDate = new Date(p.updated)
 
   const isOwner = authorizedUser?._id === p.user_id
-
 
   return (
     <tr key={p._id} className={s.table__tr}>

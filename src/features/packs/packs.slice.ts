@@ -1,15 +1,23 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils";
-import {ArgCreatePackType, FetchPacksResponseType, GetPacksParamsType, PackType} from "./packs.types";
+import {ArgCreatePackType, FetchPacksResponseType, FilterValueType, GetPacksParamsType, PackType} from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
 
 
-const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType }, GetPacksParamsType>(
+const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType, params: GetPacksParamsType }>(
   "packs/fetchPacks",
-  async (params, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const { getState } = thunkAPI
     return thunkTryCatch(thunkAPI, async () => {
+      const params = {
+        ...getState().packs.params,
+        min: getState().packs.params?.min,
+        max: getState().packs.params?.max,
+        page: getState().packs.params?.page,
+        pageCount: getState().packs.params?.pageCount
+      }
       const res = await packsApi.getPacks(params)
-      return { packsPage: res.data }
+      return { packsPage: res.data, params: params }
     })
   }
 )
@@ -17,47 +25,52 @@ const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType }, Ge
 const createPack = createAppAsyncThunk<{ pack: PackType }, ArgCreatePackType>(
   "packs/createPack",
   async (arg, thunkAPI) => {
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await packsApi.createPack(arg)
-    return { pack: res.data.newCardsPack }
+    const { dispatch } = thunkAPI
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await packsApi.createPack(arg)
+      dispatch(packsThunks.fetchPacks())
+      return { pack: res.data.newCardsPack }
+    })
   })
-})
 
 const removePack = createAppAsyncThunk<{ packId: string }, string>(
   "packs/removePack",
   async (id, thunkAPI) => {
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await packsApi.removePack(id)
-    return {packId: res.data.deletedCardsPack._id}
+    const { dispatch } = thunkAPI
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await packsApi.removePack(id)
+      dispatch(packsThunks.fetchPacks())
+      return {packId: res.data.deletedCardsPack._id}
+    })
   })
-})
 
 const updatePack = createAppAsyncThunk<{ pack: PackType }, PackType>(
   "packs/updatePack",
   async (arg, thunkAPI) => {
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await packsApi.updatePack(arg);
-    return { packs: res.data.updatedCardsPack }
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await packsApi.updatePack(arg);
+      return { packs: res.data.updatedCardsPack }
+    })
   })
-})
 
 const slice = createSlice({
   name: "packs",
   initialState: {
     cardPacks: [] as PackType[],
     cardsPackTotalCount: 2000,
-
     params: {
       page: 1,
       pageCount: 4,
-      min: '0',
-      max: '100',
+      min: 0,
+      max: 100,
       packName: '',
-      user_id: ''
+      user_id: '',
+      filter: 'All',
     } as GetPacksParamsType
   },
   reducers: {
     setParams: (state, action: PayloadAction<{ params: GetPacksParamsType }>) => {
+      debugger
       state.params = action.payload.params
     },
     setIsOwner: (state, action: PayloadAction<{ isOwner: boolean }>) => {

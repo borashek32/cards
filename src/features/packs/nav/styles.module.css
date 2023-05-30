@@ -29,10 +29,12 @@
     justify-content: center;
     align-items: center;
     background-color: var(--white--color);
+    transition: all .2s ease;
 }
 .nav__filterButton_active {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+    color: var(--white--color)
 }
 .nav__rangeWrapper {
     display: flex;
@@ -47,11 +49,7 @@
     line-height: 20px;
     border: var(--border);
     background-color: var(--white--color);
-}
-.rangeInput::placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding-left: 5px;
 }
 .nav__buttonWrapper {
     display: flex;

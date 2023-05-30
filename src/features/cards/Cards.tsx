@@ -9,7 +9,7 @@ import {BackLink} from "common/components/BackLink/BackLink"
 import {useSelector} from "react-redux"
 import {selectCards, selectCardsPackName, selectPackUserId} from "features/cards/cards.selectors"
 import Button from "common/components/Button/Button"
-import {cardsThunks} from "features/cards/cards.slice"
+import {cardsActions, cardsThunks} from "features/cards/cards.slice"
 import {toast} from "react-toastify"
 import {useAppDispatch} from "common/hooks"
 import {selectProfile} from "features/auth/auth.selectors"
@@ -25,13 +25,14 @@ export const Cards = () => {
   const packUserId = useSelector(selectPackUserId)
   const authorizedUser = useSelector(selectProfile)
   const isOwner = authorizedUser?._id === packUserId
-  console.log(isOwner)
 
   const cards = useSelector(selectCards)
   const packName = useSelector(selectCardsPackName)
 
   useEffect(() => {
-    dispatch(cardsThunks.getCards({cardsPack_id, packUserId}))
+    cardsPack_id && dispatch(cardsActions.setCardsPackId(cardsPack_id))
+    // dispatch(cardsActions.setParams())
+    dispatch(cardsThunks.getCards())
       .unwrap()
       .then((res) => {
         if (res.cards.length > 0) {
@@ -61,20 +62,20 @@ export const Cards = () => {
             <CardsTable isOwner={isOwner} cards={cards} cardsPack_id={cardsPack_id}/>
           </div>
           : <div className={s.emptyPackWrapper}>
-
-             <>
+            {isOwner
+              ? <>
                 <p className={s.addCardDesc}>
                   This pack is empty. Click add new card to fill this pack
                 </p>
                 <div className={s.buttonEmptyPackWrapper}>
                   <Button name={"Add new card"} xType={"default"} onClick={() => setOpenCreateModal(true)}/>
                 </div>
-             </>
-
-             <p className={s.addCardDesc}>
+              </>
+              :
+              <p className={s.addCardDesc}>
                 This pack is empty
               </p>
-
+            }
           </div>
         }
       </div>

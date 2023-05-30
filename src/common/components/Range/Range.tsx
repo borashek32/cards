@@ -1,14 +1,15 @@
 import React from "react";
-import {Slider, SliderProps, styled} from "@mui/material";
+import {Slider, SliderProps} from "@mui/material";
 import s from "common/components/Range/styles.module.css"
 
-const Range: React.FC<SliderProps> = (props) => {
+
+export const Range: React.FC<SliderProps> = (props) => {
 
   return (
     <div className={s.rangeWrapper}>
       <Slider
         sx={
-          { // стили для слайдера // пишет студент
+          {
             color: '#366EFF',
             width: 147,
             height: 4,
@@ -36,10 +37,8 @@ const Range: React.FC<SliderProps> = (props) => {
             },
           }
         }
-        {...props} // отдаём слайдеру пропсы если они есть (value например там внутри)
+        {...props}
       />
     </div>
-  );
-};
-
-export default Range;
+  )
+}

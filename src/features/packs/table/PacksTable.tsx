@@ -3,16 +3,25 @@ import {useAppDispatch} from "common/hooks"
 import s from 'features/packs/table/styles.module.css'
 import {PackType} from "./../packs.types"
 import {packsActions, packsThunks} from "features/packs/packs.slice"
-import {selectCardPacksTotalCount, selectPacks, selectPage, selectPageCount} from "features/packs/packs.selectors"
+import {
+  selectCardPacksTotalCount,
+  selectFilter,
+  selectPacks,
+  selectPage,
+  selectPageCount
+} from "features/packs/packs.selectors"
 import {useSelector} from "react-redux"
 import {Pack} from "features/packs/table/Pack"
 import {MenuItem, Pagination, Select, SelectChangeEvent} from "@mui/material"
+import {selectProfile} from "features/auth/auth.selectors"
 
 
 export const PacksTable = () => {
 
-  const cardPacks = useSelector(selectPacks);
-  const dispatch = useAppDispatch();
+  const cardPacks = useSelector(selectPacks)
+  const filter = useSelector(selectFilter)
+  const profile = useSelector(selectProfile)
+  const dispatch = useAppDispatch()
 
   const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
   const pageCount = useSelector(selectPageCount) ?? 4
@@ -29,11 +38,14 @@ export const PacksTable = () => {
     dispatch(packsActions.setParams({params: {page: newPage}}))
   }
 
-  useEffect(() => {
-    dispatch(packsThunks.fetchPacks({page, pageCount}))
-  }, [page, pageCount])
+  let packsToRender = cardPacks
+  if (filter === "My") {
+    packsToRender = cardPacks.filter(p => p.user_id === profile?._id ? p : '')
+  }
 
-  console.log(cardPacks)
+  useEffect(() => {
+    dispatch(packsThunks.fetchPacks())
+  }, [page, pageCount])
 
   return (
     <div className={s.container}>
@@ -59,7 +71,7 @@ export const PacksTable = () => {
         </thead>
 
         <tbody>
-        {cardPacks?.map((p: PackType) => <Pack key={p._id} p={p}/>)}
+        {packsToRender?.map((p: PackType) => <Pack key={p._id} p={p}/>)}
         </tbody>
       </table>
 

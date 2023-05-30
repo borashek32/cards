@@ -28,9 +28,6 @@ export const CardsTable: FC<Props> = ({cardsPack_id, cards}) => {
               Created At
             </td>
             <td className={s.table__colName}>
-              Created By
-            </td>
-            <td className={s.table__colName}>
               Actions
             </td>
           </tr>
@@ -38,7 +35,7 @@ export const CardsTable: FC<Props> = ({cardsPack_id, cards}) => {
 
           <tbody>
           {
-            cards?.map((c) => <Card cardsPack_id={cardsPack_id} key={c._id} c={c}/>)
+            cards?.map((c) => <Card cardsPack_id={cardsPack_id} key={c?._id} c={c}/>)
           }
           </tbody>
         </table>

@@ -20,6 +20,10 @@ export const Card: FC<Props> = ({c, cardsPack_id}) => {
   const [deleteModal, setDeleteModal] = useState(false)
   const authorizedUser = useSelector(selectProfile)
 
+  if (!c || !c.created) {
+    return null; // or handle the case where `c` is undefined or `c.created` is missing
+  }
+
   const createdDate = new Date(c.created)
   const updatedDate = new Date(c.updated)
 
@@ -37,13 +41,12 @@ export const Card: FC<Props> = ({c, cardsPack_id}) => {
       <td className={s.table__colValue}>
         {c.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
       </td>
-      <td className={s.table__colValue}>
-        {c.user_id}
-      </td>
       <td
         className={s.table__colValue_actions}>
-        <div className={s.table__colValue_actionsWrapper + ' ' + (authorizedUser?._id === c.user_id && s.table__colValue_actionsWrapper_center)}>
-          {authorizedUser?._id === c.user_id &&
+        {authorizedUser?._id === c.user_id &&
+          <div
+            className={s.table__colValue_actionsWrapper + ' '
+              + (authorizedUser?._id === c.user_id && s.table__colValue_actionsWrapper_center)}>
             <>
               <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
               {/*{editMode && <UpdatePackForm c={c} setEditMode={setEditMode}/>}*/}
@@ -51,8 +54,8 @@ export const Card: FC<Props> = ({c, cardsPack_id}) => {
               <img onClick={() => setDeleteModal(true)} src={bin} alt="bin"/>
               {deleteModal && <DeleteCardForm cardsPack_id={cardsPack_id} c={c} setDeleteModal={setDeleteModal}/>}
             </>
-          }
-        </div>
+          </div>
+        }
       </td>
     </tr>
   )

@@ -4,7 +4,7 @@ import {appActions} from "app/app.slice"
 import {AxiosError, isAxiosError} from "axios"
 
 
-// function over the operators try-catch
+// function over the operator try-catch
 export const thunkTryCatch = async (
   thunkAPI: BaseThunkAPI<RootState, any, AppDispatch, unknown>,
   logic: Function,
@@ -12,6 +12,7 @@ export const thunkTryCatch = async (
 ) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   try {
+    appActions.setIsLoading({isLoading: true})
     return await logic();
   } catch (e) {
     // usual code: Error - native js error. for typing

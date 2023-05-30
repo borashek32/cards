@@ -31,14 +31,16 @@ export type UpdatePackResponseType = {
 
 export type GetPacksParamsType = {
   packName?: string
-  min?: string
-  max?: string
+  min?: number
+  max?: number
   sortPacks?: string
   page?: number
   pageCount?: number
   user_id?: string
   block?: boolean
   isOwner?: boolean
+
+  filter?: 'My' | 'All'
 }
 
 export type FetchPacksResponseType = {
@@ -50,6 +52,7 @@ export type FetchPacksResponseType = {
   maxCardsCount: number;
   token: string;
   tokenDeathTime: number;
+  // filter: string
 };
 
 export type CreatePackResponseType = {
@@ -64,3 +67,4 @@ export type RemovePackResponseType = {
   tokenDeathTime: number;
 };
 
+export type FilterValueType = 'My' | 'All'
