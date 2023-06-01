@@ -40,7 +40,7 @@
 }
 .header__menuWrapper {
     position: absolute;
-    bottom: -184%;
+    bottom: -199%;
     right: 10px;
     padding: 17px 26px;
     background-color: var(--white--color);
@@ -96,6 +96,13 @@
     gap: 7px;
     cursor: pointer;
     color: var(--black-color);
+}
+.header__menuListItemImgWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 23px;
+    height: 23px;
 }
 .header__itemName {
 

@@ -7,7 +7,7 @@ export const Nav = () => {
 
   return (
     <div className={s.nav}>
-      <SearchField label={"Search"} addedClass={s.nav__position}/>
+      {/*<SearchField label={"Search"} addedClass={s.nav__position}/>*/}
     </div>
   )
 }

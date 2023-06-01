@@ -1,23 +1,17 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils";
-import {ArgCreatePackType, FetchPacksResponseType, FilterValueType, GetPacksParamsType, PackType} from "./packs.types";
+import {ArgCreatePackType, FetchPacksResponseType, GetPacksParamsType, PackType} from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
 
 
-const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType, params: GetPacksParamsType }>(
+const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType } >(
   "packs/fetchPacks",
   async (_, thunkAPI) => {
     const { getState } = thunkAPI
     return thunkTryCatch(thunkAPI, async () => {
-      const params = {
-        ...getState().packs.params,
-        min: getState().packs.params?.min,
-        max: getState().packs.params?.max,
-        page: getState().packs.params?.page,
-        pageCount: getState().packs.params?.pageCount
-      }
+      const params = getState().packs.params
       const res = await packsApi.getPacks(params)
-      return { packsPage: res.data, params: params }
+      return { packsPage: res.data }
     })
   }
 )
@@ -58,6 +52,7 @@ const slice = createSlice({
   initialState: {
     cardPacks: [] as PackType[],
     cardsPackTotalCount: 2000,
+    selectedPack: {} as PackType,
     params: {
       page: 1,
       pageCount: 4,
@@ -70,9 +65,14 @@ const slice = createSlice({
   },
   reducers: {
     setParams: (state, action: PayloadAction<{ params: GetPacksParamsType }>) => {
-      debugger
-      state.params = action.payload.params
+      state.params = {...state.params, ...action.payload.params}
     },
+    // to show cards of the selected pack // later
+    setSelectedPack: (state, action: PayloadAction<{ id: string }>) => {
+      const pack = state.cardPacks.find(pack => pack._id === action.payload.id)
+      if (pack) state.selectedPack = pack
+    },
+    // ?
     setIsOwner: (state, action: PayloadAction<{ isOwner: boolean }>) => {
       state.cardPacks.forEach(pack => pack.isOwner = action.payload.isOwner)
     }

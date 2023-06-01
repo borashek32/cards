@@ -8,6 +8,7 @@ import React, {FC, useState} from "react"
 import {SubmitHandler} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
+import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 
 
 type Props = {
@@ -48,13 +49,17 @@ export const DropDownMenu: FC<Props> = ({userName}) => {
           <ul className={s.header__menuList}>
             <NavLink to={'/profile'}>
               <li className={s.header__menuListItemWrapper} onClick={handleOpenMenu}>
-                <img src={user} alt="user img"/>
+                <div className={s.header__menuListItemImgWrapper}>
+                  <img src={user} alt="user img"/>
+                </div>
                 <p className={s.header__itemName}>Profile</p>
               </li>
             </NavLink>
             <NavLink to={'/packs'}>
               <li className={s.header__menuListItemWrapper} onClick={handleOpenMenu}>
-                <img src={user} alt="user img"/>
+                <div className={s.header__menuListItemImgWrapper}>
+                  <AutoAwesomeMotionIcon />
+                </div>
                 <p className={s.header__itemName}>Packs</p>
               </li>
             </NavLink>

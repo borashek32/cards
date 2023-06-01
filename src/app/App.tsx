@@ -9,6 +9,7 @@ import {authThunks} from "features/auth/auth.slice"
 import {GlobalAppError} from "common/components/Errors/GlobalError/GlobalError"
 import {Outlet, useNavigate} from "react-router-dom"
 import {AppPreloader} from "common/components/AppPreloader/AppPreloader"
+import s from "./App.module.css"
 
 
 function App() {
@@ -33,8 +34,23 @@ function App() {
     <Layout>
       <Header/>
       <GlobalAppError/>
-      {isLoading && <div><LinearProgress/></div>}
-      {isAppInitialized ? <Outlet/> : <div><AppPreloader /></div>}
+      {isLoading &&
+        <div style={{
+          position: "absolute",
+          top: '60px',
+          width: "100%"
+        }}>
+          <LinearProgress/>
+        </div>
+      }
+      {isAppInitialized
+        ? <Outlet/>
+        : <div
+          className={isLoading ? s.isLoading : ''}
+        >
+          <AppPreloader />
+        </div>
+      }
     </Layout>
   );
 }

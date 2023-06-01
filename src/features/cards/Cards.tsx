@@ -31,7 +31,6 @@ export const Cards = () => {
 
   useEffect(() => {
     cardsPack_id && dispatch(cardsActions.setCardsPackId(cardsPack_id))
-    // dispatch(cardsActions.setParams())
     dispatch(cardsThunks.getCards())
       .unwrap()
       .then((res) => {

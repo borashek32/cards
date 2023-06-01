@@ -18,16 +18,16 @@ export type PackType = {
 }
 
 export type ArgCreatePackType = {
-  name?: string;
-  deckCover?: string;
-  private?: boolean;
-};
+  name?: string
+  deckCover?: string
+  private?: boolean
+}
 
 export type UpdatePackResponseType = {
-  updatedCardsPack: PackType;
-  token: string;
-  tokenDeathTime: number;
-};
+  updatedCardsPack: PackType
+  token: string
+  tokenDeathTime: number
+}
 
 export type GetPacksParamsType = {
   packName?: string
@@ -39,32 +39,30 @@ export type GetPacksParamsType = {
   user_id?: string
   block?: boolean
   isOwner?: boolean
-
   filter?: 'My' | 'All'
 }
 
 export type FetchPacksResponseType = {
-  cardPacks: PackType[];
-  page: number;
-  pageCount: number;
-  cardPacksTotalCount: number;
-  minCardsCount: number;
-  maxCardsCount: number;
-  token: string;
-  tokenDeathTime: number;
-  // filter: string
-};
+  cardPacks: PackType[]
+  page: number
+  pageCount: number
+  cardPacksTotalCount: number
+  minCardsCount: number
+  maxCardsCount: number
+  token: string
+  tokenDeathTime: number
+}
 
 export type CreatePackResponseType = {
-  newCardsPack: PackType;
-  token: string;
-  tokenDeathTime: number;
-};
+  newCardsPack: PackType
+  token: string
+  tokenDeathTime: number
+}
 
 export type RemovePackResponseType = {
-  deletedCardsPack: PackType;
-  token: string;
-  tokenDeathTime: number;
-};
+  deletedCardsPack: PackType
+  token: string
+  tokenDeathTime: number
+}
 
 export type FilterValueType = 'My' | 'All'
