@@ -41,8 +41,10 @@ const removePack = createAppAsyncThunk<{ packId: string }, string>(
 const updatePack = createAppAsyncThunk<{ pack: PackType }, PackType>(
   "packs/updatePack",
   async (arg, thunkAPI) => {
+    const { dispatch } = thunkAPI
     return thunkTryCatch(thunkAPI, async () => {
-      const res = await packsApi.updatePack(arg);
+      const res = await packsApi.updatePack(arg)
+      dispatch(packsThunks.fetchPacks())
       return { packs: res.data.updatedCardsPack }
     })
   })

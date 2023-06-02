@@ -9,6 +9,8 @@ const selectMinCardsCount = (state: RootState) => state.packs.params.min
 const selectMaxCardsCount = (state: RootState) => state.packs.params.max
 const selectSearchValue = (state: RootState) => state.packs.params.packName
 
+const selectedPack = (state: RootState) => state.packs.selectedPack
+
 export {
   selectPacks,
   selectCardPacksTotalCount,
@@ -17,5 +19,6 @@ export {
   selectMinCardsCount,
   selectMaxCardsCount,
   selectAuthorizedUserId,
-  selectSearchValue
+  selectSearchValue,
+  selectedPack
 }

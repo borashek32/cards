@@ -20,6 +20,7 @@ type Props = {
   setEditMode: (openModal: boolean) => void
 }
 type FormDataType = {
+  _id: string
   name: string
   privateCard: boolean
 }
@@ -47,7 +48,7 @@ export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
         </div>
         <LeftTitle title={"Edit Pack"}/>
         <div className={styles.profile__wrapper}>
-          <form onSubmit={handleSubmit(onSubmit)} action="#" autoComplete={'off'} style={{width: "350px"}}>
+          <form onSubmit={handleSubmit(onSubmit)} autoComplete={'off'} style={{width: "350px"}}>
             <TextField
               fullWidth={true}
               label={"Name pack"}
@@ -72,7 +73,7 @@ export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
               <label htmlFor="#" style={{color: "#000"}} className={s.label}>Private Pack</label>
             </div>
             <Footer>
-              <Button name={"Edit"} xType={"default"} />
+              <Button name={"Update"} xType={"default"} />
             </Footer>
           </form>
         </div>

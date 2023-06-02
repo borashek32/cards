@@ -7,6 +7,7 @@ import {selectProfile} from "features/auth/auth.selectors"
 import {NavLink} from "react-router-dom"
 import {CardType} from "features/cards/cards.types"
 import {DeleteCardForm} from "features/cards/forms/DeleteCardForm"
+import {UpdateCardForm} from "features/cards/forms/UpdateCardForm"
 
 type Props = {
   c: CardType
@@ -49,7 +50,7 @@ export const Card: FC<Props> = ({c, cardsPack_id}) => {
               + (authorizedUser?._id === c.user_id && s.table__colValue_actionsWrapper_center)}>
             <>
               <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
-              {/*{editMode && <UpdatePackForm c={c} setEditMode={setEditMode}/>}*/}
+              {editMode && <UpdateCardForm c={c} setEditMode={setEditMode}/>}
 
               <img onClick={() => setDeleteModal(true)} src={bin} alt="bin"/>
               {deleteModal && <DeleteCardForm cardsPack_id={cardsPack_id} c={c} setDeleteModal={setDeleteModal}/>}

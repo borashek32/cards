@@ -32,8 +32,6 @@ export const Packs = () => {
   const maxCardsCount = useSelector(selectMaxCardsCount)
   const searchValue = useSelector(selectSearchValue)
 
-  console.log(searchValue)
-
   // fetch all packs with params
   useEffect(() => {
     dispatch(packsThunks.fetchPacks())

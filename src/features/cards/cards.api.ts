@@ -1,7 +1,6 @@
 import {instance} from "common/api"
 import {
-  ArgCreateCardType,
-  CardType,
+  ArgCreateCardType, ArgUpdateCardType,
   DeleteCardResponseType,
   FetchCardsResponseType,
   GetCardsParamsType
@@ -10,16 +9,16 @@ import {
 
 export const cardsApi = {
   getCards: (params: GetCardsParamsType) => {
-    return instance.get<FetchCardsResponseType>("cards/card", {params});
+    return instance.get<FetchCardsResponseType>("cards/card", { params });
   },
   createCard: (card: ArgCreateCardType) => {
-    return instance.post("cards/card", {card});
+    return instance.post("cards/card", { card });
   },
   removeCard: (_id: string) => {
     return instance.delete<DeleteCardResponseType>(`cards/card?id=${_id}`);
   },
-  updatePack: (card: CardType) => {
-    return instance.put("cards/card", { card });
+  updateCard: (card: ArgUpdateCardType) => {
+    return instance.put("cards/card", { card: card, id: card._id });
   },
 };
 

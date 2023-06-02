@@ -4,7 +4,7 @@ export type CardType = {
   user_id: string
   answer: string
   question: string
-  grade: number
+  grade: CardGradeType
   shots: number
   comments: string
   type: string
@@ -38,8 +38,8 @@ export type FetchCardsResponseType = {
   page: number
   pageCount: number
   cardsTotalCount: number
-  minGrade: number
-  maxGrade: number
+  minGrade: CardGradeType
+  maxGrade: CardGradeType
   token: string
   tokenDeathTime: number
   isOwner: boolean
@@ -59,11 +59,14 @@ export type ArgCreateCardType = {
   answerVideo?: string
 }
 
-export type ArgGetCardsType = {
-  cardsPack_id?: string
-  page?: number
-  pageCount?: number
-  packUserId: string
+export type ArgUpdateCardType = {
+  _id: string
+  question?: string
+  answer?: string
+  grade?: CardGradeType
+  shots?: number
+  answerImg?: string
+  questionImg?: string
 }
 
 export type GetCardsResponseType = {
@@ -74,20 +77,6 @@ export type GetCardsResponseType = {
   pageCount?: number
   packUserId: string
 }
-
-// export type GetCardsResponseType = {
-//   cards: CardType[]
-//   cardsTotalCount: number
-//   maxGrade: number
-//   minGrade: number
-//   page: number
-//   packUpdated: string
-//   packCreated: string
-//   packDeckCover: string | null
-//   packPrivate: boolean
-//   pageCount: number
-//   packUserId: string
-// }
 
 export type DeleteCardResponseType = {
   deletedCard: CardType
