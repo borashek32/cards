@@ -66,3 +66,9 @@ export type RemovePackResponseType = {
 }
 
 export type FilterValueType = 'My' | 'All'
+
+export type EditPackValuesType = {
+  _id: string
+  name: string
+  privateCard: boolean
+}

@@ -1,8 +1,7 @@
-import React, {ChangeEvent, FC, ReactNode} from "react"
+import React, {FC} from "react"
 import s from 'features/packs/table/styles.module.css'
 import {PackType} from "./../packs.types"
 import {Pack} from "features/packs/table/Pack"
-import {MenuItem, Pagination, Select, SelectChangeEvent} from "@mui/material"
 
 
 type Props = {

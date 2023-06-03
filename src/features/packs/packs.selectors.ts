@@ -1,4 +1,4 @@
-import { RootState } from "app/store"
+import {RootState} from "app/store"
 
 const selectPacks = (state: RootState) => state.packs.cardPacks
 const selectCardPacksTotalCount = (state: RootState) => state.packs.cardsPackTotalCount
@@ -8,8 +8,11 @@ const selectAuthorizedUserId = (state: RootState) => state.packs.params.user_id
 const selectMinCardsCount = (state: RootState) => state.packs.params.min
 const selectMaxCardsCount = (state: RootState) => state.packs.params.max
 const selectSearchValue = (state: RootState) => state.packs.params.packName
+const selectPack = (state: RootState) => state.packs.selectedPack
 
-const selectedPack = (state: RootState) => state.packs.selectedPack
+const selectEditPackMode = (state: RootState) => state.packs.editMode
+
+const selectEditPackFormValues = (state: RootState) => state.packs.editPackFormValues
 
 export {
   selectPacks,
@@ -20,5 +23,8 @@ export {
   selectMaxCardsCount,
   selectAuthorizedUserId,
   selectSearchValue,
-  selectedPack
+  selectPack,
+  selectEditPackMode,
+
+  selectEditPackFormValues
 }

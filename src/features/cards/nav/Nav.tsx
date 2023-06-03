@@ -1,13 +1,39 @@
-import React from "react"
+import React, {FC, useCallback} from "react"
 import s from 'features/packs/nav/styles.module.css'
-import {SearchField} from "common/components/SearchField/SearchField"
+import {SubmitHandler} from "react-hook-form"
+import {debounce} from "lodash"
+import {useAppDispatch} from "common/hooks"
+import {Search} from "common/components/Search/Search"
+import {cardsActions} from "features/cards/cards.slice"
 
 
-export const Nav = () => {
+type Props = {
+  authorizedUserId?: string
+}
+
+type FormDataType = {
+  searchValue: string
+}
+
+export const Nav: FC<Props> = ({authorizedUserId}) => {
+
+  const dispatch = useAppDispatch()
+
+  // to search cards by question
+  const onSubmitQuestion: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
+    dispatch(cardsActions.setParams({params: {cardQuestion: data.searchValue}}))
+  }, 300), [])
+
+  // to search cards by answer
+  const onSubmitAnswer: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
+    dispatch(cardsActions.setParams({params: {cardAnswer: data.searchValue}}))
+  }, 300), [])
+
 
   return (
     <div className={s.nav}>
-      {/*<SearchField label={"Search"} addedClass={s.nav__position}/>*/}
+      <Search onSubmit={onSubmitQuestion} title={"Search cards by question"} />
+      <Search onSubmit={onSubmitAnswer} title={"Search cards by answer"} />
     </div>
   )
 }

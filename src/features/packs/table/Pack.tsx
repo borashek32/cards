@@ -9,6 +9,10 @@ import {DeletePackForm} from "features/packs/forms/DeletePackForm"
 import {useSelector} from "react-redux"
 import {selectProfile} from "features/auth/auth.selectors"
 import {NavLink} from "react-router-dom"
+import {selectEditPackMode} from "features/packs/packs.selectors"
+import {useAppDispatch} from "common/hooks"
+import {packsActions} from "features/packs/packs.slice"
+
 
 type Props = {
   p: PackType
@@ -17,19 +21,35 @@ type Props = {
 
 export const Pack: FC<Props> = ({p}) => {
 
-  const [editMode, setEditMode] = useState(false)
-  const [deleteModal, setDeleteModal] = useState(false)
+  const dispatch = useAppDispatch()
+  const editMode = useSelector(selectEditPackMode)
   const authorizedUser = useSelector(selectProfile)
+  const [deleteModal, setDeleteModal] = useState(false)
 
   const createdDate = new Date(p.created)
   const updatedDate = new Date(p.updated)
 
   const isOwner = authorizedUser?._id === p.user_id
 
+  const setEditMode = () => {
+    dispatch(packsActions.setEditPackFormValues({
+      values: {
+        _id: p._id,
+        name: p.name,
+        privateCard: p.private
+      }
+    }))
+    dispatch(packsActions.setEditPackMode({editPackMode: true}))
+  }
+
+  const openPackCards = () => {
+    dispatch(packsActions.setSelectedPack({ _id: p._id }))
+  }
+
   return (
     <tr key={p._id} className={s.table__tr}>
       <td className={s.table__colValue}>
-        <NavLink to={`/cards/${p._id}`} className={s.table__link}>
+        <NavLink to={`/cards/${p._id}`} onClick={openPackCards} className={s.table__link}>
           {p.name}
         </NavLink>
       </td>
@@ -45,11 +65,13 @@ export const Pack: FC<Props> = ({p}) => {
       <td
         className={s.table__colValue_actions}>
         <div
-          className={s.table__colValue_actionsWrapper + ' ' + (authorizedUser?._id !== p.user_id && s.table__colValue_actions_justLearn)}>
+          className={s.table__colValue_actionsWrapper + ' '
+            + (authorizedUser?._id !== p.user_id && s.table__colValue_actions_justLearn)}>
+
           {isOwner &&
             <>
-              <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
-              {editMode && <UpdatePackForm p={p} setEditMode={setEditMode}/>}
+              <img onClick={setEditMode} src={pencil} alt="pencil"/>
+              {/*{editMode && <UpdatePackForm p={p} />}*/}
 
               <img onClick={() => setDeleteModal(true)} src={bin} alt="bin"/>
               {deleteModal && <DeletePackForm p={p} setDeleteModal={setDeleteModal}/>}

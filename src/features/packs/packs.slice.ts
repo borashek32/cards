@@ -1,6 +1,12 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils";
-import {ArgCreatePackType, FetchPacksResponseType, GetPacksParamsType, PackType} from "./packs.types";
+import {
+  ArgCreatePackType,
+  EditPackValuesType,
+  FetchPacksResponseType,
+  GetPacksParamsType,
+  PackType
+} from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
 
 
@@ -55,6 +61,12 @@ const slice = createSlice({
     cardPacks: [] as PackType[],
     cardsPackTotalCount: 2000,
     selectedPack: {} as PackType,
+    editMode: false,
+    editPackFormValues: {
+      _id: '',
+      name: '',
+      privatePack: false
+    },
     params: {
       page: 1,
       pageCount: 4,
@@ -62,7 +74,7 @@ const slice = createSlice({
       max: 100,
       packName: '',
       user_id: '',
-      filter: 'All',
+      filter: 'All'
     } as GetPacksParamsType
   },
   reducers: {
@@ -70,14 +82,22 @@ const slice = createSlice({
       state.params = {...state.params, ...action.payload.params}
     },
     // to show cards of the selected pack // later
-    setSelectedPack: (state, action: PayloadAction<{ id: string }>) => {
-      const pack = state.cardPacks.find(pack => pack._id === action.payload.id)
+    setSelectedPack: (state, action: PayloadAction<{ _id: string }>) => {
+      const pack = state.cardPacks.find((pack: PackType) => pack._id === action.payload._id)
+      // console.log(action.payload._id)
       if (pack) state.selectedPack = pack
+      // console.log(state.selectedPack)
     },
     // ?
     setIsOwner: (state, action: PayloadAction<{ isOwner: boolean }>) => {
       state.cardPacks.forEach(pack => pack.isOwner = action.payload.isOwner)
-    }
+    },
+    setEditPackMode: (state, action: PayloadAction<{ editPackMode: boolean }>) => {
+      state.editMode = action.payload.editPackMode
+    },
+    setEditPackFormValues: (state, action: PayloadAction<{ values: EditPackValuesType }>) => {
+      state.editPackFormValues = {...state.editPackFormValues, ...action.payload.values}
+    },
   },
   extraReducers: (builder) => {
     builder

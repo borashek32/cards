@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react"
+import React, {ChangeEvent, useEffect, useState} from "react"
 import s from 'features/packs/styles.module.css'
 import {Title} from "features/packs/title/Title"
 import {Nav} from "features/packs/nav/Nav"
 import {PacksTable} from "features/packs/table/PacksTable"
 import {CreatePackForm} from "features/packs/forms/CreatePackForm"
 import {BackLink} from "common/components/BackLink/BackLink"
-import {packsThunks} from "features/packs/packs.slice"
+import {packsActions, packsThunks} from "features/packs/packs.slice"
 import {useSelector} from "react-redux"
 import {
-  selectAuthorizedUserId,
+  selectAuthorizedUserId, selectCardPacksTotalCount,
   selectMaxCardsCount,
   selectMinCardsCount,
   selectPacks,
@@ -17,7 +17,8 @@ import {
   selectSearchValue
 } from "features/packs/packs.selectors"
 import {useAppDispatch} from "common/hooks"
-import {CustomPagination} from "common/pagination/CustimPagination"
+import {CustomPagination} from "common/components/pagination/CustomPagination"
+import {SelectChangeEvent} from "@mui/material"
 
 
 export const Packs = () => {
@@ -31,6 +32,7 @@ export const Packs = () => {
   const minCardsCount = useSelector(selectMinCardsCount)
   const maxCardsCount = useSelector(selectMaxCardsCount)
   const searchValue = useSelector(selectSearchValue)
+  const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
 
   // fetch all packs with params
   useEffect(() => {
@@ -42,14 +44,26 @@ export const Packs = () => {
     pageCount,
     minCardsCount,
     maxCardsCount,
-    searchValue
+    searchValue,
+    cardPacksTotalCount
   ])
+
+  // pagination
+  const handleChangePacksPerPage = (event: SelectChangeEvent) => {
+    dispatch(packsActions.setParams({params: {pageCount: Number(event.target.value)}}))
+  }
+
+  const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
+    dispatch(packsActions.setParams({params: {page: newPage}}))
+  }
 
   return (
     <div className={s.packsWrapper}>
       <BackLink backPath={'/profile'} backText={'Back to Profile'} />
+
       {openCreateModal &&
         <CreatePackForm setOpenCreateModal={setOpenCreateModal}/>}
+
       <div className={s.packs}>
         <Title
           name={"Packs"}
@@ -57,11 +71,17 @@ export const Packs = () => {
           setOpenCreateModal={setOpenCreateModal}
         />
 
-        <Nav authorizedUserId={authorizedUserId}/>
+        <Nav authorizedUserId={authorizedUserId} />
 
         <PacksTable packsToRender={cardPacks}/>
 
-        <CustomPagination />
+        <CustomPagination
+          handleChangePage={handleChangePage}
+          handleChangePacksPerPage={handleChangePacksPerPage}
+          pageCount={pageCount}
+          page={page}
+          itemsTotalCount={cardPacksTotalCount}
+        />
       </div>
     </div>
   )

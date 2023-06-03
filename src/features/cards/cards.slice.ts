@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 import {
-  ArgCreateCardType, ArgUpdateCardType,
+  ArgCreateCardType,
+  ArgUpdateCardType,
   CardType,
   GetCardsParamsType,
   GetCardsResponseType,
@@ -8,28 +9,21 @@ import {
 } from "features/cards/cards.types"
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils"
 import {cardsApi} from "features/cards/cards.api"
-import {packsApi} from "features/packs/packs.api"
-import {packsThunks} from "features/packs/packs.slice"
 
 
-const getCards = createAppAsyncThunk<GetCardsResponseType>(
+const getCards = createAppAsyncThunk<{ cardsPage: GetCardsResponseType }>(
   'cards/getCards',
   async (arg, thunkAPI) => {
-    const {getState} = thunkAPI
-    return thunkTryCatch(thunkAPI, async () => {
-      const params = {
-        ...getState().cards.params,
-        cardsPack_id: getState().cards.selectedCardsPackId
-      }
-      const res = await cardsApi.getCards(params)
-      return {
-        cards: res.data.cards,
-        cardsPack_id: params.cardsPack_id,
-        packName: res.data.packName,
-        packUserId: res.data.packUserId
-      }
-    })
-  })
+  const { getState } = thunkAPI
+  return thunkTryCatch(thunkAPI, async () => {
+    const params = {
+      ...getState().cards.params,
+      cardsPack_id: getState().cards.selectedCardsPackId
+    }
+    const res = await cardsApi.getCards(params)
+    return { cardsPage: res.data }
+  }, false)
+})
 
 const createCard = createAppAsyncThunk<{ card: CardType }, ArgCreateCardType>(
   'cards/createCard',
@@ -70,6 +64,7 @@ const slice = createSlice({
   initialState: {
     packName: '',
     cards: [] as CardType[],
+    cardsTotalCount: 0,
     params: {
       cardAnswer: '',
       cardQuestion: '',
@@ -78,8 +73,9 @@ const slice = createSlice({
       max: 5,
       sortCards: 0,
       page: 1,
-      pageCount: 4,
+      pageCount: 4
     } as GetCardsParamsType,
+    selectedCardPack: '' as string, // ???
     selectedCardId: '' as string,
     selectedCardsPackId: '' as string,
     isLoading: false as boolean,
@@ -89,17 +85,19 @@ const slice = createSlice({
     setParams: (state, action: PayloadAction<{ params: GetParamsType }>) => {
       state.params = { ...state.params, ...action.payload.params }
     },
-    setCardsPackId: (state, action: PayloadAction<string>) => {
-      state.selectedCardsPackId = action.payload
+    setCardsPackId: (state, action: PayloadAction<{ _id: string }>) => {
+      state.selectedCardsPackId = action.payload._id
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(getCards.fulfilled, (state, action) => {
-        state.cards = action.payload.cards
-        state.packName = action.payload.packName
-        state.selectedCardsPackId = action.payload.cardsPack_id
-        state.packUserId = action.payload.packUserId
+        const actionPayload = action.payload.cardsPage
+        state.cards = actionPayload.cards
+        state.packName = actionPayload.packName
+        state.selectedCardsPackId = actionPayload.cardsPack_id
+        state.packUserId = actionPayload.packUserId
+        state.cardsTotalCount = actionPayload.cardsTotalCount
       })
       .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardType }>) => {
         state.cards.unshift(action.payload.card);
@@ -110,9 +108,7 @@ const slice = createSlice({
       })
       .addCase(updateCard.fulfilled, (state, action) => {
         const index = state.cards.findIndex((card: CardType) => card._id && card?._id === action.payload.updatedCard._id)
-        if (index !== -1) {
-          state.cards[index] = action.payload.updatedCard
-        }
+        if (index !== -1) state.cards[index] = action.payload.updatedCard
       })
   }
 })

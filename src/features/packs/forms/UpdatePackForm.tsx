@@ -1,4 +1,4 @@
-import React, {FC} from "react"
+import React, {ChangeEvent, FC, useEffect, useState} from "react"
 import {Card} from "common/components/Card/AuthCard/Card"
 import styles from "features/auth/profile/styles.module.css"
 import Button from "common/components/Button/Button"
@@ -7,17 +7,19 @@ import i from "common/components/Input/styles.module.css"
 import {useAppDispatch} from "common/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {toast} from "react-toastify"
-import {packsThunks} from "features/packs/packs.slice"
+import {packsActions, packsThunks} from "features/packs/packs.slice"
 import {Footer} from "common/components/Footer/Footer"
-import {PackType} from "features/packs/packs.types"
+import {EditPackValuesType, PackType} from "features/packs/packs.types"
 import s from "features/packs/forms/styles.module.css"
 import closeImg from "assets/img/close.svg"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
+import {useSelector} from "react-redux"
+import {selectEditPackFormValues, selectEditPackMode} from "features/packs/packs.selectors"
+import {values} from "lodash"
 
 
 type Props = {
   p: PackType
-  setEditMode: (openModal: boolean) => void
 }
 type FormDataType = {
   _id: string
@@ -25,28 +27,55 @@ type FormDataType = {
   privateCard: boolean
 }
 
-export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
+export const UpdatePackForm: FC<Props> = ({p}) => {
 
-  const {register, formState: {errors}, handleSubmit} = useForm<FormDataType>({mode: "onChange"})
   const dispatch = useAppDispatch()
+  const editPackFormValues = useSelector(selectEditPackFormValues)
+  const [editValues, setEditValues] = useState<EditPackValuesType>({
+    _id: editPackFormValues._id,
+    name: editPackFormValues.name,
+    privateCard: editPackFormValues.privatePack
+  });
 
-  const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    dispatch(packsThunks.updatePack({ ...p, name: data.name }))
+  const {
+    register,
+    formState: {errors},
+    handleSubmit
+  } = useForm<EditPackValuesType>({mode: "onChange"})
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log(e.currentTarget.value)
+    setEditValues({
+      ...editValues,
+      name: e.currentTarget.value
+    })
+  }
+
+  const onSubmit: SubmitHandler<EditPackValuesType> = (data) => {
+    setClose()
+    dispatch(packsThunks.updatePack({ ...p, name: data.name, _id: editValues._id }))
       .unwrap()
       .then(() => {
         toast.success("Pack was updated successfully")
       })
-    setEditMode(false)
   }
 
+  const setClose = () => {
+    dispatch(packsActions.setEditPackMode({editPackMode: false}))
+    dispatch(packsActions.setEditPackFormValues({ values: {
+      _id: '',
+      name: '',
+      privateCard: false
+    }}))
+  }
 
   return (
     <div className={s.background}>
       <Card id={'cards-profile'}>
-        <div className={s.closeImgWrapper}>
-          <img src={closeImg} alt="close image" className={s.closeImg} onClick={() => setEditMode(false)}/>
+        <div className={s.closeImgWrapper} onClick={setClose}>
+          <img src={closeImg} alt="close image" className={s.closeImg} />
         </div>
-        <LeftTitle title={"Edit Pack"}/>
+        <LeftTitle title={"Edit Pack"} />
         <div className={styles.profile__wrapper}>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete={'off'} style={{width: "350px"}}>
             <TextField
@@ -63,7 +92,8 @@ export const UpdatePackForm: FC<Props> = ({p,setEditMode}) => {
                   message: "Min length of card name field is 3 symbols"
                 }
               }))}
-              defaultValue={p.name}
+              onChange={handleChange}
+              value={editValues.name}
               type="text"
             />
             {errors.name && <span className={i.error}>{errors.name.message}</span>}

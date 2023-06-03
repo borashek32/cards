@@ -1,20 +1,20 @@
 import {createTheme, TextField, ThemeProvider} from "@mui/material"
 import i from "common/components/Input/styles.module.css"
-import React, {useCallback, useState} from "react"
-import {useAppDispatch} from "common/hooks"
+import React, {FC, useState} from "react"
 import {SubmitHandler, useForm} from "react-hook-form"
-import {debounce} from "lodash"
-import {packsActions} from "features/packs/packs.slice"
 import s from "features/packs/nav/styles.module.css"
 
 
+type Props = {
+  onSubmit: SubmitHandler<FormDataType>
+  title: string
+}
 type FormDataType = {
   searchValue: string
 }
 
-export const SearchPacks = () => {
+export const Search: FC<Props> = ({onSubmit, title}) => {
 
-  const dispatch = useAppDispatch()
   const [value, setValue] = useState('')
 
   const {register, handleSubmit, formState: {errors}} = useForm<FormDataType>({
@@ -28,10 +28,6 @@ export const SearchPacks = () => {
     setValue(e.target.value);
     onSubmit({searchValue: value})
   }
-
-  const onSubmit: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
-    dispatch(packsActions.setParams({params: {packName: data.searchValue}}))
-  }, 300), [])
 
   // mui input styles
   const theme = createTheme({
@@ -51,7 +47,7 @@ export const SearchPacks = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className={s.nav__showPackCards + " " + s.nav__position}>
-        <p className={s.nav__filterTitle}>Search packs</p>
+        <p className={s.nav__filterTitle}>{title}</p>
         <form
           onChange={handleSubmit(onSubmit)}
           autoComplete={'off'}

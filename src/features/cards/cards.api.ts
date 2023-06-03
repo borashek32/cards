@@ -8,7 +8,7 @@ import {
 
 
 export const cardsApi = {
-  getCards: (params: GetCardsParamsType) => {
+  getCards: (params?: GetCardsParamsType) => {
     return instance.get<FetchCardsResponseType>("cards/card", { params });
   },
   createCard: (card: ArgCreateCardType) => {

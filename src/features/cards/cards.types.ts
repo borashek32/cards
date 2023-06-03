@@ -1,3 +1,5 @@
+import {FilterValueType} from "features/packs/packs.types"
+
 export type CardType = {
   _id: string
   cardsPack_id: string
@@ -24,6 +26,10 @@ export type GetCardsParamsType = {
   sortCards?: number
   page?: number
   pageCount?: number
+  packName?: string
+  user_id?: string
+  cardsTotalCount?: number
+  filter?: FilterValueType
 }
 
 export type GetParamsType = Omit<GetCardsParamsType, 'cardsPack_id'>
@@ -76,6 +82,7 @@ export type GetCardsResponseType = {
   page?: number
   pageCount?: number
   packUserId: string
+  cardsTotalCount: number
 }
 
 export type DeleteCardResponseType = {
