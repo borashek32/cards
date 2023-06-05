@@ -6,9 +6,10 @@ import {Pack} from "features/packs/table/Pack"
 
 type Props = {
   packsToRender: PackType[]
+  authorizedUserId?: string
 }
 
-export const PacksTable: FC<Props> = ({packsToRender}) => {
+export const PacksTable: FC<Props> = ({packsToRender, authorizedUserId}) => {
 
   return (
     <div className={s.container}>
@@ -34,7 +35,12 @@ export const PacksTable: FC<Props> = ({packsToRender}) => {
         </thead>
 
         <tbody>
-        {packsToRender?.map((p: PackType) => <Pack key={p._id} p={p}/>)}
+        {packsToRender?.map((p: PackType) => {
+
+          const isOwner = authorizedUserId === p.user_id
+
+          return <Pack key={p._id} p={p} isOwner={isOwner} />
+        })}
         </tbody>
       </table>
 

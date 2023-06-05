@@ -11,14 +11,14 @@ import {createAppAsyncThunk, thunkTryCatch} from "common/utils"
 import {cardsApi} from "features/cards/cards.api"
 
 
-const getCards = createAppAsyncThunk<{ cardsPage: GetCardsResponseType }>(
+const getCards = createAppAsyncThunk<{ cardsPage: GetCardsResponseType }, { _id?: string }>(
   'cards/getCards',
   async (arg, thunkAPI) => {
   const { getState } = thunkAPI
   return thunkTryCatch(thunkAPI, async () => {
     const params = {
       ...getState().cards.params,
-      cardsPack_id: getState().cards.selectedCardsPackId
+      cardsPack_id: arg._id
     }
     const res = await cardsApi.getCards(params)
     return { cardsPage: res.data }
@@ -31,19 +31,19 @@ const createCard = createAppAsyncThunk<{ card: CardType }, ArgCreateCardType>(
   const {dispatch} = thunkAPI
   return thunkTryCatch(thunkAPI, async () => {
     const res = await cardsApi.createCard(arg)
-    dispatch(cardsThunks.getCards())
-    return { pack: res.data.newCard }
+    dispatch(cardsThunks.getCards({_id: arg.cardsPack_id}))
+    return { card: res.data.newCard }
   })
 })
 
-const removeCard = createAppAsyncThunk<{ deletedCard: CardType }, string>(
+const removeCard = createAppAsyncThunk<{ deletedCard: CardType }, { id: string, cardsPack_id: string }>(
   "cards/removeCard",
-  async (id, thunkAPI) => {
+  async (arg, thunkAPI) => {
   const {dispatch} = thunkAPI
   return thunkTryCatch(thunkAPI, async () => {
-    const res = await cardsApi.removeCard(id)
-    dispatch(cardsThunks.getCards())
-    return {cardId: res.data.deletedCard}
+    const res = await cardsApi.removeCard(arg.id)
+    dispatch(cardsThunks.getCards({_id: arg.cardsPack_id}))
+    return {deletedCard: res.data.deletedCard}
   })
 })
 
@@ -53,8 +53,8 @@ const updateCard = createAppAsyncThunk<{ updatedCard: CardType }, ArgUpdateCardT
   const {dispatch} = thunkAPI
   return thunkTryCatch(thunkAPI, async () => {
     const res = await cardsApi.updateCard(arg)
-    dispatch(cardsThunks.getCards())
-    return { pack: res.data.updatedCard }
+    dispatch(cardsThunks.getCards({_id: arg.cardsPack_id}))
+    return { updatedCard: res.data.updatedCard }
   })
 })
 
@@ -63,6 +63,7 @@ const slice = createSlice({
   name: "cards",
   initialState: {
     packName: '',
+    packPrivate: false,
     cards: [] as CardType[],
     cardsTotalCount: 0,
     params: {
@@ -75,9 +76,7 @@ const slice = createSlice({
       page: 1,
       pageCount: 4
     } as GetCardsParamsType,
-    selectedCardPack: '' as string, // ???
     selectedCardId: '' as string,
-    selectedCardsPackId: '' as string,
     isLoading: false as boolean,
     packUserId: ''
   },
@@ -85,22 +84,19 @@ const slice = createSlice({
     setParams: (state, action: PayloadAction<{ params: GetParamsType }>) => {
       state.params = { ...state.params, ...action.payload.params }
     },
-    setCardsPackId: (state, action: PayloadAction<{ _id: string }>) => {
-      state.selectedCardsPackId = action.payload._id
-    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(getCards.fulfilled, (state, action) => {
         const actionPayload = action.payload.cardsPage
         state.cards = actionPayload.cards
-        state.packName = actionPayload.packName
-        state.selectedCardsPackId = actionPayload.cardsPack_id
         state.packUserId = actionPayload.packUserId
+        state.packName = actionPayload.packName
+        state.packPrivate = actionPayload.packPrivate
         state.cardsTotalCount = actionPayload.cardsTotalCount
       })
       .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardType }>) => {
-        state.cards.unshift(action.payload.card);
+        state.cards.unshift(action.payload.card)
       })
       .addCase(removeCard.fulfilled, (state, action) => {
         const index = state.cards.findIndex((c: CardType) => c._id && c._id === action.payload.deletedCard?._id)

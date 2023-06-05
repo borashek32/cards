@@ -24,22 +24,21 @@ import {useAppDispatch} from "common/hooks"
 import {selectProfile} from "features/auth/auth.selectors"
 import {CustomPagination} from "common/components/pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
-import {selectAuthorizedUserId, selectPack} from "features/packs/packs.selectors"
 import {DropDownMenu} from "features/cards/dropDownMenu/DropDownMenu"
-import {packsActions} from "features/packs/packs.slice"
+import {selectDeletePackMode, selectEditPackMode} from "features/packs/packs.selectors"
+import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
+import {DeletePackForm} from "features/packs/forms/DeletePackForm"
 
 
 export const Cards = () => {
 
   const dispatch = useAppDispatch()
 
-  const cardsPackFromUseParams = useParams() // here an object, like {id: "csdghcvdsghcda"}
-  const cardsPack_id = cardsPackFromUseParams.cardsPack_id
+  const {cardsPack_id} = useParams() // here an object, like {id: "csdghcvdsghcda"}
 
   const packUserId = useSelector(selectPackUserId)
   const authorizedUser = useSelector(selectProfile)
   const isOwner = authorizedUser?._id === packUserId
-  const authorizedUserId = useSelector(selectAuthorizedUserId)
   const cards = useSelector(selectCards)
   const packName = useSelector(selectCardsPackName)
   const cardQuestion = useSelector(selectSearchCardQuestion)
@@ -47,12 +46,12 @@ export const Cards = () => {
   const page = useSelector(selectPage)
   const pageCount = useSelector(selectPageCount) ?? 4
   const cardsPackTotalCount = useSelector(selectPackCardsCount)
-  const pack = useSelector(selectPack)
+
+  const editMode = useSelector(selectEditPackMode)
+  const deleteMode = useSelector(selectDeletePackMode)
 
   useEffect(() => {
-    cardsPack_id && dispatch(cardsActions.setCardsPackId({ _id: cardsPack_id }))
-    cardsPack_id && dispatch(packsActions.setSelectedPack({ _id: cardsPack_id }))
-    dispatch(cardsThunks.getCards())
+    dispatch(cardsThunks.getCards({_id: cardsPack_id}))
       .unwrap()
       .then((res) => {
         if (res.cardsPage.cardsTotalCount > 0) {
@@ -60,12 +59,10 @@ export const Cards = () => {
         }
       })
   }, [
-    dispatch,
     cardQuestion,
     cardAnswer,
     page,
-    pageCount,
-    cardsPackTotalCount
+    pageCount
   ])
 
   const [openCreateModal, setOpenCreateModal] = useState(false)
@@ -81,14 +78,22 @@ export const Cards = () => {
 
   return (
     <div className={s.packsWrapper}>
+      {editMode && <UpdatePackForm />}
+      {deleteMode && <DeletePackForm />}
+
       <BackLink backPath={'/packs'} backText={'Back to Packs List'}/>
       {openCreateModal &&
-        <CreateCardForm cardsPack_id={cardsPack_id} setOpenCreateModal={setOpenCreateModal}/>}
+        <CreateCardForm
+          cardsPack_id={cardsPack_id}
+          setOpenCreateModal={setOpenCreateModal}
+        />}
 
       <div className={s.packs}>
         <div className={t.pack__titleWrapper}>
           <div className={t.pack__titleTextWrapper}>
+
             <h1 className={t.pack__title}>{packName}</h1>
+
             {isOwner && <div className={t.pack__titleIconWrapper}>
               <DropDownMenu />
             </div>}
@@ -101,7 +106,7 @@ export const Cards = () => {
 
         {cards.length > 0
           ? <div>
-            <Nav authorizedUserId={authorizedUserId} />
+            <Nav />
             <CardsTable isOwner={isOwner} cards={cards} cardsPack_id={cardsPack_id}/>
             <CustomPagination
               handleChangePage={handleChangePage}

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils";
 import {
-  ArgCreatePackType,
+  ArgCreatePackType, DeletePackValuesType,
   EditPackValuesType,
   FetchPacksResponseType,
   GetPacksParamsType,
@@ -67,6 +67,11 @@ const slice = createSlice({
       name: '',
       privatePack: false
     },
+    deleteMode: false,
+    deletePackFormValues: {
+      _id: '',
+      name: '',
+    },
     params: {
       page: 1,
       pageCount: 4,
@@ -81,23 +86,22 @@ const slice = createSlice({
     setParams: (state, action: PayloadAction<{ params: GetPacksParamsType }>) => {
       state.params = {...state.params, ...action.payload.params}
     },
-    // to show cards of the selected pack // later
-    setSelectedPack: (state, action: PayloadAction<{ _id: string }>) => {
-      const pack = state.cardPacks.find((pack: PackType) => pack._id === action.payload._id)
-      // console.log(action.payload._id)
-      if (pack) state.selectedPack = pack
-      // console.log(state.selectedPack)
-    },
-    // ?
-    setIsOwner: (state, action: PayloadAction<{ isOwner: boolean }>) => {
-      state.cardPacks.forEach(pack => pack.isOwner = action.payload.isOwner)
-    },
     setEditPackMode: (state, action: PayloadAction<{ editPackMode: boolean }>) => {
       state.editMode = action.payload.editPackMode
+    },
+    setSelectedPack: (state, action: PayloadAction<{ _id: string}>) => {
+      const pack = state.cardPacks.find(p => p._id === action.payload._id)
+      if (pack) state.selectedPack = pack
     },
     setEditPackFormValues: (state, action: PayloadAction<{ values: EditPackValuesType }>) => {
       state.editPackFormValues = {...state.editPackFormValues, ...action.payload.values}
     },
+    setDeletePackMode: (state, action: PayloadAction<{ deletePackMode: boolean }>) => {
+      state.deleteMode = action.payload.deletePackMode
+    },
+    setDeletePayload: (state, action: PayloadAction<{ values: DeletePackValuesType }>) => {
+      state.deletePackFormValues = {...state.deletePackFormValues, ...action.payload.values}
+    }
   },
   extraReducers: (builder) => {
     builder

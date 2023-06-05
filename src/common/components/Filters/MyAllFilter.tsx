@@ -1,23 +1,22 @@
 import s from "features/packs/nav/styles.module.css"
-import React, {FC} from "react"
-import {useAppDispatch} from "common/hooks"
-import {useSelector} from "react-redux"
-import {selectProfile} from "features/auth/auth.selectors"
+import React, {FC, SetStateAction} from "react"
 import {FilterValueType} from "features/packs/packs.types"
-import {cardsActions} from "features/cards/cards.slice"
 
 
 type Props = {
-  authorizedUserId?: string
   handleChangeFilter: (filterValue: FilterValueType) => void
+  setFilter: (filter: SetStateAction<FilterValueType>) => void
+  filter: FilterValueType
 }
 
-export const MyAllFilter: FC<Props> = ({
-                                         authorizedUserId,
-                                         handleChangeFilter
-}) => {
+export const MyAllFilter: FC<Props> = ({ handleChangeFilter, setFilter , filter }) => {
 
   const handleChangeFilterValue = (filterValue: FilterValueType) => {
+    if (filterValue === "All") {
+      setFilter("All")
+    } else {
+      setFilter("My")
+    }
     handleChangeFilter(filterValue)
   }
 
@@ -27,13 +26,13 @@ export const MyAllFilter: FC<Props> = ({
       <div className={s.nav__filterButtonsWrapper}>
         <button
           onClick={() => handleChangeFilterValue('My')}
-          className={s.nav__filterButton + ' ' + (authorizedUserId && s.nav__filterButton_active)}
+          className={s.nav__filterButton + ' ' + (filter === "My" && s.nav__filterButton_active)}
         >
           My
         </button>
         <button
           onClick={() => handleChangeFilterValue('All')}
-          className={s.nav__filterButton + ' ' + (!authorizedUserId && s.nav__filterButton_active)}
+          className={s.nav__filterButton + ' ' + (filter === "All" && s.nav__filterButton_active)}
         >
           All
         </button>

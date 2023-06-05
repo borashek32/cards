@@ -73,12 +73,14 @@ export type ArgUpdateCardType = {
   shots?: number
   answerImg?: string
   questionImg?: string
+  cardsPack_id: string
 }
 
 export type GetCardsResponseType = {
   cards: CardType[]
   cardsPack_id: string
   packName: string
+  packPrivate: boolean
   page?: number
   pageCount?: number
   packUserId: string

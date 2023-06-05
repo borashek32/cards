@@ -1,38 +1,55 @@
 import s from "features/header/styles.module.css"
 import t from 'features/packs/title/styles.module.css'
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator"
 import triangle from "assets/img/triangle.svg"
 import pencil from "assets/img/pencil.svg"
 import bin from "assets/img/bin.svg"
 import teacher from "assets/img/teacher.svg"
 import {useSelector} from "react-redux"
-import {selectEditPackMode, selectPack} from "features/packs/packs.selectors"
-import {DeletePackForm} from "features/packs/forms/DeletePackForm"
 import {packsActions} from "features/packs/packs.slice"
 import {useAppDispatch} from "common/hooks"
-import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
+import {selectCardsPackName, selectCardsPackPrivate} from "features/cards/cards.selectors"
+import {useParams} from "react-router-dom"
 
 
 export const DropDownMenu = () => {
 
   const dispatch = useAppDispatch()
-  const pack = useSelector(selectPack)
-  const editMode = useSelector(selectEditPackMode)
-  const [deleteModal, setDeleteModal] = useState(false)
+  const packName = useSelector(selectCardsPackName)
+  const packPrivate = useSelector(selectCardsPackPrivate)
+
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
-  const handleOpenMenu = () => setIsOpenMenu(!isOpenMenu)
+  const {cardsPack_id} = useParams()
+
+  useEffect(() => {
+
+  }, [])
+
+  const handleOpenMenu = () => {
+    setIsOpenMenu(!isOpenMenu)
+  }
 
   const setEditMode = () => {
     dispatch(packsActions.setEditPackFormValues({
       values: {
-        _id: pack._id,
-        name: pack.name,
-        privateCard: pack.private
+        _id: cardsPack_id ?? '',
+        name: packName,
+        privateCard: packPrivate
       }
     }))
     dispatch(packsActions.setEditPackMode({editPackMode: true}))
+  }
+
+  const setDeleteMode = () => {
+    dispatch(packsActions.setDeletePayload({
+      values: {
+        _id: cardsPack_id ?? '',
+        name: packName
+      }
+    }))
+    dispatch(packsActions.setDeletePackMode({ deletePackMode: true }))
   }
 
   const finalClassName = t.pack__menuWrapper + ' '
@@ -54,18 +71,18 @@ export const DropDownMenu = () => {
                     <img src={pencil} alt="edit"/>
                   </div>
                   <p className={s.header__itemName}>Edit</p>
-                  {/*{editMode && <UpdatePackForm p={pack} />}*/}
                 </li>
+
                 <li
-                  onClick={() => setDeleteModal(true)}
+                  onClick={setDeleteMode}
                   className={s.header__menuListItemWrapper}
                 >
                   <div className={s.header__menuListItemImgWrapper}>
                     <img src={bin} alt="delete"/>
                   </div>
                   <p className={s.header__itemName}>Delete</p>
-                  {deleteModal && <DeletePackForm p={pack} setDeleteModal={setDeleteModal}/>}
                 </li>
+
                 <li
                   onClick={() => {}}
                   className={s.header__menuListItemWrapper}
@@ -73,7 +90,7 @@ export const DropDownMenu = () => {
                   <div className={s.header__menuListItemImgWrapper}>
                     <img src={teacher} alt="learn"/>
                   </div>
-                  <p className={s.header__itemName}>Delete</p>
+                  <p className={s.header__itemName}>Learn</p>
                 </li>
               </ul>
               <img src={triangle} alt="triangle" className={s.triangle}/>

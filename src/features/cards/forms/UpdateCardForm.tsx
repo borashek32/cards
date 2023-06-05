@@ -24,7 +24,6 @@ type FormDataType = {
 }
 
 export const UpdateCardForm: FC<Props> = ({setEditMode, c}) => {
-
   const dispatch = useAppDispatch()
   const {register, formState: {errors}, handleSubmit} = useForm<FormDataType>({mode: "onChange"})
 

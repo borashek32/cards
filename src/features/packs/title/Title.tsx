@@ -15,7 +15,8 @@ export const Title: FC<PropsType> = ({setOpenCreateModal, name, buttonName}) => 
     <div className={s.pack__titleWrapper}>
       <h1 className={s.pack__title}>{name}</h1>
       <div className={s.buttonWrapper}>
-        <Button name={buttonName} xType={"default"} onClick={() => setOpenCreateModal(true)} />
+        <Button name={buttonName} xType={"default"}
+                onClick={() => setOpenCreateModal(true)} />
       </div>
     </div>
   )

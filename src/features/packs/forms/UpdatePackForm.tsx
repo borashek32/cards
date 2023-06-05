@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useEffect, useState} from "react"
+import React, {ChangeEvent, FC, useState} from "react"
 import {Card} from "common/components/Card/AuthCard/Card"
 import styles from "features/auth/profile/styles.module.css"
 import Button from "common/components/Button/Button"
@@ -14,28 +14,19 @@ import s from "features/packs/forms/styles.module.css"
 import closeImg from "assets/img/close.svg"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 import {useSelector} from "react-redux"
-import {selectEditPackFormValues, selectEditPackMode} from "features/packs/packs.selectors"
-import {values} from "lodash"
+import {selectEditPackFormValues, selectPack} from "features/packs/packs.selectors"
 
 
-type Props = {
-  p: PackType
-}
-type FormDataType = {
-  _id: string
-  name: string
-  privateCard: boolean
-}
-
-export const UpdatePackForm: FC<Props> = ({p}) => {
+export const UpdatePackForm = () => {
 
   const dispatch = useAppDispatch()
+  const p = useSelector(selectPack)
   const editPackFormValues = useSelector(selectEditPackFormValues)
   const [editValues, setEditValues] = useState<EditPackValuesType>({
     _id: editPackFormValues._id,
     name: editPackFormValues.name,
     privateCard: editPackFormValues.privatePack
-  });
+  })
 
   const {
     register,
@@ -44,7 +35,6 @@ export const UpdatePackForm: FC<Props> = ({p}) => {
   } = useForm<EditPackValuesType>({mode: "onChange"})
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log(e.currentTarget.value)
     setEditValues({
       ...editValues,
       name: e.currentTarget.value

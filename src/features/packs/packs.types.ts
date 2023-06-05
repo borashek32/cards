@@ -72,3 +72,8 @@ export type EditPackValuesType = {
   name: string
   privateCard: boolean
 }
+
+export type DeletePackValuesType = {
+  _id: string
+  name: string
+}

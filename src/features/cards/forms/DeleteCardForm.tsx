@@ -2,12 +2,14 @@ import React, {FC} from "react"
 import {Card} from "common/components/Card/AuthCard/Card"
 import Button from "common/components/Button/Button"
 import s from "features/packs/forms/styles.module.css"
-import {useAppDispatch} from "common/hooks"
 import closeImg from 'assets/img/close.svg'
 import {toast} from "react-toastify"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 import {CardType} from "features/cards/cards.types"
 import {cardsThunks} from "features/cards/cards.slice"
+import {useNavigate} from "react-router-dom"
+import {paths} from "common/constants/constants"
+import {useAppDispatch} from "common/hooks"
 
 
 type Props = {
@@ -19,12 +21,14 @@ type Props = {
 export const DeleteCardForm: FC<Props> = ({setDeleteModal, c, cardsPack_id}) => {
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const removePackHandler = (id: string) => {
-    dispatch(cardsThunks.removeCard(id))
+    dispatch(cardsThunks.removeCard({id, cardsPack_id: c.cardsPack_id}))
       .unwrap()
       .then((res) => {
         toast.success(`Pack ${c.question} was deleted successfully`)
+        return navigate(-1)
       })
     setDeleteModal(false)
   }

@@ -2,8 +2,8 @@ import {RootState} from "app/store"
 
 
 const selectCards = (state: RootState) => state.cards.cards
-const selectCardsPackId = (state: RootState) => state.cards.selectedCardsPackId
 const selectCardsPackName = (state: RootState) => state.cards.packName
+const selectCardsPackPrivate = (state: RootState) => state.cards.packPrivate
 const selectPackUserId = (state: RootState) => state.cards.packUserId
 
 const selectSearchCardQuestion = (state: RootState) => state.cards.params.cardQuestion
@@ -15,8 +15,9 @@ const selectPackCardsCount = (state: RootState) => state.cards.cardsTotalCount
 
 export {
   selectCards,
-  selectCardsPackId,
+  // selectCardsPackId,
   selectCardsPackName,
+  selectCardsPackPrivate,
   selectPackUserId,
   selectSearchCardQuestion,
   selectSearchCardAnswer,

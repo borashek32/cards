@@ -1,4 +1,4 @@
-import React, {FC, useCallback} from "react"
+import React, {FC, SetStateAction, useCallback} from "react"
 import noFilters from 'assets/img/noFilters.svg'
 import s from 'features/packs/nav/styles.module.css'
 import {RangeFilter} from "common/components/Filters/RangeFilter"
@@ -8,23 +8,23 @@ import {packsActions} from "features/packs/packs.slice"
 import {SubmitHandler} from "react-hook-form"
 import {debounce} from "lodash"
 import {MyAllFilter} from "common/components/Filters/MyAllFilter"
-import {useSelector} from "react-redux"
-import {selectProfile} from "features/auth/auth.selectors"
 import {FilterValueType} from "features/packs/packs.types"
 
 
 type Props = {
-  authorizedUserId?: string
+  handleChangeFilter: (filterValue: FilterValueType) => void
+  setFilter: (filter: SetStateAction<FilterValueType>) => void
+  filter: FilterValueType
 }
 type FormDataType = {
   searchValue: string
 }
 
-export const Nav: FC<Props> = ({authorizedUserId}) => {
+export const Nav: FC<Props> = ({ handleChangeFilter, setFilter, filter }) => {
 
   const dispatch = useAppDispatch()
 
-  // to reset RangeFilter
+  // to reset all filters
   const resetFilters = () => {
     dispatch(packsActions.setParams({
       params: {
@@ -39,17 +39,6 @@ export const Nav: FC<Props> = ({authorizedUserId}) => {
     }))
   }
 
-  // All | My
-  const profile = useSelector(selectProfile)
-
-  const handleChangeFilter = (filterValue: FilterValueType) => {
-    if (filterValue === "My") {
-      dispatch(packsActions.setParams({params: {user_id: profile?._id}}))
-    } else {
-      dispatch(packsActions.setParams({params: {user_id: ''}}))
-    }
-  }
-
   // to search packs
   const onSubmit: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
     dispatch(packsActions.setParams({params: {packName: data.searchValue}}))
@@ -60,8 +49,9 @@ export const Nav: FC<Props> = ({authorizedUserId}) => {
       <Search onSubmit={onSubmit} title={"Search packs"} />
 
       <MyAllFilter
-        authorizedUserId={authorizedUserId}
         handleChangeFilter={handleChangeFilter}
+        setFilter={setFilter}
+        filter={filter}
       />
 
       <RangeFilter />

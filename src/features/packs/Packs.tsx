@@ -8,7 +8,7 @@ import {BackLink} from "common/components/BackLink/BackLink"
 import {packsActions, packsThunks} from "features/packs/packs.slice"
 import {useSelector} from "react-redux"
 import {
-  selectAuthorizedUserId, selectCardPacksTotalCount,
+  selectCardPacksTotalCount,
   selectMaxCardsCount,
   selectMinCardsCount,
   selectPacks,
@@ -19,6 +19,8 @@ import {
 import {useAppDispatch} from "common/hooks"
 import {CustomPagination} from "common/components/pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
+import {selectAuthorizedUserId} from "features/auth/auth.selectors"
+import {FilterValueType} from "features/packs/packs.types"
 
 
 export const Packs = () => {
@@ -34,19 +36,16 @@ export const Packs = () => {
   const searchValue = useSelector(selectSearchValue)
   const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
 
-  // fetch all packs with params
-  useEffect(() => {
-    dispatch(packsThunks.fetchPacks())
-  }, [
-    dispatch,
-    authorizedUserId,
-    page,
-    pageCount,
-    minCardsCount,
-    maxCardsCount,
-    searchValue,
-    cardPacksTotalCount
-  ])
+  // My | All
+  const [filter, setFilter] = useState<FilterValueType>("All")
+
+  const handleChangeFilter = (filter: FilterValueType) => {
+    if (filter === "My") {
+      dispatch(packsActions.setParams({ params: { user_id: authorizedUserId } }))
+    } else {
+      dispatch(packsActions.setParams({ params: { user_id: '' } }))
+    }
+  }
 
   // pagination
   const handleChangePacksPerPage = (event: SelectChangeEvent) => {
@@ -56,6 +55,12 @@ export const Packs = () => {
   const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
     dispatch(packsActions.setParams({params: {page: newPage}}))
   }
+
+  // fetch all packs with params
+  useEffect(() => {
+    dispatch(packsThunks.fetchPacks())
+  }, [page, pageCount, minCardsCount, maxCardsCount, searchValue, filter])
+
 
   return (
     <div className={s.packsWrapper}>
@@ -71,9 +76,16 @@ export const Packs = () => {
           setOpenCreateModal={setOpenCreateModal}
         />
 
-        <Nav authorizedUserId={authorizedUserId} />
+        <Nav
+          handleChangeFilter={handleChangeFilter}
+          setFilter={setFilter}
+          filter={filter}
+        />
 
-        <PacksTable packsToRender={cardPacks}/>
+        <PacksTable
+          authorizedUserId={authorizedUserId}
+          packsToRender={cardPacks}
+        />
 
         <CustomPagination
           handleChangePage={handleChangePage}
