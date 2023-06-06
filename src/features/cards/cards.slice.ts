@@ -9,6 +9,8 @@ import {
 } from "features/cards/cards.types"
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils"
 import {cardsApi} from "features/cards/cards.api"
+import {PackType} from "features/packs/packs.types"
+import {packsThunks} from "features/packs/packs.slice"
 
 
 const getCards = createAppAsyncThunk<{ cardsPage: GetCardsResponseType }, { _id?: string }>(
@@ -83,7 +85,7 @@ const slice = createSlice({
   reducers: {
     setParams: (state, action: PayloadAction<{ params: GetParamsType }>) => {
       state.params = { ...state.params, ...action.payload.params }
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -106,9 +108,15 @@ const slice = createSlice({
         const index = state.cards.findIndex((card: CardType) => card._id && card?._id === action.payload.updatedCard._id)
         if (index !== -1) state.cards[index] = action.payload.updatedCard
       })
+      .addCase(packsThunks.updatePack.fulfilled, (state, action) => {
+        state.packName = action.payload.pack.name
+      })
   }
 })
 
-export const cardsActions = slice.actions
+export const cardsActions = {
+  ...slice.actions,
+  updatePackFulfilled: packsThunks.updatePack.fulfilled
+}
 export const cardsReducer = slice.reducer
 export const cardsThunks = { getCards, createCard, removeCard, updateCard }

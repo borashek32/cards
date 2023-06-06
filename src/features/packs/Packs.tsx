@@ -17,7 +17,7 @@ import {
   selectSearchValue
 } from "features/packs/packs.selectors"
 import {useAppDispatch} from "common/hooks"
-import {CustomPagination} from "common/components/pagination/CustomPagination"
+import {CustomPagination} from "common/components/Pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
 import {selectAuthorizedUserId} from "features/auth/auth.selectors"
 import {FilterValueType} from "features/packs/packs.types"
@@ -47,7 +47,7 @@ export const Packs = () => {
     }
   }
 
-  // pagination
+  // Pagination
   const handleChangePacksPerPage = (event: SelectChangeEvent) => {
     dispatch(packsActions.setParams({params: {pageCount: Number(event.target.value)}}))
   }
@@ -60,6 +60,10 @@ export const Packs = () => {
   useEffect(() => {
     dispatch(packsThunks.fetchPacks())
   }, [page, pageCount, minCardsCount, maxCardsCount, searchValue, filter])
+
+  useEffect(() => {
+    console.log(cardPacks,"cardPacks")
+  },[cardPacks])
 
 
   return (

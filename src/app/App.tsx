@@ -44,7 +44,7 @@ function App() {
         </div>
       }
       {isAppInitialized
-        ? <Outlet/>
+        ? <Outlet />
         : <div
           className={isLoading ? s.isLoading : ''}
         >

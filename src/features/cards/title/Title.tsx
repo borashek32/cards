@@ -19,7 +19,6 @@ export const Title: FC<PropsType> = ({setOpenCreateModal, name, buttonName, card
       {cards && cards.length > 0 && <div>
         <Button name={buttonName} xType={"default"} onClick={() => {
           setOpenCreateModal(true)
-          console.log(123)
         }} />
       </div>}
     </div>

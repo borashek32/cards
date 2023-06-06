@@ -8,6 +8,7 @@ import {
   PackType
 } from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
+import {cardsActions} from "features/cards/cards.slice"
 
 
 const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType } >(
@@ -33,13 +34,13 @@ const createPack = createAppAsyncThunk<{ pack: PackType }, ArgCreatePackType>(
     })
   })
 
-const removePack = createAppAsyncThunk<{ packId: string }, string>(
+const removePack = createAppAsyncThunk<{ packId: string }, { id: string, withUpdate: boolean }>(
   "packs/removePack",
-  async (id, thunkAPI) => {
+  async ({id,withUpdate = true}, thunkAPI) => {
     const { dispatch } = thunkAPI
     return thunkTryCatch(thunkAPI, async () => {
       const res = await packsApi.removePack(id)
-      dispatch(packsThunks.fetchPacks())
+      withUpdate && dispatch(packsThunks.fetchPacks())
       return {packId: res.data.deletedCardsPack._id}
     })
   })
@@ -51,7 +52,7 @@ const updatePack = createAppAsyncThunk<{ pack: PackType }, PackType>(
     return thunkTryCatch(thunkAPI, async () => {
       const res = await packsApi.updatePack(arg)
       dispatch(packsThunks.fetchPacks())
-      return { packs: res.data.updatedCardsPack }
+      return { pack: res.data.updatedCardsPack }
     })
   })
 
@@ -86,21 +87,9 @@ const slice = createSlice({
     setParams: (state, action: PayloadAction<{ params: GetPacksParamsType }>) => {
       state.params = {...state.params, ...action.payload.params}
     },
-    setEditPackMode: (state, action: PayloadAction<{ editPackMode: boolean }>) => {
-      state.editMode = action.payload.editPackMode
-    },
-    setSelectedPack: (state, action: PayloadAction<{ _id: string}>) => {
-      const pack = state.cardPacks.find(p => p._id === action.payload._id)
+    setSelectedPack: (state, action: PayloadAction<{ _id?: string}>) => {
+      const pack = state.cardPacks.find(p => p._id === action.payload?._id)
       if (pack) state.selectedPack = pack
-    },
-    setEditPackFormValues: (state, action: PayloadAction<{ values: EditPackValuesType }>) => {
-      state.editPackFormValues = {...state.editPackFormValues, ...action.payload.values}
-    },
-    setDeletePackMode: (state, action: PayloadAction<{ deletePackMode: boolean }>) => {
-      state.deleteMode = action.payload.deletePackMode
-    },
-    setDeletePayload: (state, action: PayloadAction<{ values: DeletePackValuesType }>) => {
-      state.deletePackFormValues = {...state.deletePackFormValues, ...action.payload.values}
     }
   },
   extraReducers: (builder) => {
@@ -109,17 +98,17 @@ const slice = createSlice({
         state.cardPacks = action.payload.packsPage.cardPacks
         state.cardsPackTotalCount = action.payload.packsPage.cardPacksTotalCount
       })
-      .addCase(createPack.fulfilled, (state, action) => {
-        state.cardPacks.unshift(action.payload.pack)
-      })
-      .addCase(removePack.fulfilled, (state, action) => {
-        const index = state.cardPacks.findIndex((pack: PackType) => pack._id && pack._id === action.payload.packId)
-        if (index !== -1) state.cardPacks.splice(index, 1)
-      })
-      .addCase(updatePack.fulfilled, (state, action) => {
-        const index = state.cardPacks.findIndex((pack: PackType) => pack._id && pack._id === action.payload.pack?._id)
-        if (index !== -1) state.cardPacks[index] = action.payload.pack
-      })
+      // .addCase(createPack.fulfilled, (state, action) => {
+      //   state.cardPacks.unshift(action.payload.pack)
+      // })
+      // .addCase(removePack.fulfilled, (state, action) => {
+      //   const index = state.cardPacks.findIndex((pack: PackType) => pack._id === action.payload.packId)
+      //   if (index !== -1) state.cardPacks.splice(index, 1)
+      // })
+      // .addCase(updatePack.fulfilled, (state, action) => {
+      //   const index = state.cardPacks.findIndex((pack: PackType) => pack._id && pack._id === action.payload.pack?._id)
+      //   if (index !== -1) state.cardPacks[index] = action.payload.pack
+      // })
   }
 })
 

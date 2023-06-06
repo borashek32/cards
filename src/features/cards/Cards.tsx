@@ -22,19 +22,18 @@ import {cardsActions, cardsThunks} from "features/cards/cards.slice"
 import {toast} from "react-toastify"
 import {useAppDispatch} from "common/hooks"
 import {selectProfile} from "features/auth/auth.selectors"
-import {CustomPagination} from "common/components/pagination/CustomPagination"
+import {CustomPagination} from "common/components/Pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
 import {DropDownMenu} from "features/cards/dropDownMenu/DropDownMenu"
-import {selectDeletePackMode, selectEditPackMode} from "features/packs/packs.selectors"
-import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
-import {DeletePackForm} from "features/packs/forms/DeletePackForm"
+import {packsActions} from "features/packs/packs.slice"
+import {selectPack} from "features/packs/packs.selectors"
 
 
 export const Cards = () => {
 
   const dispatch = useAppDispatch()
 
-  const {cardsPack_id} = useParams() // here an object, like {id: "csdghcvdsghcda"}
+  const {cardsPack_id} = useParams()
 
   const packUserId = useSelector(selectPackUserId)
   const authorizedUser = useSelector(selectProfile)
@@ -47,10 +46,12 @@ export const Cards = () => {
   const pageCount = useSelector(selectPageCount) ?? 4
   const cardsPackTotalCount = useSelector(selectPackCardsCount)
 
-  const editMode = useSelector(selectEditPackMode)
-  const deleteMode = useSelector(selectDeletePackMode)
+  useEffect(() => {
+
+  }, [packName])
 
   useEffect(() => {
+    cardsPack_id && dispatch(packsActions.setSelectedPack({ _id: cardsPack_id }))
     dispatch(cardsThunks.getCards({_id: cardsPack_id}))
       .unwrap()
       .then((res) => {
@@ -58,29 +59,21 @@ export const Cards = () => {
           toast.success("Cards loaded successfully")
         }
       })
-  }, [
-    cardQuestion,
-    cardAnswer,
-    page,
-    pageCount
-  ])
+  }, [cardQuestion, cardAnswer, page, pageCount])
 
   const [openCreateModal, setOpenCreateModal] = useState(false)
 
-  // pagination
+  // Pagination
   const handleChangePacksPerPage = (event: SelectChangeEvent) => {
-    dispatch(cardsActions.setParams({params: {pageCount: Number(event.target.value)}}))
+    dispatch(cardsActions.setParams({ params: { pageCount: Number(event.target.value) } }))
   }
 
   const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
-    dispatch(cardsActions.setParams({params: {page: newPage}}))
+    dispatch(cardsActions.setParams({ params: { page: newPage } }))
   }
 
   return (
     <div className={s.packsWrapper}>
-      {editMode && <UpdatePackForm />}
-      {deleteMode && <DeletePackForm />}
-
       <BackLink backPath={'/packs'} backText={'Back to Packs List'}/>
       {openCreateModal &&
         <CreateCardForm

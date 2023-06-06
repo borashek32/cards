@@ -35,12 +35,11 @@ export const PacksTable: FC<Props> = ({packsToRender, authorizedUserId}) => {
         </thead>
 
         <tbody>
-        {packsToRender?.map((p: PackType) => {
-
-          const isOwner = authorizedUserId === p.user_id
-
-          return <Pack key={p._id} p={p} isOwner={isOwner} />
-        })}
+        {packsToRender.map((p: PackType) => {
+            const isOwner = authorizedUserId === p.user_id
+            return <Pack key={p._id} p={p} isOwner={isOwner} />
+          }
+        )}
         </tbody>
       </table>
 

@@ -1,48 +1,60 @@
-import React, {useState} from "react"
+import React, {FC} from "react"
 import {Card} from "common/components/Card/AuthCard/Card"
 import Button from "common/components/Button/Button"
 import s from "./styles.module.css"
 import {useAppDispatch} from "common/hooks"
-import {packsActions, packsThunks} from "features/packs/packs.slice"
+import {packsThunks} from "features/packs/packs.slice"
 import closeImg from 'assets/img/close.svg'
 import {toast} from "react-toastify"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
+import {useNavigate, useParams} from "react-router-dom"
+import {PackType} from "features/packs/packs.types"
 import {useSelector} from "react-redux"
-import {selectDeletePackFormValues, selectPack} from "features/packs/packs.selectors"
-import {DeletePackValuesType} from "features/packs/packs.types"
-import {useNavigate} from "react-router-dom"
+import {selectCardsPackName} from "features/cards/cards.selectors"
 
 
-export const DeletePackForm = () => {
+type Props = {
+  pack: PackType
+  setDeleteMode: (deleteMode: boolean) => void
+}
+
+export const DeletePackForm: FC<Props> = ({ pack, setDeleteMode }) => {
 
   const dispatch = useAppDispatch()
-  const p = useSelector(selectPack)
-  const deletePackValues = useSelector(selectDeletePackFormValues)
+  const packName = useSelector(selectCardsPackName)
   const navigate = useNavigate()
+  const {cardsPack_id} = useParams()
 
   const removePackHandler = () => {
-    closeDeleteForm()
-    dispatch(packsThunks.removePack(p._id))
+    setCloseDeleteForm()
+    dispatch(packsThunks.removePack({id:pack._id || cardsPack_id as string, withUpdate:false}))
       .unwrap()
       .then((res) => {
         navigate('/packs')
-        toast.success(`Pack ${p.name} was deleted successfully`)
+        toast.success(`Pack ${pack.name || packName} was deleted successfully`)
       })
   }
 
-  const closeDeleteForm = () => {
-    dispatch(packsActions.setDeletePackMode({ deletePackMode: false }))
-  }
+  const setCloseDeleteForm = () => setDeleteMode(false)
 
   return (
     <div className={s.background}>
       <Card id={'cards-profile'}>
         <div className={s.closeImgWrapper}>
-          <img src={closeImg} alt="close image" className={s.closeImg} onClick={closeDeleteForm}/>
+          <img
+            src={closeImg}
+            alt="close image"
+            className={s.closeImg}
+            onClick={setCloseDeleteForm}
+          />
         </div>
         <LeftTitle title={"Delete Pack"}/>
-        <p className={s.desc}>Do you really want to remove <strong>{deletePackValues.name}</strong>?</p>
-        <p className={s.desc}>All cards will be deleted.</p>
+        <p className={s.desc}>
+          Do you really want to remove <strong>{pack.name || packName}</strong>?
+        </p>
+        <p className={s.desc}>
+          All cards will be deleted.
+        </p>
         <div className={s.buttonsWrapper}>
           <Button
             name={"Delete"}
@@ -53,7 +65,7 @@ export const DeletePackForm = () => {
           <Button
             name={"Cancel"}
             xType={"secondary"}
-            onClick={closeDeleteForm}
+            onClick={setCloseDeleteForm}
             className={s.button}
           />
         </div>

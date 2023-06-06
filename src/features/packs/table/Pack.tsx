@@ -1,5 +1,5 @@
 import {PackType} from "features/packs/packs.types"
-import React, {FC} from "react"
+import React, {FC, useState} from "react"
 import s from "features/packs/table/styles.module.css"
 import teacher from "assets/img/teacher.svg"
 import pencil from "assets/img/pencil.svg"
@@ -7,10 +7,8 @@ import bin from "assets/img/bin.svg"
 import {NavLink} from "react-router-dom"
 import {useAppDispatch} from "common/hooks"
 import {packsActions} from "features/packs/packs.slice"
+import {DeletePackForm} from "../forms/DeletePackForm"
 import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
-import {DeletePackForm} from "features/packs/forms/DeletePackForm"
-import {useSelector} from "react-redux"
-import {selectDeletePackMode, selectEditPackMode} from "features/packs/packs.selectors"
 
 
 type Props = {
@@ -21,36 +19,14 @@ type Props = {
 export const Pack: FC<Props> = ({p, isOwner}) => {
 
   const dispatch = useAppDispatch()
-  const editMode = useSelector(selectEditPackMode)
-  const deleteMode = useSelector(selectDeletePackMode)
 
   const createdDate = new Date(p.created)
   const updatedDate = new Date(p.updated)
 
-  const setEditMode = () => {
-    dispatch(packsActions.setEditPackFormValues({
-      values: {
-        _id: p._id,
-        name: p.name,
-        privateCard: p.private
-      }
-    }))
-    dispatch(packsActions.setEditPackMode({ editPackMode: true }))
-  }
+  const [editMode, setEditMode] = useState(false)
+  const [deleteMode, setDeleteMode] = useState(false)
 
-  const setDeleteMode = () => {
-    dispatch(packsActions.setDeletePackMode({ deletePackMode: true }))
-    dispatch(packsActions.setDeletePayload({
-      values: {
-        _id: p._id,
-        name: p.name
-      }
-    }))
-  }
-
-  const setSelectedPack = () => {
-    dispatch(packsActions.setSelectedPack({ _id: p._id }))
-  }
+  const setSelectedPack = () => dispatch(packsActions.setSelectedPack({ _id: p._id }))
 
   return (
     <tr key={p._id} className={s.table__tr}>
@@ -81,11 +57,24 @@ export const Pack: FC<Props> = ({p, isOwner}) => {
 
           {isOwner &&
             <>
-              <img onClick={setEditMode} src={pencil} alt="pencil"/>
-              {editMode && <UpdatePackForm />}
+              <img
+                onClick={() => setEditMode(true)}
+                src={pencil}
+                alt="pencil"
+              />
+              {editMode && <UpdatePackForm
+                pack={p}
+                setEditMode={setEditMode}
+              />}
 
-              <img onClick={setDeleteMode} src={bin} alt="bin"/>
-              {deleteMode && <DeletePackForm />}
+              <img
+                onClick={() => setDeleteMode(true)}
+                src={bin} alt="bin"
+              />
+              {deleteMode && <DeletePackForm
+                pack={p}
+                setDeleteMode={setDeleteMode}
+              />}
             </>
           }
           <img src={teacher} alt="teacher"/>

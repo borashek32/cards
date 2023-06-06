@@ -7,25 +7,32 @@ import i from "common/components/Input/styles.module.css"
 import {useAppDispatch} from "common/hooks"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {toast} from "react-toastify"
-import {packsActions, packsThunks} from "features/packs/packs.slice"
-import {Footer} from "common/components/Footer/Footer"
+import {packsThunks} from "features/packs/packs.slice"
 import {EditPackValuesType, PackType} from "features/packs/packs.types"
 import s from "features/packs/forms/styles.module.css"
 import closeImg from "assets/img/close.svg"
 import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 import {useSelector} from "react-redux"
-import {selectEditPackFormValues, selectPack} from "features/packs/packs.selectors"
+import {selectCardsPackName} from "features/cards/cards.selectors"
+import {useParams} from "react-router-dom"
+import {cardsActions} from "features/cards/cards.slice"
 
 
-export const UpdatePackForm = () => {
+type Props = {
+  pack: PackType
+  setEditMode: (editMode: boolean) => void
+}
+
+export const UpdatePackForm: FC<Props> = ({ pack, setEditMode }) => {
 
   const dispatch = useAppDispatch()
-  const p = useSelector(selectPack)
-  const editPackFormValues = useSelector(selectEditPackFormValues)
+  const packName = useSelector(selectCardsPackName)
+  const {cardsPack_id} = useParams()
+
   const [editValues, setEditValues] = useState<EditPackValuesType>({
-    _id: editPackFormValues._id,
-    name: editPackFormValues.name,
-    privateCard: editPackFormValues.privatePack
+    _id: pack._id || cardsPack_id as string,
+    name: pack.name || packName,
+    privateCard: pack.private
   })
 
   const {
@@ -34,7 +41,7 @@ export const UpdatePackForm = () => {
     handleSubmit
   } = useForm<EditPackValuesType>({mode: "onChange"})
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChangeInputValue = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEditValues({
       ...editValues,
       name: e.currentTarget.value
@@ -42,27 +49,24 @@ export const UpdatePackForm = () => {
   }
 
   const onSubmit: SubmitHandler<EditPackValuesType> = (data) => {
-    setClose()
-    dispatch(packsThunks.updatePack({ ...p, name: data.name, _id: editValues._id }))
+    setCloseEditForm()
+    dispatch(packsThunks.updatePack({ ...pack, name: data.name, _id: editValues._id }))
       .unwrap()
-      .then(() => {
+      .then((res) => {
         toast.success("Pack was updated successfully")
+        dispatch(cardsActions.updatePackFulfilled)
       })
   }
 
-  const setClose = () => {
-    dispatch(packsActions.setEditPackMode({editPackMode: false}))
-    dispatch(packsActions.setEditPackFormValues({ values: {
-      _id: '',
-      name: '',
-      privateCard: false
-    }}))
-  }
+  const setCloseEditForm = () => setEditMode(false)
 
   return (
     <div className={s.background}>
       <Card id={'cards-profile'}>
-        <div className={s.closeImgWrapper} onClick={setClose}>
+        <div
+          className={s.closeImgWrapper}
+          onClick={setCloseEditForm}
+        >
           <img src={closeImg} alt="close image" className={s.closeImg} />
         </div>
         <LeftTitle title={"Edit Pack"} />
@@ -82,7 +86,7 @@ export const UpdatePackForm = () => {
                   message: "Min length of card name field is 3 symbols"
                 }
               }))}
-              onChange={handleChange}
+              onChange={handleChangeInputValue}
               value={editValues.name}
               type="text"
             />
@@ -92,9 +96,19 @@ export const UpdatePackForm = () => {
               <input type={"checkbox"} {...register('privateCard')} className={s.checkbox} />
               <label htmlFor="#" style={{color: "#000"}} className={s.label}>Private Pack</label>
             </div>
-            <Footer>
-              <Button name={"Update"} xType={"default"} />
-            </Footer>
+              <div className={s.buttonsWrapper}>
+                <Button
+                  name={"Update"}
+                  xType={'default'}
+                  className={s.button}
+                />
+                <Button
+                  name={"Cancel"}
+                  xType={"secondary"}
+                  onClick={setCloseEditForm}
+                  className={s.button}
+                />
+              </div>
           </form>
         </div>
       </Card>
