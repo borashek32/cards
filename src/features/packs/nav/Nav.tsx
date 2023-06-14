@@ -9,7 +9,7 @@ import {SubmitHandler} from "react-hook-form"
 import {debounce} from "lodash"
 import {MyAllFilter} from "common/components/Filters/MyAllFilter"
 import {useSelector} from "react-redux"
-import {selectSearchValue} from "features/packs/packs.selectors"
+import {selectSearchPackName} from "features/packs/packs.selectors"
 
 
 type FormDataType = {
@@ -19,7 +19,7 @@ type FormDataType = {
 export const Nav: FC = () => {
 
   const dispatch = useAppDispatch()
-  const searchValue = useSelector(selectSearchValue)
+  const packName = useSelector(selectSearchPackName)
 
   // My | All
   const handleChangeFilter = (userId?: string) => {
@@ -53,7 +53,7 @@ export const Nav: FC = () => {
   return (
     <div className={s.nav}>
       <Search
-        searchValue={searchValue}
+        searchValue={packName}
         onSubmit={onSubmit}
         title={"Search packs"}
       />

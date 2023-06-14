@@ -64,7 +64,6 @@ const updateCardGrade = createAppAsyncThunk<{ updatedGrade: UpdatedCardGradeType
   "cards/updateCardGrade",
   async (arg, thunkAPI) => {
     const {dispatch} = thunkAPI
-    debugger
     return thunkTryCatch(thunkAPI, async () => {
       const res = await cardsApi.updateCardGrade(arg)
       dispatch(cardsThunks.getCards({_id: arg.cardsPack_id}))
@@ -97,7 +96,7 @@ const slice = createSlice({
     } as GetCardsParamsType
   },
   reducers: {
-    setParams: (state, action: PayloadAction<{ params: GetParamsType }>) => {
+    setParams: (state, action: PayloadAction<{ params: GetCardsParamsType }>) => {
       state.params = { ...state.params, ...action.payload.params }
     },
     setCardsPackName: (state, action: PayloadAction<{ packName: string }>) => {

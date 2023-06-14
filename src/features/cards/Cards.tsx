@@ -9,13 +9,11 @@ import {BackLink} from "common/components/BackLink/BackLink"
 import {useSelector} from "react-redux"
 import {
   selectCards,
-  selectCardsPackName,
+  selectCardsPackName, selectCardsParams,
   selectPackCardsCount,
   selectPackUserId,
   selectPage,
-  selectPageCount,
-  selectSearchCardAnswer,
-  selectSearchCardQuestion
+  selectPageCount
 } from "features/cards/cards.selectors"
 import Button from "common/components/Button/Button"
 import {cardsActions, cardsThunks} from "features/cards/cards.slice"
@@ -26,8 +24,6 @@ import {CustomPagination} from "common/components/Pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
 import {DropDownMenu} from "features/cards/dropDownMenu/DropDownMenu"
 import {packsActions} from "features/packs/packs.slice"
-import {CardGradeType} from "features/cards/cards.types"
-import {selectPack} from "features/packs/packs.selectors"
 
 
 export const Cards = () => {
@@ -36,11 +32,11 @@ export const Cards = () => {
   const {cardsPack_id} = useParams()
   const [openCreateModal, setOpenCreateModal] = useState(false)
 
+  const cardsParams = useSelector(selectCardsParams)
+
   // selectors for cards page
   const cards = useSelector(selectCards)
   const packName = useSelector(selectCardsPackName)
-  const cardQuestion = useSelector(selectSearchCardQuestion)
-  const cardAnswer = useSelector(selectSearchCardAnswer)
 
   // selectors for pagination
   const page = useSelector(selectPage)
@@ -61,11 +57,6 @@ export const Cards = () => {
     dispatch(cardsActions.setParams({ params: { page: newPage } }))
   }
 
-  // handle star rating
-  const handleChangeStarRating = (cardsPack_id: string, card_id: string, value: CardGradeType) => {
-    cardsPack_id && dispatch(cardsThunks.updateCardGrade({ cardsPack_id: cardsPack_id, card_id: card_id, grade: value }))
-  }
-
   useEffect(() => {
     cardsPack_id && dispatch(packsActions.setSelectedPack({ _id: cardsPack_id }))
     dispatch(cardsThunks.getCards({_id: cardsPack_id}))
@@ -75,7 +66,7 @@ export const Cards = () => {
           toast.success("Cards loaded successfully")
         }
       })
-  }, [cardQuestion, cardAnswer, page, pageCount])
+  }, [cardsParams])
 
   return (
     <div className={s.packsWrapper}>
@@ -109,7 +100,6 @@ export const Cards = () => {
               isOwner={isOwner}
               cards={cards}
               cardsPack_id={cardsPack_id}
-              handleStarRating={handleChangeStarRating}
             />
             <CustomPagination
               handleChangePage={handleChangePage}

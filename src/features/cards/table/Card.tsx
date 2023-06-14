@@ -13,6 +13,7 @@ import {learnActions} from "features/learn/learn.slice"
 import {useSelector} from "react-redux"
 import {selectPack} from "features/packs/packs.selectors"
 import {selectPackName} from "features/learn/learn.selectors"
+import {cardsThunks} from "features/cards/cards.slice"
 
 
 type Props = {
@@ -20,14 +21,12 @@ type Props = {
   key: string
   cardsPack_id?: string
   isOwner: boolean
-  handleStarRating: (cardsPack_id: string, card_id: string, value: CardGradeType) => void
 }
 
 export const Card: FC<Props> = ({
                                   card,
                                   cardsPack_id,
-                                  isOwner,
-                                  handleStarRating
+                                  isOwner
 }) => {
 
   const dispatch = useAppDispatch()
@@ -45,8 +44,14 @@ export const Card: FC<Props> = ({
   const createdDate = new Date(card.created)
   const updatedDate = new Date(card.updated)
 
+
+  // handle star rating
   const handleRating = (value: CardGradeType) => {
-    handleStarRating(card.cardsPack_id, card._id, value)
+    handleChangeStarRating(card.cardsPack_id, card._id, value)
+  }
+
+  const handleChangeStarRating = (cardsPack_id: string, card_id: string, value: CardGradeType) => {
+    cardsPack_id && dispatch(cardsThunks.updateCardGrade({ cardsPack_id: cardsPack_id, card_id: card_id, grade: value }))
   }
 
   const setCardData = () => {

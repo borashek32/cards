@@ -9,13 +9,10 @@ import {packsActions, packsThunks} from "features/packs/packs.slice"
 import {useSelector} from "react-redux"
 import {
   selectCardPacksTotalCount,
-  selectMaxCardsCount,
-  selectMinCardsCount,
   selectPacks,
   selectPage,
   selectPageCount,
-  selectParams,
-  selectSearchValue
+  selectParams
 } from "features/packs/packs.selectors"
 import {useAppDispatch} from "common/hooks"
 import {CustomPagination} from "common/components/Pagination/CustomPagination"
@@ -48,7 +45,7 @@ export const Packs = () => {
 
   return (
     <div className={s.packsWrapper}>
-      <BackLink backPath={'/profile'} backText={'Back to Profile'} />
+      <BackLink backPath={'/profile'} backText={'Back to Profile'}/>
 
       {openCreateModal &&
         <CreatePackForm setOpenCreateModal={setOpenCreateModal}/>}
@@ -60,7 +57,7 @@ export const Packs = () => {
           setOpenCreateModal={setOpenCreateModal}
         />
 
-        <Nav />
+        <Nav/>
 
         <PacksTable packsToRender={cardPacks}/>
 

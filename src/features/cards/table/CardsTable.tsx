@@ -1,20 +1,16 @@
 import React, {FC} from "react"
 import s from 'features/packs/table/styles.module.css'
 import {Card} from "features/cards/table/Card"
-import {CardGradeType, CardType} from "features/cards/cards.types"
-import {useSelector} from "react-redux"
-import {selectPackName} from "features/learn/learn.selectors"
+import {CardType} from "features/cards/cards.types"
 
 
 type Props = {
   cardsPack_id?: string
   cards: CardType[]
   isOwner: boolean
-  handleStarRating: (cardsPack_id: string, card_id: string, value: CardGradeType) => void
 }
 
 export const CardsTable: FC<Props> = ({
-                                        handleStarRating,
                                         cardsPack_id,
                                         cards,
                                         isOwner
@@ -47,7 +43,7 @@ export const CardsTable: FC<Props> = ({
 
           <tbody>
           {cards?.map((card) => <Card
-            handleStarRating={handleStarRating}
+            // handleStarRating={handleStarRating}
             isOwner={isOwner}
             cardsPack_id={cardsPack_id}
             key={card?._id}
