@@ -1,6 +1,6 @@
 import {createTheme, TextField, ThemeProvider} from "@mui/material"
 import i from "common/components/Input/styles.module.css"
-import React, {FC, useState} from "react"
+import React, {FC, useEffect, useState} from "react"
 import {SubmitHandler, useForm} from "react-hook-form"
 import s from "features/packs/nav/styles.module.css"
 
@@ -30,7 +30,7 @@ export const Search: FC<Props> = ({
   })
 
   const handleOnChange = (e: any) => {
-    setValue(e.target.value);
+    setValue(e.target.value)
     value && onSubmit({searchFormValue: value})
   }
 
@@ -41,13 +41,17 @@ export const Search: FC<Props> = ({
         styleOverrides: {
           root: {
             "& .MuiInputBase-input": {
-              backgroundColor: "#fff", // Измените на нужный вам цвет
+              backgroundColor: "#fff"
             }
           }
         }
       }
     }
   })
+
+  useEffect(() => {
+    setValue(searchValue)
+  }, [searchValue])
 
   return (
     <ThemeProvider theme={theme}>
@@ -64,6 +68,8 @@ export const Search: FC<Props> = ({
             autoComplete="off"
             placeholder={"Provide your text"}
             className={i.input}
+            type="text"
+            value={value}
             {...(register("searchFormValue", {
               maxLength: {
                 value: 50,
@@ -71,7 +77,6 @@ export const Search: FC<Props> = ({
               },
               onChange: handleOnChange
             }))}
-            type="text"
           />
           {errors.searchFormValue && <span className={i.error}>{errors.searchFormValue.message}</span>}
         </form>

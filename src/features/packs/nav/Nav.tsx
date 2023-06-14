@@ -1,4 +1,4 @@
-import React, {FC, SetStateAction, useCallback} from "react"
+import React, {FC, useCallback} from "react"
 import noFilters from 'assets/img/noFilters.svg'
 import s from 'features/packs/nav/styles.module.css'
 import {RangeFilter} from "common/components/Filters/RangeFilter"
@@ -8,32 +8,47 @@ import {packsActions} from "features/packs/packs.slice"
 import {SubmitHandler} from "react-hook-form"
 import {debounce} from "lodash"
 import {MyAllFilter} from "common/components/Filters/MyAllFilter"
-import {FilterValueType} from "features/packs/packs.types"
+import {useSelector} from "react-redux"
+import {selectSearchValue} from "features/packs/packs.selectors"
 
 
-type Props = {
-  handleChangeFilter: (userId?: string) => void
-  // setFilter: (filter: SetStateAction<FilterValueType>) => void
-  resetFilters: () => void
-  searchValue?: string
-}
 type FormDataType = {
   searchFormValue: string
 }
 
-export const Nav: FC<Props> = ({
-                                 handleChangeFilter,
-                                 // setFilter,
-                                 resetFilters,
-                                 searchValue
-}) => {
+export const Nav: FC = () => {
 
   const dispatch = useAppDispatch()
+  const searchValue = useSelector(selectSearchValue)
+
+  // My | All
+  const handleChangeFilter = (userId?: string) => {
+    if (userId) {
+      dispatch(packsActions.setParams({ params: { user_id: userId } }))
+    } else {
+      dispatch(packsActions.setParams({ params: { user_id: '' } }))
+    }
+  }
 
   // to search packs
   const onSubmit: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
-    dispatch(packsActions.setParams({params: {packName: data.searchFormValue}}))
+    dispatch(packsActions.setParams({ params: { packName: data.searchFormValue } }))
   }, 300), [])
+
+  // to reset all filters
+  const resetFilters = () => {
+    dispatch(packsActions.setParams({
+      params: {
+        page: 1,
+        pageCount: 4,
+        min: 0,
+        max: 100,
+        packName: '',
+        user_id: '',
+        filter: 'All',
+      }
+    }))
+  }
 
   return (
     <div className={s.nav}>
@@ -48,7 +63,10 @@ export const Nav: FC<Props> = ({
       <RangeFilter />
 
       <div className={s.nav__buttonWrapper}>
-        <button onClick={resetFilters} className={s.nav__buttonNoFilters}>
+        <button
+          onClick={resetFilters}
+          className={s.nav__buttonNoFilters}
+        >
           <img src={noFilters} alt="no filter img"/>
         </button>
       </div>

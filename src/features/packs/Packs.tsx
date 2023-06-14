@@ -29,43 +29,16 @@ export const Packs = () => {
   const cardPacks = useSelector(selectPacks)
   const pageCount = useSelector(selectPageCount) ?? 4
   const page = useSelector(selectPage)
-  const searchValue = useSelector(selectSearchValue)
   const cardPacksTotalCount = useSelector(selectCardPacksTotalCount)
   const params = useSelector(selectParams)
 
-  console.log(params.packName, searchValue)
-
-  // My | All
-  const handleChangeFilter = (userId?: string) => {
-    if (userId) {
-      dispatch(packsActions.setParams({ params: { user_id: userId } }))
-    } else {
-      dispatch(packsActions.setParams({ params: { user_id: '' } }))
-    }
-  }
-
-  // Pagination
+  // pagination
   const handleChangePacksPerPage = (event: SelectChangeEvent) => {
     dispatch(packsActions.setParams({params: {pageCount: Number(event.target.value)}}))
   }
 
   const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
     dispatch(packsActions.setParams({params: {page: newPage}}))
-  }
-
-  // to reset all filters
-  const resetFilters = () => {
-    dispatch(packsActions.setParams({
-      params: {
-        page: 1,
-        pageCount: 4,
-        min: 0,
-        max: 100,
-        packName: '',
-        user_id: '',
-        filter: 'All',
-      }
-    }))
   }
 
   // fetch all packs with params
@@ -87,11 +60,7 @@ export const Packs = () => {
           setOpenCreateModal={setOpenCreateModal}
         />
 
-        <Nav
-          handleChangeFilter={handleChangeFilter}
-          resetFilters={resetFilters}
-          searchValue={params.packName}
-        />
+        <Nav />
 
         <PacksTable packsToRender={cardPacks}/>
 
