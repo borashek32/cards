@@ -1,5 +1,3 @@
-import {FilterValueType} from "features/packs/packs.types"
-
 export type CardType = {
   _id: string
   cardsPack_id: string
@@ -29,7 +27,6 @@ export type GetCardsParamsType = {
   packName?: string
   user_id?: string
   cardsTotalCount?: number
-  filter?: FilterValueType
 }
 
 export type GetParamsType = Omit<GetCardsParamsType, 'cardsPack_id'>

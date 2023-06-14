@@ -73,16 +73,6 @@ export const DropDownMenu = () => {
                   </div>
                   <p className={s.header__itemName}>Delete</p>
                 </li>
-
-                <li
-                  onClick={() => {}}
-                  className={s.header__menuListItemWrapper}
-                >
-                  <div className={s.header__menuListItemImgWrapper}>
-                    <img src={teacher} alt="learn"/>
-                  </div>
-                  <p className={s.header__itemName}>Learn</p>
-                </li>
               </ul>
               <img src={triangle} alt="triangle" className={s.triangle}/>
             </div>

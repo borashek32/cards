@@ -19,7 +19,6 @@ export const Nav: FC = () => {
   const dispatch = useAppDispatch()
   const question = useSelector(selectSearchCardQuestion)
   const answer = useSelector(selectSearchCardAnswer)
-  console.log(question, answer)
 
   // to search cards by question
   const onSubmitQuestion: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {

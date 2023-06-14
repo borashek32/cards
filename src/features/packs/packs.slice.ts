@@ -1,14 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils";
-import {
-  ArgCreatePackType, DeletePackValuesType,
-  EditPackValuesType,
-  FetchPacksResponseType,
-  GetPacksParamsType,
-  PackType, SortType
-} from "./packs.types";
+import {ArgCreatePackType, FetchPacksResponseType, GetPacksParamsType, PackType} from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
-import {cardsActions} from "features/cards/cards.slice"
 
 
 const fetchPacks = createAppAsyncThunk<{ packsPage: FetchPacksResponseType } >(
@@ -66,6 +59,7 @@ const slice = createSlice({
     params: {
       page: 1,
       pageCount: 4,
+      sortPacks: '0updated',
       min: 0,
       max: 100,
       packName: '',

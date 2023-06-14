@@ -44,8 +44,7 @@ export const Nav: FC = () => {
         min: 0,
         max: 100,
         packName: '',
-        user_id: '',
-        filter: 'All',
+        user_id: ''
       }
     }))
   }

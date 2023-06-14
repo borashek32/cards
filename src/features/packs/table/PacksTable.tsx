@@ -12,9 +12,6 @@ import {packsActions} from "features/packs/packs.slice"
 type Props = {
   packsToRender: PackType[]
 }
-// type SortType = {
-//   sort: '0' | '1'
-// }
 
 export const PacksTable: FC<Props> = ({packsToRender}) => {
 
@@ -22,11 +19,16 @@ export const PacksTable: FC<Props> = ({packsToRender}) => {
 
   // these are used to determine if authorized user is owner or not
   const authorizedUserId = useSelector(selectAuthorizedUserId)
-  const [sort, setSort] = useState(false)
+  const [sort, setSort] = useState<'0updated' | '1updated'>('0updated')
 
+  // sort
   const handleChangeSort = () => {
-    setSort(!sort)
-    dispatch(packsActions.setSortedPacks({ packs: packsToRender }))
+    if (sort === "0updated") {
+      setSort("1updated")
+    } else {
+      setSort("0updated")
+    }
+    dispatch(packsActions.setParams({ params: { sortPacks: sort } }))
   }
 
   return (
@@ -40,17 +42,19 @@ export const PacksTable: FC<Props> = ({packsToRender}) => {
           <td className={s.table__colName}>
             Cards
           </td>
+
           <td
             className={s.table__colName}
             onClick={handleChangeSort}
             style={{display: "flex", alignItems: "center", gap: "5px", cursor: "pointer"}}
           >
-            {sort ? 'Last Updated' : 'First Updated'}
+            {sort === '0updated' ? 'First Updated' : 'Last Updated'}
             <img
               src={downIcon}
               className={sort ? s.arrow : s.arrowRevert}
             />
           </td>
+
           <td className={s.table__colName}>
             Created By
           </td>

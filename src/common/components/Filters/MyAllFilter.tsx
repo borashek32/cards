@@ -1,6 +1,5 @@
 import s from "features/packs/nav/styles.module.css"
-import React, {FC, SetStateAction, useState} from "react"
-import {FilterValueType} from "features/packs/packs.types"
+import React, {FC} from "react"
 import {useSelector} from "react-redux"
 import {selectAuthorizedUserId} from "features/auth/auth.selectors"
 import {selectParams} from "features/packs/packs.selectors"

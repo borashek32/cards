@@ -33,13 +33,12 @@ export type GetPacksParamsType = {
   packName?: string
   min?: number
   max?: number
-  sortPacks?: string
   page?: number
   pageCount?: number
   user_id?: string
   block?: boolean
   isOwner?: boolean
-  filter?: 'My' | 'All'
+  sortPacks?: '0updated' | '1updated'
 }
 
 export type FetchPacksResponseType = {
@@ -65,17 +64,8 @@ export type RemovePackResponseType = {
   tokenDeathTime: number
 }
 
-export type FilterValueType = 'My' | 'All'
-
 export type EditPackValuesType = {
   _id: string
   name: string
   privateCard: boolean
 }
-
-export type DeletePackValuesType = {
-  _id: string
-  name: string
-}
-
-export type SortType =  'asc' | 'desc'
