@@ -29,8 +29,8 @@ export const DropDownMenu = () => {
   }
 
   const openDeleteForm = () => {
-    setIsOpenMenu(false)
     setDeleteMode(true)
+    setIsOpenMenu(false)
   }
 
   const finalClassName = t.pack__menuWrapper + ' '

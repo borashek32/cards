@@ -51,13 +51,13 @@ export type FetchCardsResponseType = {
   isOwner: boolean
 }
 
-type CardGradeType = 0 | 1 | 2 | 3 | 4 | 5
+export type CardGradeType = 0 | 1 | 2 | 3 | 4 | 5
 
 export type ArgCreateCardType = {
   cardsPack_id: string
   question?: string
   answer?: string
-  grade?: CardGradeType
+  grade?: number | null
   shots?: number
   answerImg?: string
   questionImg?: string
@@ -69,7 +69,7 @@ export type ArgUpdateCardType = {
   _id: string
   question?: string
   answer?: string
-  grade?: CardGradeType
+  grade?: number | null
   shots?: number
   answerImg?: string
   questionImg?: string
@@ -91,4 +91,23 @@ export type DeleteCardResponseType = {
   deletedCard: CardType
   token: string
   tokenDeathTime: number
+}
+
+export type ArgUpdateCardGardeType = {
+  card_id: string
+  grade: CardGradeType
+  cardsPack_id: string
+}
+
+export type UpdatedCardGradeType = {
+  token: string
+  tokenDeathTime: number
+  updatedGrade: {
+    _id: string
+    cardsPack_id: string
+    card_id: string
+    user_id: string
+    grade: CardGradeType
+    shots: number
+  }
 }

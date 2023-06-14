@@ -1,28 +1,28 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 import {
-  ArgCreateCardType,
+  ArgCreateCardType, ArgUpdateCardGardeType,
   ArgUpdateCardType,
   CardType,
   GetCardsParamsType,
   GetCardsResponseType,
-  GetParamsType
+  GetParamsType, UpdatedCardGradeType
 } from "features/cards/cards.types"
 import {createAppAsyncThunk, thunkTryCatch} from "common/utils"
 import {cardsApi} from "features/cards/cards.api"
-import {PackType} from "features/packs/packs.types"
 import {packsThunks} from "features/packs/packs.slice"
 
 
 const getCards = createAppAsyncThunk<{ cardsPage: GetCardsResponseType }, { _id?: string }>(
   'cards/getCards',
   async (arg, thunkAPI) => {
-  const { getState } = thunkAPI
+  const { getState, dispatch } = thunkAPI
   return thunkTryCatch(thunkAPI, async () => {
     const params = {
       ...getState().cards.params,
       cardsPack_id: arg._id
     }
     const res = await cardsApi.getCards(params)
+    dispatch(cardsActions.setCardsPackName({ packName: res.data.packName }))
     return { cardsPage: res.data }
   }, false)
 })
@@ -60,6 +60,18 @@ const updateCard = createAppAsyncThunk<{ updatedCard: CardType }, ArgUpdateCardT
   })
 })
 
+const updateCardGrade = createAppAsyncThunk<{ updatedGrade: UpdatedCardGradeType }, ArgUpdateCardGardeType>(
+  "cards/updateCardGrade",
+  async (arg, thunkAPI) => {
+    const {dispatch} = thunkAPI
+    debugger
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await cardsApi.updateCardGrade(arg)
+      dispatch(cardsThunks.getCards({_id: arg.cardsPack_id}))
+      return { updatedGrade: res.data.updatedGrade }
+    })
+  })
+
 
 const slice = createSlice({
   name: "cards",
@@ -68,6 +80,11 @@ const slice = createSlice({
     packPrivate: false,
     cards: [] as CardType[],
     cardsTotalCount: 0,
+    isOwner: false,
+    selectedCardId: '' as string,
+    isLoading: false as boolean,
+    packUserId: '',
+    card: {} as CardType,
     params: {
       cardAnswer: '',
       cardQuestion: '',
@@ -77,14 +94,14 @@ const slice = createSlice({
       sortCards: 0,
       page: 1,
       pageCount: 4
-    } as GetCardsParamsType,
-    selectedCardId: '' as string,
-    isLoading: false as boolean,
-    packUserId: ''
+    } as GetCardsParamsType
   },
   reducers: {
     setParams: (state, action: PayloadAction<{ params: GetParamsType }>) => {
       state.params = { ...state.params, ...action.payload.params }
+    },
+    setCardsPackName: (state, action: PayloadAction<{ packName: string }>) => {
+      state.packName = action.payload.packName
     }
   },
   extraReducers: (builder) => {
@@ -97,20 +114,26 @@ const slice = createSlice({
         state.packPrivate = actionPayload.packPrivate
         state.cardsTotalCount = actionPayload.cardsTotalCount
       })
-      .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardType }>) => {
-        state.cards.unshift(action.payload.card)
-      })
-      .addCase(removeCard.fulfilled, (state, action) => {
-        const index = state.cards.findIndex((c: CardType) => c._id && c._id === action.payload.deletedCard?._id)
-        if (index !== -1) state.cards.splice(index, 1)
-      })
-      .addCase(updateCard.fulfilled, (state, action) => {
-        const index = state.cards.findIndex((card: CardType) => card._id && card?._id === action.payload.updatedCard._id)
-        if (index !== -1) state.cards[index] = action.payload.updatedCard
-      })
-      .addCase(packsThunks.updatePack.fulfilled, (state, action) => {
-        state.packName = action.payload.pack.name
-      })
+      // .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardType }>) => {
+      //   state.cards.unshift(action.payload.card)
+      // })
+      // .addCase(removeCard.fulfilled, (state, action) => {
+      //   const index = state.cards.findIndex((c: CardType) => c._id && c._id === action.payload.deletedCard?._id)
+      //   if (index !== -1) state.cards.splice(index, 1)
+      // })
+      // .addCase(updateCard.fulfilled, (state, action) => {
+      //   const index = state.cards.findIndex((card: CardType) => card._id && card?._id === action.payload.updatedCard._id)
+      //   if (index !== -1) state.cards[index] = action.payload.updatedCard
+      // })
+      // .addCase(packsThunks.updatePack.fulfilled, (state, action) => {
+      //   state.packName = action.payload.pack.name
+      // })
+      // .addCase(updateCardGrade.fulfilled, (state, action) => {
+      //   console.log('payload', action.payload)
+      //   debugger
+      //   const index = state.cards.findIndex((card: CardType) => card._id === action.payload.updatedGrade.updatedGrade.card_id)
+      //   if (index !== -1) state.cards[index].grade = action.payload.updatedGrade.updatedGrade.grade
+      // })
   }
 })
 
@@ -119,4 +142,4 @@ export const cardsActions = {
   updatePackFulfilled: packsThunks.updatePack.fulfilled
 }
 export const cardsReducer = slice.reducer
-export const cardsThunks = { getCards, createCard, removeCard, updateCard }
+export const cardsThunks = { getCards, createCard, removeCard, updateCard, updateCardGrade }

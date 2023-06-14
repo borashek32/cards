@@ -1,5 +1,6 @@
 import {RootState} from "app/store"
 
+
 const selectPacks = (state: RootState) => state.packs.cardPacks
 const selectCardPacksTotalCount = (state: RootState) => state.packs.cardsPackTotalCount
 

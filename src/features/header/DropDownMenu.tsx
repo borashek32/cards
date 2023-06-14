@@ -9,6 +9,7 @@ import {SubmitHandler} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
+import {cardsActions} from "features/cards/cards.slice"
 
 
 type Props = {
@@ -33,7 +34,6 @@ export const DropDownMenu: FC<Props> = ({userName}) => {
         navigate('/login')
       })
   }
-
 
   return (
     <div onClick={handleOpenMenu}>

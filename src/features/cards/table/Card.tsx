@@ -2,61 +2,113 @@ import React, {FC, useState} from "react"
 import s from "features/packs/table/styles.module.css"
 import pencil from "assets/img/pencil.svg"
 import bin from "assets/img/bin.svg"
-import {useSelector} from "react-redux"
-import {selectProfile} from "features/auth/auth.selectors"
-import {NavLink} from "react-router-dom"
-import {CardType} from "features/cards/cards.types"
+import {NavLink, useParams} from "react-router-dom"
+import {CardGradeType, CardType} from "features/cards/cards.types"
 import {DeleteCardForm} from "features/cards/forms/DeleteCardForm"
 import {UpdateCardForm} from "features/cards/forms/UpdateCardForm"
+import {StarRating} from "common/components/StarRating/StarRating"
+import teacher from "assets/img/teacher.svg"
+import {useAppDispatch} from "common/hooks"
+import {learnActions} from "features/learn/learn.slice"
+import {useSelector} from "react-redux"
+import {selectPack} from "features/packs/packs.selectors"
+import {selectPackName} from "features/learn/learn.selectors"
+
 
 type Props = {
-  c: CardType
+  card: CardType
   key: string
   cardsPack_id?: string
+  isOwner: boolean
+  handleStarRating: (cardsPack_id: string, card_id: string, value: CardGradeType) => void
 }
 
-export const Card: FC<Props> = ({c, cardsPack_id}) => {
+export const Card: FC<Props> = ({
+                                  card,
+                                  cardsPack_id,
+                                  isOwner,
+                                  handleStarRating
+}) => {
+
+  const dispatch = useAppDispatch()
+
+  const packName = useSelector(selectPackName)
 
   const [editMode, setEditMode] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
-  const authorizedUser = useSelector(selectProfile)
 
-  if (!c || !c.created) {
-    return null; // or handle the case where `c` is undefined or `c.created` is missing
+  // to handle the case where `card` is undefined or `c.created` is missing
+  if (!card || !card.created) {
+    return null
   }
 
-  const createdDate = new Date(c.created)
-  const updatedDate = new Date(c.updated)
+  const createdDate = new Date(card.created)
+  const updatedDate = new Date(card.updated)
 
+  const handleRating = (value: CardGradeType) => {
+    handleStarRating(card.cardsPack_id, card._id, value)
+  }
+
+  const setCardData = () => {
+    dispatch(learnActions.setCardData({ data: {
+        cardsPack_id: cardsPack_id || '',
+        packName: packName,
+        question: card.question,
+        answer: card.answer
+      }
+    }))
+  }
 
   return (
-    <tr key={c._id} className={s.table__tr}>
+    <tr key={card._id} className={s.table__tr}>
       <td className={s.table__colValue}>
-        <NavLink to={`/cards/${c._id}`} className={s.table__link}>
-          {c.question}
+        <NavLink
+          to={`/learn/${card._id}`}
+          onClick={setCardData}
+          className={s.table__link}
+        >
+          {card.question}
         </NavLink>
       </td>
       <td className={s.table__colValue}>
-        {c.answer}
+        {card.answer}
       </td>
       <td className={s.table__colValue}>
-        {c.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
+        {card.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
       </td>
-      <td
-        className={s.table__colValue_actions}>
-        {authorizedUser?._id === c.user_id &&
-          <div
-            className={s.table__colValue_actionsWrapper + ' '
-              + (authorizedUser?._id === c.user_id && s.table__colValue_actionsWrapper_center)}>
-            <>
-              <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
-              {editMode && <UpdateCardForm c={c} setEditMode={setEditMode}/>}
+      <td className={s.table__colValue}>
+        <StarRating value={card.grade} handleStarRating={handleRating} />
+      </td>
+      <td className={s.table__colValue_actions}>
+      {isOwner &&
+        <div className={s.table__colValue_actionsWrapper + ' '
+          + (isOwner && s.table__colValue_actionsWrapper_center)}>
+          <>
+            <img onClick={() => setEditMode(true)} src={pencil} alt="pencil"/>
+            {editMode && <UpdateCardForm
+              c={card}
+              setEditMode={setEditMode}
+            />}
 
-              <img onClick={() => setDeleteModal(true)} src={bin} alt="bin"/>
-              {deleteModal && <DeleteCardForm cardsPack_id={cardsPack_id} c={c} setDeleteModal={setDeleteModal}/>}
-            </>
-          </div>
-        }
+            <img onClick={() => setDeleteModal(true)} src={bin} alt="bin"/>
+            {deleteModal && <DeleteCardForm
+              cardsPack_id={cardsPack_id}
+              c={card}
+              setDeleteModal={setDeleteModal}
+            />}
+          </>
+        </div>}
+
+        <NavLink
+          to={`/learn/${card._id}`}
+          onClick={setCardData}
+        >
+          <img
+            src={teacher}
+            alt="teacher"
+            className={s.table__imgLearn}
+          />
+        </NavLink>
       </td>
     </tr>
   )

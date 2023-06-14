@@ -77,3 +77,5 @@ export type DeletePackValuesType = {
   _id: string
   name: string
 }
+
+export type SortType =  'asc' | 'desc'

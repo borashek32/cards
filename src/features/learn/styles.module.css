@@ -1,0 +1,34 @@
+.learn__background {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background--color);
+    flex-direction: column;
+}
+.learn__title {
+    margin: 100px 0 -100px 0;
+}
+.learn__questionAnswer {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+}
+.learn__questionAnswerFromCard {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+.learn__triesQuantity {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    opacity: .5;
+    margin: 10px 0;
+}
+.learn__answerWrapper {
+    margin-top: 20px;
+}

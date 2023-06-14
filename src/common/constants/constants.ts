@@ -8,5 +8,5 @@ export const paths = {
   PROFILE: '/profile',
   PACKS: '/packs',
   CARDS: '/cards/:cardsPack_id',
-  LEARN: '/learn'
+  LEARN: '/learn/:card_id'
 } as const

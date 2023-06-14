@@ -61,11 +61,6 @@ export const Packs = () => {
     dispatch(packsThunks.fetchPacks())
   }, [page, pageCount, minCardsCount, maxCardsCount, searchValue, filter])
 
-  useEffect(() => {
-    console.log(cardPacks,"cardPacks")
-  },[cardPacks])
-
-
   return (
     <div className={s.packsWrapper}>
       <BackLink backPath={'/profile'} backText={'Back to Profile'} />
@@ -86,10 +81,7 @@ export const Packs = () => {
           filter={filter}
         />
 
-        <PacksTable
-          authorizedUserId={authorizedUserId}
-          packsToRender={cardPacks}
-        />
+        <PacksTable packsToRender={cardPacks}/>
 
         <CustomPagination
           handleChangePage={handleChangePage}

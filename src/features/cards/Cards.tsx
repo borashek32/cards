@@ -21,34 +21,50 @@ import Button from "common/components/Button/Button"
 import {cardsActions, cardsThunks} from "features/cards/cards.slice"
 import {toast} from "react-toastify"
 import {useAppDispatch} from "common/hooks"
-import {selectProfile} from "features/auth/auth.selectors"
+import {selectAuthorizedUserId} from "features/auth/auth.selectors"
 import {CustomPagination} from "common/components/Pagination/CustomPagination"
 import {SelectChangeEvent} from "@mui/material"
 import {DropDownMenu} from "features/cards/dropDownMenu/DropDownMenu"
 import {packsActions} from "features/packs/packs.slice"
+import {CardGradeType} from "features/cards/cards.types"
 import {selectPack} from "features/packs/packs.selectors"
 
 
 export const Cards = () => {
 
   const dispatch = useAppDispatch()
-
   const {cardsPack_id} = useParams()
+  const [openCreateModal, setOpenCreateModal] = useState(false)
 
-  const packUserId = useSelector(selectPackUserId)
-  const authorizedUser = useSelector(selectProfile)
-  const isOwner = authorizedUser?._id === packUserId
+  // selectors for cards page
   const cards = useSelector(selectCards)
   const packName = useSelector(selectCardsPackName)
   const cardQuestion = useSelector(selectSearchCardQuestion)
   const cardAnswer = useSelector(selectSearchCardAnswer)
+
+  // selectors for pagination
   const page = useSelector(selectPage)
   const pageCount = useSelector(selectPageCount) ?? 4
   const cardsPackTotalCount = useSelector(selectPackCardsCount)
 
-  useEffect(() => {
+  // these are used to determine if authorized user is owner or not
+  const packUserId = useSelector(selectPackUserId)
+  const authorizedUserId = useSelector(selectAuthorizedUserId)
+  const isOwner = authorizedUserId === packUserId
 
-  }, [packName])
+  // Pagination
+  const handleChangePacksPerPage = (event: SelectChangeEvent) => {
+    dispatch(cardsActions.setParams({ params: { pageCount: Number(event.target.value) } }))
+  }
+
+  const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
+    dispatch(cardsActions.setParams({ params: { page: newPage } }))
+  }
+
+  // handle star rating
+  const handleChangeStarRating = (cardsPack_id: string, card_id: string, value: CardGradeType) => {
+    cardsPack_id && dispatch(cardsThunks.updateCardGrade({ cardsPack_id: cardsPack_id, card_id: card_id, grade: value }))
+  }
 
   useEffect(() => {
     cardsPack_id && dispatch(packsActions.setSelectedPack({ _id: cardsPack_id }))
@@ -60,17 +76,6 @@ export const Cards = () => {
         }
       })
   }, [cardQuestion, cardAnswer, page, pageCount])
-
-  const [openCreateModal, setOpenCreateModal] = useState(false)
-
-  // Pagination
-  const handleChangePacksPerPage = (event: SelectChangeEvent) => {
-    dispatch(cardsActions.setParams({ params: { pageCount: Number(event.target.value) } }))
-  }
-
-  const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
-    dispatch(cardsActions.setParams({ params: { page: newPage } }))
-  }
 
   return (
     <div className={s.packsWrapper}>
@@ -100,7 +105,12 @@ export const Cards = () => {
         {cards.length > 0
           ? <div>
             <Nav />
-            <CardsTable isOwner={isOwner} cards={cards} cardsPack_id={cardsPack_id}/>
+            <CardsTable
+              isOwner={isOwner}
+              cards={cards}
+              cardsPack_id={cardsPack_id}
+              handleStarRating={handleChangeStarRating}
+            />
             <CustomPagination
               handleChangePage={handleChangePage}
               handleChangePacksPerPage={handleChangePacksPerPage}

@@ -5,7 +5,7 @@ import {
   EditPackValuesType,
   FetchPacksResponseType,
   GetPacksParamsType,
-  PackType
+  PackType, SortType
 } from "./packs.types";
 import {packsApi} from "features/packs/packs.api"
 import {cardsActions} from "features/cards/cards.slice"
@@ -62,17 +62,7 @@ const slice = createSlice({
     cardPacks: [] as PackType[],
     cardsPackTotalCount: 2000,
     selectedPack: {} as PackType,
-    editMode: false,
-    editPackFormValues: {
-      _id: '',
-      name: '',
-      privatePack: false
-    },
-    deleteMode: false,
-    deletePackFormValues: {
-      _id: '',
-      name: '',
-    },
+    sortedPacks: [] as PackType[],
     params: {
       page: 1,
       pageCount: 4,
@@ -90,6 +80,9 @@ const slice = createSlice({
     setSelectedPack: (state, action: PayloadAction<{ _id?: string}>) => {
       const pack = state.cardPacks.find(p => p._id === action.payload?._id)
       if (pack) state.selectedPack = pack
+    },
+    setSortedPacks: (state, action: PayloadAction<{ packs: PackType[] }>) => {
+      state.sortedPacks = action.payload.packs.sort((a, b) => (a.updated > b.updated ? 1 : -1))
     }
   },
   extraReducers: (builder) => {
@@ -112,6 +105,6 @@ const slice = createSlice({
   }
 })
 
-export const packsReducer = slice.reducer;
-export const packsActions = slice.actions;
-export const packsThunks = { fetchPacks, createPack, removePack, updatePack  };
+export const packsReducer = slice.reducer
+export const packsActions = slice.actions
+export const packsThunks = { fetchPacks, createPack, removePack, updatePack }

@@ -9,45 +9,52 @@ import {useAppDispatch} from "common/hooks"
 import {packsActions} from "features/packs/packs.slice"
 import {DeletePackForm} from "../forms/DeletePackForm"
 import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
+import {useSelector} from "react-redux"
+import {selectPackName} from "features/learn/learn.selectors"
+import {cardsActions} from "features/cards/cards.slice"
+import {selectCardsPackName} from "features/cards/cards.selectors"
+import {selectPack} from "features/packs/packs.selectors"
 
 
 type Props = {
-  p: PackType
+  pack: PackType
   isOwner: boolean
 }
 
-export const Pack: FC<Props> = ({p, isOwner}) => {
+export const Pack: FC<Props> = ({ pack, isOwner }) => {
 
   const dispatch = useAppDispatch()
 
-  const createdDate = new Date(p.created)
-  const updatedDate = new Date(p.updated)
+  const createdDate = new Date(pack.created)
+  const updatedDate = new Date(pack.updated)
 
   const [editMode, setEditMode] = useState(false)
   const [deleteMode, setDeleteMode] = useState(false)
 
-  const setSelectedPack = () => dispatch(packsActions.setSelectedPack({ _id: p._id }))
+  const setSelectedPack = () => {
+    dispatch(packsActions.setSelectedPack({ _id: pack._id }))
+  }
 
   return (
-    <tr key={p._id} className={s.table__tr}>
+    <tr key={pack._id} className={s.table__tr}>
       <td className={s.table__colValue}>
         <NavLink
-          to={`/cards/${p._id}`}
+          to={`/cards/${pack._id}`}
           className={s.table__link}
         >
           <div onClick={setSelectedPack}>
-            {p.name}
+            {pack.name}
           </div>
         </NavLink>
       </td>
       <td className={s.table__colValue}>
-        {p.cardsCount}
+        {pack.cardsCount}
       </td>
       <td className={s.table__colValue}>
-        {p.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
+        {pack.updated ? updatedDate.toLocaleString() : createdDate.toLocaleString()}
       </td>
       <td className={s.table__colValue}>
-        {p.user_name}
+        {pack.user_name}
       </td>
       <td
         className={s.table__colValue_actions}>
@@ -63,7 +70,7 @@ export const Pack: FC<Props> = ({p, isOwner}) => {
                 alt="pencil"
               />
               {editMode && <UpdatePackForm
-                pack={p}
+                pack={pack}
                 setEditMode={setEditMode}
               />}
 
@@ -72,12 +79,14 @@ export const Pack: FC<Props> = ({p, isOwner}) => {
                 src={bin} alt="bin"
               />
               {deleteMode && <DeletePackForm
-                pack={p}
+                pack={pack}
                 setDeleteMode={setDeleteMode}
               />}
             </>
           }
-          <img src={teacher} alt="teacher"/>
+          <NavLink to={`/cards/${pack._id}`}>
+            <img src={teacher} alt="teacher"/>
+          </NavLink>
         </div>
       </td>
     </tr>

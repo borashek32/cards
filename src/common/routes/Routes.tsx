@@ -16,44 +16,44 @@ import App from "app/App"
 export const router = createHashRouter([
   {
     path: paths.MAIN,
-    element: <App />,
-    errorElement: <Error404 />,
+    element: <App  />,
+    errorElement: <Error404  />,
     children: [
       {
         path: paths.LOGIN,
-        element: <Login />
+        element: <Login  />
       },
       {
         path: paths.SIGN_UP,
-        element: <SignUpForm />
+        element: <SignUpForm  />
       },
       {
         path: paths.SET_NEW_PASSWORD,
-        element: <SetNewPasswordForm />
+        element: <SetNewPasswordForm  />
       },
       {
         path: paths.FORGOT_PASSWORD,
-        element: <ForgotPasswordForm/>
+        element: <ForgotPasswordForm />
       },
       {
         path: paths.CHECK_EMAIL,
-        element: <CheckEmail/>
+        element: <CheckEmail />
       },
       {
         path: paths.PROFILE,
-        element: <Profile/>
+        element: <Profile />
       },
       {
         path: paths.CARDS,
-        element: <Cards/>
+        element: <Cards />
       },
       {
         path: paths.PACKS,
-        element: <Packs/>
+        element: <Packs />
       },
       {
         path: paths.LEARN,
-        element: <Learn/>
+        element: <Learn />
       }
     ]
   }
