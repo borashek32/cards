@@ -4,11 +4,16 @@ import React, {useCallback, useState} from "react"
 import {packsActions} from "features/packs/packs.slice"
 import {debounce} from "lodash"
 import {useAppDispatch} from "common/hooks"
+import {useSelector} from "react-redux"
+import {selectMaxCardsCount, selectMinCardsCount} from "features/packs/packs.selectors"
 
 
 export const RangeFilter = () => {
 
   const dispatch = useAppDispatch()
+
+  const minCardsCount = useSelector(selectMinCardsCount)
+  const maxCardsCount = useSelector(selectMaxCardsCount)
 
   const [value, setValue] = useState<number[]>([0, 100])
 

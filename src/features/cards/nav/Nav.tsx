@@ -12,7 +12,7 @@ type Props = {
 }
 
 type FormDataType = {
-  searchValue: string
+  searchFormValue: string
 }
 
 export const Nav: FC<Props> = ({authorizedUserId}) => {
@@ -21,19 +21,25 @@ export const Nav: FC<Props> = ({authorizedUserId}) => {
 
   // to search cards by question
   const onSubmitQuestion: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
-    dispatch(cardsActions.setParams({params: {cardQuestion: data.searchValue}}))
+    dispatch(cardsActions.setParams({params: {cardQuestion: data.searchFormValue}}))
   }, 300), [])
 
   // to search cards by answer
   const onSubmitAnswer: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
-    dispatch(cardsActions.setParams({params: {cardAnswer: data.searchValue}}))
+    dispatch(cardsActions.setParams({params: {cardAnswer: data.searchFormValue}}))
   }, 300), [])
 
 
   return (
     <div className={s.nav}>
-      <Search onSubmit={onSubmitQuestion} title={"Search cards by question"} />
-      <Search onSubmit={onSubmitAnswer} title={"Search cards by answer"} />
+      <Search
+        onSubmit={onSubmitQuestion}
+        title={"Search cards by question"}
+      />
+      <Search
+        onSubmit={onSubmitAnswer}
+        title={"Search cards by answer"}
+      />
     </div>
   )
 }

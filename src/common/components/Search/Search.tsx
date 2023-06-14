@@ -7,26 +7,31 @@ import s from "features/packs/nav/styles.module.css"
 
 type Props = {
   onSubmit: SubmitHandler<FormDataType>
+  searchValue?: string
   title: string
 }
 type FormDataType = {
-  searchValue: string
+  searchFormValue: string
 }
 
-export const Search: FC<Props> = ({onSubmit, title}) => {
+export const Search: FC<Props> = ({
+                                    searchValue,
+                                    onSubmit,
+                                    title
+}) => {
 
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(searchValue)
 
   const {register, handleSubmit, formState: {errors}} = useForm<FormDataType>({
     mode: "onChange",
     defaultValues: {
-      searchValue: value,
+      searchFormValue: value,
     }
   })
 
   const handleOnChange = (e: any) => {
     setValue(e.target.value);
-    onSubmit({searchValue: value})
+    value && onSubmit({searchFormValue: value})
   }
 
   // mui input styles
@@ -59,7 +64,7 @@ export const Search: FC<Props> = ({onSubmit, title}) => {
             autoComplete="off"
             placeholder={"Provide your text"}
             className={i.input}
-            {...(register("searchValue", {
+            {...(register("searchFormValue", {
               maxLength: {
                 value: 50,
                 message: "You reached max search value"
@@ -68,7 +73,7 @@ export const Search: FC<Props> = ({onSubmit, title}) => {
             }))}
             type="text"
           />
-          {errors.searchValue && <span className={i.error}>{errors.searchValue.message}</span>}
+          {errors.searchFormValue && <span className={i.error}>{errors.searchFormValue.message}</span>}
         </form>
       </div>
     </ThemeProvider>

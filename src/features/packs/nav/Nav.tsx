@@ -12,47 +12,38 @@ import {FilterValueType} from "features/packs/packs.types"
 
 
 type Props = {
-  handleChangeFilter: (filterValue: FilterValueType) => void
-  setFilter: (filter: SetStateAction<FilterValueType>) => void
-  filter: FilterValueType
+  handleChangeFilter: (userId?: string) => void
+  // setFilter: (filter: SetStateAction<FilterValueType>) => void
+  resetFilters: () => void
+  searchValue?: string
 }
 type FormDataType = {
-  searchValue: string
+  searchFormValue: string
 }
 
-export const Nav: FC<Props> = ({ handleChangeFilter, setFilter, filter }) => {
+export const Nav: FC<Props> = ({
+                                 handleChangeFilter,
+                                 // setFilter,
+                                 resetFilters,
+                                 searchValue
+}) => {
 
   const dispatch = useAppDispatch()
 
-  // to reset all filters
-  const resetFilters = () => {
-    dispatch(packsActions.setParams({
-      params: {
-        page: 1,
-        pageCount: 4,
-        min: 0,
-        max: 100,
-        packName: '',
-        user_id: '',
-        filter: 'All',
-      }
-    }))
-  }
-
   // to search packs
   const onSubmit: SubmitHandler<FormDataType> = useCallback(debounce((data: FormDataType) => {
-    dispatch(packsActions.setParams({params: {packName: data.searchValue}}))
+    dispatch(packsActions.setParams({params: {packName: data.searchFormValue}}))
   }, 300), [])
 
   return (
     <div className={s.nav}>
-      <Search onSubmit={onSubmit} title={"Search packs"} />
-
-      <MyAllFilter
-        handleChangeFilter={handleChangeFilter}
-        setFilter={setFilter}
-        filter={filter}
+      <Search
+        searchValue={searchValue}
+        onSubmit={onSubmit}
+        title={"Search packs"}
       />
+
+      <MyAllFilter handleChangeFilter={handleChangeFilter} />
 
       <RangeFilter />
 

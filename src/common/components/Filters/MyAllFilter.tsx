@@ -1,38 +1,33 @@
 import s from "features/packs/nav/styles.module.css"
-import React, {FC, SetStateAction} from "react"
+import React, {FC, SetStateAction, useState} from "react"
 import {FilterValueType} from "features/packs/packs.types"
+import {useSelector} from "react-redux"
+import {selectAuthorizedUserId} from "features/auth/auth.selectors"
+import {selectParams} from "features/packs/packs.selectors"
 
 
 type Props = {
-  handleChangeFilter: (filterValue: FilterValueType) => void
-  setFilter: (filter: SetStateAction<FilterValueType>) => void
-  filter: FilterValueType
+  handleChangeFilter: (userId?: string) => void
 }
 
-export const MyAllFilter: FC<Props> = ({ handleChangeFilter, setFilter , filter }) => {
+export const MyAllFilter: FC<Props> = ({ handleChangeFilter }) => {
 
-  const handleChangeFilterValue = (filterValue: FilterValueType) => {
-    if (filterValue === "All") {
-      setFilter("All")
-    } else {
-      setFilter("My")
-    }
-    handleChangeFilter(filterValue)
-  }
+  const userId = useSelector(selectAuthorizedUserId)
+  const { user_id } = useSelector(selectParams)
 
   return (
     <div className={s.nav__showPackCards + " " + s.nav__position}>
       <p className={s.nav__filterTitle}>Show packs cards</p>
       <div className={s.nav__filterButtonsWrapper}>
         <button
-          onClick={() => handleChangeFilterValue('My')}
-          className={s.nav__filterButton + ' ' + (filter === "My" && s.nav__filterButton_active)}
+          onClick={() => handleChangeFilter(userId)}
+          className={s.nav__filterButton + ' ' + (userId === user_id && s.nav__filterButton_active)}
         >
           My
         </button>
         <button
-          onClick={() => handleChangeFilterValue('All')}
-          className={s.nav__filterButton + ' ' + (filter === "All" && s.nav__filterButton_active)}
+          onClick={() => handleChangeFilter('')}
+          className={s.nav__filterButton + ' ' + (userId !== user_id && s.nav__filterButton_active)}
         >
           All
         </button>
