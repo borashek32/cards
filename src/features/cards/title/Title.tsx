@@ -11,7 +11,12 @@ type PropsType = {
   cards?: CardType[]
 }
 
-export const Title: FC<PropsType> = ({setOpenCreateModal, name, buttonName, cards}) => {
+export const Title: FC<PropsType> = ({
+                                       setOpenCreateModal,
+                                       name,
+                                       buttonName,
+                                       cards
+}) => {
 
   return (
     <div className={s.pack__titleWrapper}>

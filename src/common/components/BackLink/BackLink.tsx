@@ -21,7 +21,7 @@ export const BackLink: FC<Props> = ({backPath, backText}) => {
         cardQuestion: '',
         min: 0,
         max: 5,
-        sortCards: 0,
+        sortCards: '0grade',
         page: 1,
         pageCount: 4,
       }}))

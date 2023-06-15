@@ -9,17 +9,16 @@ import {SubmitHandler} from "react-hook-form"
 import {authThunks} from "features/auth/auth.slice"
 import {useAppDispatch} from "common/hooks"
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
-import {cardsActions} from "features/cards/cards.slice"
+import {useSelector} from "react-redux"
+import {selectProfileAvatar, selectUserName} from "features/auth/auth.selectors"
 
 
-type Props = {
-  userName: string
-}
-
-export const DropDownMenu: FC<Props> = ({userName}) => {
+export const DropDownMenu: FC = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const avatar = useSelector(selectProfileAvatar)
+  const userName = useSelector(selectUserName)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
   const handleOpenMenu = () => setIsOpenMenu(!isOpenMenu)
@@ -37,13 +36,14 @@ export const DropDownMenu: FC<Props> = ({userName}) => {
 
   return (
     <div onClick={handleOpenMenu}>
-      <div className={s.header__userSection}>
+      {userName && <div className={s.header__userSection}>
         <p className={s.header__userName}>{userName}</p>
-        <img src={cat}
+        <img src={avatar ? avatar : cat}
              alt="user img"
              className={s.header__userImg}
         />
-      </div>
+      </div>}
+
       {isOpenMenu && <div className={finalClassName}>
         <div className={s.header__menu}>
           <ul className={s.header__menuList}>

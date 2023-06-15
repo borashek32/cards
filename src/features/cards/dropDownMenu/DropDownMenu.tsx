@@ -6,12 +6,10 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator"
 import triangle from "assets/img/triangle.svg"
 import pencil from "assets/img/pencil.svg"
 import bin from "assets/img/bin.svg"
-import teacher from "assets/img/teacher.svg"
 import {useSelector} from "react-redux"
 import {UpdatePackForm} from "features/packs/forms/UpdatePackForm"
 import {selectPack} from "features/packs/packs.selectors"
 import {DeletePackForm} from "features/packs/forms/DeletePackForm"
-import {selectCardsPackName} from "features/cards/cards.selectors"
 
 
 export const DropDownMenu = () => {
@@ -38,7 +36,6 @@ export const DropDownMenu = () => {
 
   return (
     <>
-
       {deleteMode && <DeletePackForm
         pack={pack}
         setDeleteMode={setDeleteMode}

@@ -88,9 +88,9 @@ const slice = createSlice({
       cardAnswer: '',
       cardQuestion: '',
       cardsPack_id: '',
+      sortCards: '0grade',
       min: 0,
       max: 5,
-      sortCards: 0,
       page: 1,
       pageCount: 4
     } as GetCardsParamsType

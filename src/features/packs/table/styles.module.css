@@ -60,10 +60,8 @@
     line-height: 15px;
     color: var(--black-color);
 }
-.arrow {
-    cursor: pointer;
-}
+
+
 .arrowRevert {
-    cursor: pointer;
-    transform: rotate(180deg)
+    transform: scaleY(-1);
 }

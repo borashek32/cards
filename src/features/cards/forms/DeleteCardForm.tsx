@@ -8,7 +8,6 @@ import {LeftTitle} from "common/components/Title/LeftTitle/LeftTitle"
 import {CardType} from "features/cards/cards.types"
 import {cardsThunks} from "features/cards/cards.slice"
 import {useNavigate} from "react-router-dom"
-import {paths} from "common/constants/constants"
 import {useAppDispatch} from "common/hooks"
 
 

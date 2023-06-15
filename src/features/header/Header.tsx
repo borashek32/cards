@@ -2,18 +2,19 @@ import React from 'react'
 import s from 'features/header/styles.module.css'
 import logo from 'assets/img/logo.svg'
 import {DropDownMenu} from "features/header/DropDownMenu"
-import {useAppSelector} from "common/hooks"
+import {NavLink} from "react-router-dom"
 
 
 export const Header = () => {
 
-  const profile = useAppSelector(state => state.auth.profile)
-
   return (
     <div id={'hw5-header'} className={s.header}>
       <div className={s.header__container}>
-        <img src={logo} alt="IT-incubator Logo" className={s.header__logo}/>
-        {profile && <DropDownMenu userName={profile.name} />}
+        <NavLink to={"/packs"}>
+          <img src={logo} alt="IT-incubator Logo" className={s.header__logo}/>
+        </NavLink>
+
+        <DropDownMenu />
       </div>
     </div>
   )

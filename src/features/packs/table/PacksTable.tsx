@@ -51,7 +51,7 @@ export const PacksTable: FC<Props> = ({packsToRender}) => {
             {sort === '0updated' ? 'First Updated' : 'Last Updated'}
             <img
               src={downIcon}
-              className={sort ? s.arrow : s.arrowRevert}
+              className={sort === '0updated' ? s.arrowRevert : ''}
             />
           </td>
 

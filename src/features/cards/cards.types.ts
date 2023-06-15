@@ -21,7 +21,7 @@ export type GetCardsParamsType = {
   cardsPack_id?: string
   min?: number
   max?: number
-  sortCards?: number
+  sortCards?: '0grade' | '1grade'
   page?: number
   pageCount?: number
   packName?: string

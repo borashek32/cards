@@ -43,8 +43,6 @@ export const SignUpForm = () => {
 
   const onSubmit = (data: FormDataType) => {
     dispatch(authThunks.register(data))
-      // .unwrap() нужен при использовании .catch()
-      // .unwrap()
       .then(() => {
         toast.success("You are registered successfully")
         setTimeout(() => {

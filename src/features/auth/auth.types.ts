@@ -30,7 +30,9 @@ export type ProfileType = {
   __v: number
   token: string
   tokenDeathTime: number
+  avatar: string
 }
 export type UpdateProfileDataType = {
-  name: string
+  avatar?: string
+  name?: string
 }

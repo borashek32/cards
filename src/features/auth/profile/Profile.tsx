@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {ChangeEvent, useCallback, useState} from "react"
 import {Card} from "common/components/Card/AuthCard/Card"
 import {Title} from "common/components/Title/Title"
 import {SubmitHandler} from "react-hook-form"
@@ -15,9 +15,10 @@ import cat from 'assets/img/catYellow.jpg'
 import logout from 'assets/img/logout.svg'
 import {useNavigate} from "react-router-dom"
 import {useSelector} from "react-redux"
-import {selectProfile} from "features/auth/auth.selectors"
-import f from 'common/components/Footer/styles.module.css'
+import {selectProfile, selectProfileAvatar} from "features/auth/auth.selectors"
 import {BackLink} from "common/components/BackLink/BackLink"
+import {Input} from "@mui/material"
+import {toast} from "react-toastify"
 
 
 export const Profile = () => {
@@ -25,7 +26,9 @@ export const Profile = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const profile = useSelector(selectProfile)
+  const avatar = useSelector(selectProfileAvatar)
   const [editMode, setEditMode] = useState(false)
+  const [editPhotoMode, setEditPhotoMode] = useState(false)
 
   // log out
   const onSubmit: SubmitHandler<any> = () => {
@@ -37,25 +40,70 @@ export const Profile = () => {
   }
 
   // edit profile
-  const onEditMode = () => {
-    setEditMode(true)
+  const onEditMode = () => setEditMode(true)
+
+  // change photo
+  const onEditPhotoMode = () => setEditPhotoMode(true)
+
+  const convertFileToBase64 = (file: File, callBack: (value: string) => void) => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const file64 = reader.result as string
+      callBack(file64)
+    }
+    reader.readAsDataURL(file)
   }
 
+  const uploadUserAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length) {
+      const file = e.target.files[0]
+      if (file.size < 4000000) {
+        convertFileToBase64(file, (avatar: string) => {
+          dispatch(authThunks.updateProfile({ avatar: avatar }))
+            .unwrap()
+            .then(() => {
+              setEditPhotoMode(false)
+              dispatch(authThunks.authMe())
+              toast.success("You changed profile avatar successfully:)")
+            })
+            .catch(() => {
+              toast.error('Error: your file is too large! Choose another one, please')
+            })
+        })
+      }
+    }
+  }, [])
 
   return (
     <>
-      <BackLink backPath={'/packs'} backText={'Back to Packs List'} />
+      <BackLink backPath={'/packs'} backText={'Back to Packs List'}/>
       <Card id={'cards-profile'}>
         <Title title={"Personal Information"}/>
         <div className={styles.profile__wrapper}>
           <div className={styles.profile__userPhotoWrapper}>
-            <img
-              src={cat}
-              alt="user img"
-              className={styles.profile__userPhoto}/>
-            <div className={styles.profile__editPhotoWrapper}>
-              <img src={editPhoto} alt="edit photo" className={styles.profile__editPhoto}/>
-            </div>
+            {!editPhotoMode
+              ? <>
+                <img
+                  src={avatar ?? cat}
+                  alt="user img"
+                  onClick={onEditPhotoMode}
+                  className={styles.profile__userPhoto}
+                />
+                <div className={styles.profile__editPhotoWrapper}>
+                  <img
+                    style={{cursor: "pointer"}}
+                    src={editPhoto}
+                    alt="edit photo"
+                    onClick={onEditPhotoMode}
+                    className={styles.profile__editPhoto}
+                  />
+                </div>
+              </>
+
+              : <Input
+                type={'file'}
+                onChange={uploadUserAvatar}
+              />}
           </div>
 
           <div className={styles.profile__userInfoWrapper}>
